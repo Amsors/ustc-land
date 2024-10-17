@@ -1,0 +1,8 @@
+# CMake构建目录
+cmake-build-*/
+
+# 运行目录
+run/
+
+# JetBrains IDEs
+.idea/
