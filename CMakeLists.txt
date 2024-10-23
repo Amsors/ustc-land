@@ -7,6 +7,11 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/run)
 add_definitions(-DNANOGUI_USE_OPENGL)
 if(${CMAKE_BUILD_TYPE} STREQUAL "Release")
     add_definitions(-D__USTC_LAND_RELEASE__)
+else()
+    option(NANOGUI_SHOW_WIDGET_BOUNDS "Show widget bounds" OFF)
+    if(NANOGUI_SHOW_WIDGET_BOUNDS)
+        set(LIB_SUFFIX "-bounded")
+    endif()
 endif()
 
 include_directories(${CMAKE_SOURCE_DIR}/include)
@@ -27,5 +32,5 @@ file(GLOB_RECURSE SOURCES ${CMAKE_SOURCE_DIR}/src/cpp/*.cpp)
 add_executable(ustc_land ${SOURCES})
 target_link_libraries(ustc_land
         PUBLIC ${CMAKE_SOURCE_DIR}/libs/${CMAKE_BUILD_TYPE}/glfw3.lib
-        PUBLIC ${CMAKE_SOURCE_DIR}/libs/${CMAKE_BUILD_TYPE}/nanogui.lib
+        PUBLIC ${CMAKE_SOURCE_DIR}/libs/${CMAKE_BUILD_TYPE}/nanogui${LIB_SUFFIX}.lib
 )
