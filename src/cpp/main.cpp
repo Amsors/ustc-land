@@ -3,15 +3,25 @@
 #include <string>
 
 #include "i18n.h"
-#include "main_application.h"
-#include "glad/glad.h"
+#include "game/main_application.h"
 #include "nanogui/formhelper.h"
 #include "nanogui/screen.h"
+#include "nanovg/stb_image.h"
 #include "spdlog/spdlog.h"
 #include "spdlog/sinks/daily_file_sink.h"
 #include "spdlog/sinks/wincolor_sink.h"
 
+#ifdef __USTC_LAND_RELEASE__
+#   pragma comment(linker, "/SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup")
+#else
+#   pragma comment(linker, "/SUBSYSTEM:CONSOLE /ENTRY:mainCRTStartup")
+#endif
+
 int main() {
+    #ifndef __USTC_LAND_RELEASE__
+    system("chcp 65001");
+    #endif
+
     std::vector<spdlog::sink_ptr> sinks = {
         #ifndef __USTC_LAND_RELEASE__
         std::make_shared<spdlog::sinks::wincolor_stdout_sink_mt>(),
@@ -19,15 +29,18 @@ int main() {
         std::make_shared<spdlog::sinks::daily_file_sink_mt>("logs/log.txt", 23, 59)
     };
     // TODO: 添加日志
-    // ReSharper disable once CppTooWideScopeInitStatement
     const std::vector loggers = {
-        make_shared<spdlog::logger>("i18n", begin(sinks), end(sinks))
+        std::make_shared<spdlog::logger>("main", begin(sinks), end(sinks)),
+        std::make_shared<spdlog::logger>("i18n", begin(sinks), end(sinks)),
+        std::make_shared<spdlog::logger>("render", begin(sinks), end(sinks))
     };
     for(const auto &logger: loggers) {
         spdlog::register_logger(logger);
     }
+    spdlog::set_level(spdlog::level::trace);
     spdlog::set_pattern("[%H:%M:%S] (%n) [%^%l%$] %v");
 
+    stbi_set_flip_vertically_on_load(true);
     i18n::initTranslator();
 
     try {
@@ -36,10 +49,11 @@ int main() {
         app->draw_all();
         app->set_visible(true);
         nanogui::mainloop(1 / 60.f * 1000);
-        nanogui::shutdown();
     } catch(const std::runtime_error &e) {
-        MessageBoxA(nullptr, (std::string("Caught a fatal error: ") + std::string(e.what())).c_str(), nullptr, MB_ICONERROR | MB_OK);
+        using namespace std::string_literals;
+        SPDLOG_LOGGER_ERROR(loggers[0], fmt::runtime(i18n::translated("main.error.exit")), e.what());
         return -1;
     }
+    nanogui::shutdown();
     return 0;
 }

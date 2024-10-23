@@ -49,7 +49,7 @@
 #  endif
 #endif
 
-#include <nanovg.h>
+#include <nanovg/nanovg.h>
 
 // Special treatment of linux Nvidia opengl headers
 #if !defined(_WIN32) && !defined(__APPLE__) && defined(NANOGUI_USE_OPENGL)
