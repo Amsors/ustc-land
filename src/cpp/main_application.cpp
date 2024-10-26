@@ -10,12 +10,18 @@
 #include "spdlog/spdlog.h"
 
 MainApplication::MainApplication():
-    nanogui::Screen({0, 0}, "USTC Land", false, true) {
-    // perform_layout();
+    nanogui::Screen({0, 0}, "USTC Land", false, true),
+    msyh(nvgCreateFont(nvg_context(), "msyh", R"(fonts\msyh.ttf)")), msyhbd(nvgCreateFont(nvg_context(), "msyhbd", R"(fonts\msyhbd.ttf)")), hyswhand(nvgCreateFont(nvg_context(), "hyswhand", R"(fonts\hyswhand.ttf)")) {
+    SPDLOG_LOGGER_TRACE(spdlog::get("render"), "Main window created! size of the window: (x: {}, y: {}); pixel ratio: {:.2}", m_size.x(), m_size.y(), m_pixel_ratio);
+
+    new WelcomeBar(this);
+
+    perform_layout();
+
     std::string vs, fs;
     loadShaders("background", vs, fs);
     renderPass = new nanogui::RenderPass({this});
-    renderPass->set_clear_color(0, {0x54, 0x9D, 0x64, 0xFF});
+    renderPass->set_clear_color(0, {0x85, 0xA8, 0x87, 0xFF});
     shader = new nanogui::Shader(renderPass, "background", vs, fs, nanogui::Shader::BlendMode::AlphaBlend);
 
     for(int i = 1; i <= BACKGORUND_TEXTURES; i++) {
@@ -24,7 +30,7 @@ MainApplication::MainApplication():
         const std::string &imageFile = fmt::format("textures/background/{}.png", i);
         std::unique_ptr<uint8_t[], void(*)(void *)> texture_data(stbi_load(imageFile.c_str(), &size.x(), &size.y(), &channels, 0), stbi_image_free);
         assert(channels == 4);
-        auto *tex = new nanogui::Texture(nanogui::Texture::PixelFormat::RGBA, nanogui::Texture::ComponentFormat::UInt8, size, nanogui::Texture::InterpolationMode::Trilinear, nanogui::Texture::InterpolationMode::Nearest);
+        auto *tex = new nanogui::Texture(nanogui::Texture::PixelFormat::RGBA, nanogui::Texture::ComponentFormat::UInt8, size, nanogui::Texture::InterpolationMode::Bilinear, nanogui::Texture::InterpolationMode::Bilinear);
         tex->upload(texture_data.get());
         textures.emplace_back(tex);
     }
@@ -41,7 +47,7 @@ MainApplication::MainApplication():
 
     const nanogui::Matrix4f vp =
         nanogui::Matrix4f::perspective(45.f, .1f, 60.f, m_size.x() * 1.f / m_size.y()) *
-        nanogui::Matrix4f::look_at(nanogui::Vector3f(0, -5, -50), nanogui::Vector3f(0, 0, 0), nanogui::Vector3f(0, 1, 0));
+        nanogui::Matrix4f::look_at(nanogui::Vector3f(0, -4, -40), nanogui::Vector3f(0, 0, 0), nanogui::Vector3f(0, 1, 0));
 
     shader->set_buffer("indices", nanogui::VariableType::UInt32, {3 * 2}, indices);
     shader->set_buffer("positions", nanogui::VariableType::Float32, {4, 3}, positions);
@@ -71,7 +77,6 @@ void MainApplication::draw_contents() {
 
     for(int i = 0; i < BACKGORUND_TEXTURES; i++) {
         nanogui::Matrix4f model =
-            nanogui::Matrix4f::scale({1.1f, 1.1f, 1.f}) *
             nanogui::Matrix4f::translate({TEXTURE_POSITIONS[i].x(), TEXTURE_POSITIONS[i].y(), 0}) *
             nanogui::Matrix4f::scale({textures[i]->size().x() / 33.f, textures[i]->size().y() / 33.f, 1.f});
         shader->set_uniform("model", model);

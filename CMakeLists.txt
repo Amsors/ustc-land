@@ -17,10 +17,9 @@ endif()
 include_directories(${CMAKE_SOURCE_DIR}/include)
 
 file(GLOB RUN_FILES CONFIGURE_DEPENDS true ${CMAKE_SOURCE_DIR}/run/*)
-# 不删除日志文件夹
+# 不删除日志和存档文件夹
 foreach(file IN LISTS RUN_FILES)
-    if(NOT file MATCHES ".+log.+")
-        message(STATUS "Deleting ${file}")
+    if(NOT (file MATCHES ".+log.+" AND file MATCHES ".+save.+"))
         file(REMOVE ${file})
     endif()
 endforeach()

@@ -1,4 +1,7 @@
 main.error.exit=捕获严重异常，退出程序：\n{}
 
+screen.welcome.start=开始游戏
+screen.welcome.quit=退出游戏
+
 shader.load.fail.vertex=无法加载顶点着色器：{}.vert
 shader.load.fail.fragment=无法加载片段着色器：{}.frag

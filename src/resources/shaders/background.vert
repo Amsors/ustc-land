@@ -12,8 +12,8 @@ void main() {
     texCoord = texCoords;
     if(texCoords.y > 0.5) {
         float phi0 = sin(dot(positions.xy, vec2(12.9898, 78.2336))) * 3.14159;
-        float omega = cos(dot(positions.xy, vec2(13.5826, 23.5481))) * 0.5 + 1;
-        gl_Position = vp * model * vec4(positions.x + sin(omega * (glfwTime) + phi0) * 0.05, positions.yz, 1.0);
+        float omega = cos(dot(positions.xy, vec2(13.5826, 23.5481))) * 0.1 + 0.5;
+        gl_Position = vp * model * vec4(positions.x + sin(omega * glfwTime + phi0) * 0.02, positions.yz, 1.0);
     } else {
         gl_Position = vp * model * vec4(positions.xyz, 1.0);
     }
