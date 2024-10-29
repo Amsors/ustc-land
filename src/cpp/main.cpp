@@ -4,7 +4,6 @@
 
 #include "i18n.h"
 #include "game/main_application.h"
-#include "nanogui/formhelper.h"
 #include "nanogui/screen.h"
 #include "nanovg/stb_image.h"
 #include "spdlog/spdlog.h"
@@ -50,7 +49,6 @@ int main() {
         app->set_visible(true);
         nanogui::mainloop(1 / 60.f * 1000);
     } catch(const std::runtime_error &e) {
-        using namespace std::string_literals;
         SPDLOG_LOGGER_ERROR(loggers[0], fmt::runtime(i18n::translated("main.error.exit")), e.what());
         return -1;
     }

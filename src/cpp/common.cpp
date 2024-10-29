@@ -25,12 +25,3 @@ bool loadShaders(const std::string &name, std::string &vs, std::string &fs) {
     file.close();
     return true;
 }
-
-nanogui::Theme *createBarTheme(NVGcontext *ctx) {
-    static nanogui::Theme *barTheme = nullptr;
-    if(barTheme == nullptr) {
-        barTheme = new nanogui::Theme(ctx);
-        // TODO: 设置Bar的基础样式
-    }
-    return barTheme;
-}

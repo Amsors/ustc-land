@@ -11,10 +11,9 @@
 
 MainApplication::MainApplication():
     nanogui::Screen({0, 0}, "USTC Land", false, true),
-    msyh(nvgCreateFont(nvg_context(), "msyh", R"(fonts\msyh.ttf)")), msyhbd(nvgCreateFont(nvg_context(), "msyhbd", R"(fonts\msyhbd.ttf)")), hyswhand(nvgCreateFont(nvg_context(), "hyswhand", R"(fonts\hyswhand.ttf)")) {
+    msyh(nvgCreateFont(m_nvg_context, "msyh", R"(fonts\msyh.ttf)")), msyhbd(nvgCreateFont(m_nvg_context, "msyhbd", R"(fonts\msyhbd.ttf)")), hyswhand(nvgCreateFont(m_nvg_context, "hyswhand", R"(fonts\hyswhand.ttf)")),
+    welcomeBar(new WelcomeBar(this, 500.)), listBar(new ListBar(this, 440.)), infoBar(new InfoBar(this, 440.)) {
     SPDLOG_LOGGER_TRACE(spdlog::get("render"), "Main window created! size of the window: (x: {}, y: {}); pixel ratio: {:.2}", m_size.x(), m_size.y(), m_pixel_ratio);
-
-    new WelcomeBar(this);
 
     perform_layout();
 
@@ -60,7 +59,11 @@ bool MainApplication::keyboard_event(const int key, const int scancode, const in
         return true;
     }
     if(key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
-        set_visible(false);
+        if(playing) {
+            quitGame();
+        } else {
+            set_visible(false);
+        }
         return true;
     }
     return false;
@@ -75,6 +78,7 @@ void MainApplication::draw_contents() {
     renderPass->resize(framebuffer_size());
     renderPass->begin();
 
+    // 绘制背景
     for(int i = 0; i < BACKGORUND_TEXTURES; i++) {
         nanogui::Matrix4f model =
             nanogui::Matrix4f::translate({TEXTURE_POSITIONS[i].x(), TEXTURE_POSITIONS[i].y(), 0}) *
@@ -86,5 +90,48 @@ void MainApplication::draw_contents() {
         shader->end();
     }
 
+    // 处理游戏内的时间变化
+    const double now = glfwGetTime();
+    const double deltaTime = now - lastFrame;
+    lastFrame = now;
+    if(playing) {
+        timeProgress += deltaTime;
+        if(timeProgress > TICK) {
+            timeProgress -= TICK;
+            ticks++;
+            tick();
+        }
+    }
+
+    if(playing) {
+        if(welcomeBar->where() == Bar::THERE) {
+            listBar->move(deltaTime, false);
+            infoBar->move(deltaTime, false);
+        } else {
+            welcomeBar->move(deltaTime, true);
+        }
+    } else {
+        if(listBar->where() == Bar::THERE/* && infoBar->where() == Bar::THERE*/) {
+            welcomeBar->move(deltaTime, false);
+        } else {
+            listBar->move(deltaTime, true);
+            infoBar->move(deltaTime, true);
+        }
+    }
+
+    // TODO: 绘制前景（卡牌、特效等）
+
     renderPass->end();
 }
+
+void MainApplication::startGame() {
+    ticks = 0;
+    playing = true;
+}
+
+void MainApplication::quitGame() {
+    playing = false;
+    // TODO: 保存游戏进度
+}
+
+void MainApplication::tick() {}

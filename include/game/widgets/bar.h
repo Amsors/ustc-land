@@ -4,15 +4,49 @@
 
 class Bar: public nanogui::Window {
 public:
-    explicit Bar(nanogui::Widget* parent);
+    enum Position {
+        HERE, MOVING, THERE
+    };
+
+    using SizeProvider = std::function<int(nanogui::Screen *)>;
+    using DistanceProvider = std::function<double(int, int, int)>;
+
+    Bar(nanogui::Widget *parent, double moveSpeed, const SizeProvider &width, const SizeProvider &height, const SizeProvider &margin, const DistanceProvider &distance0, const DistanceProvider &maxDistance);
     bool mouse_drag_event(const nanogui::Vector2i &p, const nanogui::Vector2i &rel, int button, int modifiers) override;
     void draw(NVGcontext *ctx) override;
+    virtual void move(double deltaTime, bool isLeft) = 0;
 
-private:
+    Position where() const {
+        return distance == 0. ? HERE : distance == MAX_DISTANCE ? THERE : MOVING;
+    }
+
+protected:
+    const double MOVE_SPEED;
+    double x = 0., y = 0.;
+    const int WIDTH, HEIGHT, MARGIN;
+    const double MAX_DISTANCE;
+    double distance;
     NVGpaint stroke;
 };
 
 class WelcomeBar final: public Bar {
 public:
-    explicit WelcomeBar(nanogui::Widget* parent);
+    WelcomeBar(nanogui::Widget *parent, double moveSpeed);
+    void move(double deltaTime, bool isLeft) override;
+};
+
+class ListBar final: public Bar {
+public:
+    ListBar(nanogui::Widget *parent, double moveSpeed);
+    void move(double deltaTime, bool isLeft) override;
+};
+
+class InfoBar final: public Bar {
+public:
+    InfoBar(nanogui::Widget *parent, double moveSpeed);
+    void move(double deltaTime, bool isLeft) override;
+    void draw(NVGcontext *ctx) override;
+
+private:
+    float textBound[4]{};
 };
