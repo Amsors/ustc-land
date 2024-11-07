@@ -45,9 +45,9 @@ int main() {
     try {
         nanogui::init();
         nanogui::ref app = new MainApplication();
-        app->draw_all();
+        // app->draw_all();
         app->set_visible(true);
-        nanogui::mainloop(1 / 60.f * 1000);
+        nanogui::mainloop(1 / 300.f * 1000);
     } catch(const std::runtime_error &e) {
         SPDLOG_LOGGER_ERROR(loggers[0], fmt::runtime(i18n::translated("main.error.exit")), e.what());
         return -1;

@@ -438,6 +438,18 @@ template <typename Value_, size_t Size_> struct Matrix {
         return c;
     }
 
+    friend Array<Value, Size> operator*(const Matrix &a, const Array<Value, Size> &b) {
+        Array<Value, Size> c;
+        for(size_t i = 0; i < Size; i++) {
+            Value accum = 0;
+            for(size_t j = 0; j < Size; j++) {
+                accum += a.m[j][i] * b[j];
+            }
+            c[i] = accum;
+        }
+        return c;
+    }
+
     Matrix T() const {
         Matrix result;
         for (size_t i = 0; i < Size; ++i)
@@ -501,6 +513,81 @@ template <typename Value_, size_t Size_> struct Matrix {
         result.m[2][1] = tmp1 - tmp2;
 
         return result;
+    }
+
+    template <typename V = Value, std::enable_if_t<std::is_floating_point_v<V>, int> = 0>
+    static void lu_decomposition(const Matrix &a, Matrix &l, Matrix &u) {
+        memset(l.m, 0, sizeof(Value) * Size * Size);
+        memset(u.m, 0, sizeof(Value) * Size * Size);
+        for(size_t i = 0; i < Size; i++) {
+            l.m[i][i] = 1;
+        }
+        for(size_t i = 0; i < Size; i++) {
+            for(size_t j = i; j < Size; j++) {
+                Value accum = 0;
+                for(size_t k = 0; k < i; k++) {
+                    accum += l.m[k][i] * u.m[j][k];
+                }
+                u.m[j][i] = a.m[j][i] - accum;
+            }
+            for(size_t j = i + 1; j < Size; j++) {
+                Value accum = 0;
+                for(size_t k = 0; k < i; k++) {
+                    accum += l.m[k][j] * u.m[i][k];
+                }
+                l.m[i][j] = (a.m[i][j] - accum) / u.m[i][i];
+            }
+        }
+    }
+
+    template <size_t S = Size, std::enable_if_t<S == 1, int> = 0>
+    static Value determinant(const Matrix &a) {
+        return a.m[0][0];
+    }
+
+    template <size_t S = Size, std::enable_if_t<S == 2, int> = 0>
+    static Value determinant(const Matrix &a) {
+        return a.m[0][0] * a.m[1][1] - a.m[0][1] * a.m[1][0];
+    }
+
+    template <typename V = Value, size_t S = Size, std::enable_if_t<S >= 3 && std::is_floating_point_v<V>, int> = 0>
+    static Value determinant(const Matrix &a) {
+        Matrix l, u;
+        lu_decomposition(a, l, u);
+        Value det = 1;
+        for(size_t i = 0; i < Size; i++) {
+            det *= u.m[i][i];
+        }
+        return det;
+    }
+
+    template <typename V = Value, std::enable_if_t<std::is_floating_point_v<V>, int> = 0>
+    static Matrix inverse(const Matrix &a) {
+        if(!determinant(a)) {
+            throw std::runtime_error("The given matrix is not invertible");
+        }
+        Matrix l, u;
+        lu_decomposition(a, l, u);
+        for(size_t i = 0; i < Size; i++) {
+            for(size_t j = 0; j < i; j++) {
+                Value accum = 0;
+                for(size_t k = j; k < i; k++) {
+                    accum += l.m[k][i] * l.m[j][k];
+                }
+                l.m[j][i] = -accum;
+            }
+        }
+        for(size_t i = 0; i < Size; i++) {
+            for(size_t j = 0; j < i; j++) {
+                Value accum = 0;
+                for(size_t k = j; k < i; k++) {
+                    accum += u.m[k][j] * u.m[i][k];
+                }
+                u.m[i][j] = -accum / u.m[i][i];
+            }
+            u.m[i][i] = 1 / u.m[i][i];
+        }
+        return u * l;
     }
 
     template <size_t S = Size, std::enable_if_t<S == 4, int> = 0>

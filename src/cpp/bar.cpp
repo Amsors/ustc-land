@@ -48,9 +48,9 @@ void Bar::draw(NVGcontext *ctx) {
 WelcomeBar::WelcomeBar(nanogui::Widget *parent, const double moveSpeed):
     Bar(parent, moveSpeed,
         [](const nanogui::Screen *const screen)-> int {
-            return static_cast<int>(screen->size().x() / screen->pixel_ratio()) / 5;
+            return static_cast<int>(screen->size().x() * .2f);
         }, [](const nanogui::Screen *const screen)-> int {
-            return static_cast<int>(screen->size().y() / screen->pixel_ratio()) * 2 / 5;
+            return static_cast<int>(screen->size().y() * .4f);
         }, [](const nanogui::Screen *const) -> int {
             return 10;
         }, [](const int, const int, const int) -> double {
@@ -60,11 +60,11 @@ WelcomeBar::WelcomeBar(nanogui::Widget *parent, const double moveSpeed):
         }) {
     set_fixed_size({WIDTH, HEIGHT});
     x = MARGIN;
-    y = static_cast<int>(screen()->size().y() / screen()->pixel_ratio()) - MARGIN - HEIGHT;
+    y = static_cast<int>(screen()->size().y()) - MARGIN - HEIGHT;
     set_position({static_cast<int>(x), static_cast<int>(y)});
     set_layout(new nanogui::BoxLayout(nanogui::Orientation::Vertical, nanogui::Alignment::Middle, MARGIN, 20));
 
-    new nanogui::Label(this, "USTC Land", "hyswhand", HEIGHT / 5);
+    new nanogui::Label(this, "USTC Land", "hyswhand", HEIGHT * .2f);
     new ClickableLabel(this, i18n::translated("screen.welcome.start"), "msyh", "msyhbd", HEIGHT / 10,
         [this](const nanogui::Vector2i &, int, bool, int) -> bool {
             if(auto *const app = dynamic_cast<MainApplication*>(screen())) {
@@ -96,9 +96,9 @@ void WelcomeBar::move(const double deltaTime, const bool isLeft) {
 ListBar::ListBar(nanogui::Widget *parent, const double moveSpeed):
     Bar(parent, moveSpeed,
         [](const nanogui::Screen *const screen)-> int {
-            return static_cast<int>(screen->size().x() / screen->pixel_ratio()) / 5;
+            return static_cast<int>(screen->size().x() * .2f);
         }, [](const nanogui::Screen *const screen)-> int {
-            return static_cast<int>(screen->size().y() / screen->pixel_ratio()) * 3 / 4 - 15;
+            return static_cast<int>(screen->size().y() * .75f) - 15;
         }, [](const nanogui::Screen *const) -> int {
             return 10;
         }, [](const int width, const int, const int margin) -> double {
@@ -114,11 +114,6 @@ ListBar::ListBar(nanogui::Widget *parent, const double moveSpeed):
 
     auto *tab = new StyledTabWidget(this, stroke, "msyhbd");
     tab->set_font_size(20);
-    // tab->theme()->m_button_gradient_top_pushed = BAR_BACKGROUND;
-    // tab->theme()->m_button_gradient_bot_pushed = BAR_BACKGROUND;
-    // tab->theme()->m_border_dark = BAR_BACKGROUND;
-    // tab->theme()->m_border_light = BAR_BACKGROUND;
-    // tab->theme()->m_border_medium = BAR_BACKGROUND;
     auto *list1 = new nanogui::Widget(tab);
     auto *list2 = new nanogui::Widget(tab);
     tab->append_tab("list1", list1);
@@ -140,9 +135,9 @@ void ListBar::move(const double deltaTime, const bool isLeft) {
 InfoBar::InfoBar(nanogui::Widget *parent, const double moveSpeed):
     Bar(parent, moveSpeed,
         [](const nanogui::Screen *const screen)-> int {
-            return static_cast<int>(screen->size().x() / screen->pixel_ratio()) / 5;
+            return static_cast<int>(screen->size().x() * .2f);
         }, [](const nanogui::Screen *const screen)-> int {
-            return static_cast<int>(screen->size().y() / screen->pixel_ratio()) * 1 / 4 - 15;
+            return static_cast<int>(screen->size().y() * .25f) - 15;
         }, [](const nanogui::Screen *const) -> int {
             return 10;
         }, [](const int width, const int, const int margin) -> double {
@@ -152,7 +147,7 @@ InfoBar::InfoBar(nanogui::Widget *parent, const double moveSpeed):
         }) {
     set_fixed_size({WIDTH, HEIGHT});
     x = -MARGIN - WIDTH;
-    y = static_cast<int>(screen()->size().y() / screen()->pixel_ratio()) - MARGIN - HEIGHT;
+    y = static_cast<int>(screen()->size().y()) - MARGIN - HEIGHT;
     set_position({static_cast<int>(x), static_cast<int>(y)});
 }
 
@@ -184,11 +179,11 @@ void InfoBar::draw(NVGcontext *ctx) {
     static const int LINES = nvgTextBreakLines(ctx, text.c_str(), nullptr, WIDTH - MARGIN * 2, rows, 100);
     static const int TEXT_HEIGHT = FONT_SIZE * LINES;
     const int x0 = m_pos.x() + MARGIN;
-    int y0 = m_pos.y() + MARGIN - static_cast<int>(glfwGetTime() * SCROLL_SPEED) % TEXT_HEIGHT;
+    const int y0 = m_pos.y() + MARGIN -
+        (dynamic_cast<MainApplication*>(screen())->gameState() == MainApplication::PLAYING ? static_cast<int>(glfwGetTime() * SCROLL_SPEED) % TEXT_HEIGHT : 0);
     nvgIntersectScissor(ctx, m_pos.x() + MARGIN, m_pos.y() + MARGIN, WIDTH - MARGIN * 2, HEIGHT - MARGIN * 2);
-    for(int i = 0; i < LINES; i++) {
-        nvgText(ctx, x0, y0, rows[i].start, rows[i].end);
-        y0 += FONT_SIZE;
+    for(int i = 0, y = y0; i < LINES; i++, y += FONT_SIZE) {
+        nvgText(ctx, x0, y, rows[i].start, rows[i].end);
     }
 
     nvgRestore(ctx);
