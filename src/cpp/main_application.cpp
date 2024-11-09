@@ -12,9 +12,13 @@
 #include "spdlog/spdlog.h"
 
 MainApplication::MainApplication():
-    nanogui::Screen({300, 200}, "USTC Land", false, false), camera(0, -4, -40),
-    msyh(nvgCreateFont(m_nvg_context, "msyh", R"(fonts\msyh.ttf)")), msyhbd(nvgCreateFont(m_nvg_context, "msyhbd", R"(fonts\msyhbd.ttf)")), hyswhand(nvgCreateFont(m_nvg_context, "hyswhand", R"(fonts\hyswhand.ttf)")) {
+    nanogui::Screen({300, 200}, "USTC Land", false, false), camera(0, -4, -40) {
     SPDLOG_LOGGER_TRACE(spdlog::get("render"), "Main window created! size of the window: (x: {}, y: {}); pixel ratio: {:.2}", m_size.x(), m_size.y(), m_pixel_ratio);
+
+    // 加载字体
+    nvgCreateFont(m_nvg_context, "msyh", R"(fonts\msyh.ttf)");
+    nvgCreateFont(m_nvg_context, "msyhbd", R"(fonts\msyhbd.ttf)");
+    nvgCreateFont(m_nvg_context, "hyswhand", R"(fonts\hyswhand.ttf)");
 
     std::string bvs, bfs, cvs, cfs;
     loadShaders("background", bvs, bfs);
@@ -97,12 +101,11 @@ bool MainApplication::mouse_button_event(const nanogui::Vector2i &p, const int b
     if(button == GLFW_MOUSE_BUTTON_RIGHT) {
         if(down) {
             mouseState = RIGHT;
-            switch(state) {
-                case PLAYING:
-                    cards.emplace_back(std::make_shared<Card>(nanogui::Vector3f(5.f, 7.f, 0.f)));
-                    return true;
-                default:
-                    break;
+            if(state == PLAYING) {
+                std::vector<std::shared_ptr<Card>> newStack;
+                newStack.emplace_back(std::make_shared<Card>());
+                cards.emplace_back(std::move(newStack));
+                return true;
             }
         } else {
             mouseState = NONE;
@@ -111,8 +114,48 @@ bool MainApplication::mouse_button_event(const nanogui::Vector2i &p, const int b
     if(button == GLFW_MOUSE_BUTTON_LEFT) {
         if(down) {
             mouseState = LEFT;
+            const nanogui::Vector2f cursor = screenToWorldZ0(p);
+            for(int i = 0; i < cards.size(); i++) {
+                for(auto ritCard = cards[i].rbegin(); ritCard != cards[i].rend(); ++ritCard) {
+                    if((*ritCard)->contains(cursor)) {
+                        if(ritCard != cards[i].rend() - 1) {
+                            std::vector sub(ritCard.base() - 1, cards[i].end());
+                            cards[i].erase(ritCard.base() - 1, cards[i].end());
+                            if(cards[i].empty()) {
+                                cards.erase(cards.begin() + i);
+                            }
+                            cards.emplace_back(std::move(sub));
+                            movingStack = true;
+                            return true;
+                        }
+                        // 确保选中的牌堆是最后渲染出来的（即永远在最上方）
+                        std::swap(cards[i], cards.back());
+                        movingStack = true;
+                        return true;
+                    }
+                }
+            }
         } else {
             mouseState = NONE;
+            if(movingStack) {
+                // 尝试合并两堆卡牌
+                const nanogui::Vector3f &pos = cards.back().back()->getPosition();
+                const float chosenH = cards.back()[0]->getPosition().y() + Card::H - pos.y();
+                for(auto it = cards.begin(); it != cards.end() - 1; ++it) {
+                    const nanogui::Vector3f &pos2 = it->back()->getPosition();
+                    if(std::abs(pos2.x() - pos.x()) <= Card::W &&
+                        std::abs(pos2.y() - pos.y()) <= std::min(chosenH, (*it)[0]->getPosition().y() + Card::H - pos2.y())) {
+                        for(int j = 0; j < cards.back().size(); j++) {
+                            cards.back()[j]->moveTo({pos2.x(), pos2.y() - Card::D * (j + 1)});
+                        }
+                        it->insert(it->end(), cards.back().begin(), cards.back().end());
+                        cards.erase(cards.end() - 1);
+                        break;
+                    }
+                }
+                movingStack = false;
+                return true;
+            }
         }
     }
     return false;
@@ -123,18 +166,14 @@ bool MainApplication::mouse_motion_event(const nanogui::Vector2i &p, const nanog
         return true;
     }
     switch(mouseState) {
-        case LEFT: {
-            const nanogui::Vector2f cursor = screenToWorldZ0(p - rel);
-            for(auto it = cards.rbegin(); it != cards.rend(); ++it) {
-                if((*it)->contains(cursor)) {
-                    const nanogui::Vector2f posTo = screenToWorldZ0(p);
-                    (*it)->move(posTo - cursor);
-                    SPDLOG_LOGGER_WARN(spdlog::get("main"), "\ncursor: {}\npos: {}\nposTo: {}\ndelta: {}", cursor, (*it)->getPosition(), posTo, posTo - cursor);
-                    break;
+        case LEFT:
+            if(movingStack) {
+                const nanogui::Vector2f delta = screenToWorldZ0(p) - screenToWorldZ0(p - rel);
+                for(const auto &card: cards.back()) {
+                    card->move(delta);
                 }
             }
             break;
-        }
         default:
             break;
     }
@@ -191,19 +230,24 @@ void MainApplication::draw_contents() {
             }
             break;
         case PLAYING:
-            for(const auto &card: cards) {
-                card->calc(deltaTime);
+            for(const auto &stack: cards) {
+                for(const auto &card: stack) {
+                    card->calc(deltaTime);
+                }
             }
         // TODO: 绘制前景（卡牌、特效等）
-            for(const auto &card: cards) {
-                nanogui::Matrix4f model =
-                    nanogui::Matrix4f::translate(card->getPosition()) *
-                    nanogui::Matrix4f::scale({Card::W, Card::H, 1.f});
-                cardShader->set_uniform("model", model);
-                // cardShader->set_texture("tex", cardTextures[0].get());
-                cardShader->begin();
-                cardShader->draw_array(nanogui::Shader::PrimitiveType::Triangle, 0, 6, true);
-                cardShader->end();
+            for(const auto &stack: cards) {
+                for(const auto &card: stack) {
+                    nanogui::Matrix4f model =
+                        nanogui::Matrix4f::translate(card->getPosition()) *
+                        nanogui::Matrix4f::scale({Card::W, Card::H, 1.f});
+                    cardShader->set_uniform("model", model);
+                    cardShader->set_uniform("cardColor", card->getColor());
+                    // cardShader->set_texture("tex", cardTextures[0].get());
+                    cardShader->begin();
+                    cardShader->draw_array(nanogui::Shader::PrimitiveType::Triangle, 0, 6, true);
+                    cardShader->end();
+                }
             }
             break;
         default:

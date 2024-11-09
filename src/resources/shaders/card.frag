@@ -3,8 +3,10 @@
 //in vec2 texCoord;
 out vec4 color;
 
+// TODO: 需要删除，仅用于前期测试使用
+uniform vec4 cardColor;
 //uniform sampler2D tex;
 
 void main() {
-    color = vec4(0.757, 0.243, 0.373, 1.0);
+    color = cardColor;
 }

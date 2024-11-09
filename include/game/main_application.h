@@ -54,12 +54,12 @@ private:
     nanogui::Shader *bgShader, *cardShader;
     nanogui::RenderPass *renderPass;
     nanogui::Vector3f camera;
-    int msyh, msyhbd, hyswhand; // 字体ID
 
     Bar *welcomeBar, *listBar, *infoBar; // HUD
     State state = TITLE;
     double lastFrame = 0.;
     MouseState mouseState = NONE;
 
-    std::vector<std::shared_ptr<Card>> cards;
+    std::vector<std::vector<std::shared_ptr<Card>>> cards; // 越在下面的卡牌，对应的下标越小；不同牌堆之间的顺序不确定
+    bool movingStack = false;
 };

@@ -16,6 +16,11 @@ public:
         pos.y() += delta[1];
     }
 
+    void moveTo(const nanogui::Vector2f &pos) {
+        this->pos.x() = pos.x();
+        this->pos.y() = pos.y();
+    }
+
     [[nodiscard]] bool contains(const nanogui::Vector2f &cursor) const {
         return pos[0] <= cursor[0] && cursor[0] <= pos[0] + W && pos[1] <= cursor[1] && cursor[1] <= pos[1] + H;
     }
@@ -28,9 +33,16 @@ public:
         return angle;
     }
 
-    static const float W, H;
+    [[nodiscard]] const nanogui::Color &getColor() const {
+        return color;
+    };
+
+    static const float W, H, D;
 
 private:
     Position pos;
     Angle angle;
+
+    // TODO: 需要删除，仅用于前期测试使用
+    nanogui::Color color;
 };
