@@ -37,7 +37,7 @@ public:
         return color;
     };
 
-    static const float W, H, D;
+    static const float W, H, D, R;
 
 private:
     Position pos;

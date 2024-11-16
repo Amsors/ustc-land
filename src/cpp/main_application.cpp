@@ -61,6 +61,7 @@ MainApplication::MainApplication():
     const nanogui::Matrix4f vp =
         p * nanogui::Matrix4f::look_at(camera, nanogui::Vector3f(0, 0, 0), nanogui::Vector3f(0, 1, 0));
     iVp = nanogui::Matrix4f::inverse(vp);
+    SPDLOG_LOGGER_TRACE(spdlog::get("main"), "\nvp:\n{}\niVp:\n{}", vp, iVp);
 
     bgShader->set_buffer("indices", nanogui::VariableType::UInt32, {3 * 2}, indices);
     bgShader->set_buffer("positions", nanogui::VariableType::Float32, {4, 3}, positions);
@@ -71,6 +72,10 @@ MainApplication::MainApplication():
     cardShader->set_buffer("positions", nanogui::VariableType::Float32, {4, 3}, positions);
     // cardShader->set_buffer("texCoords", nanogui::VariableType::Float32, {4, 2}, texCoords);
     cardShader->set_uniform("vp", vp);
+    cardShader->set_uniform("iVp", iVp);
+    cardShader->set_uniform("windowSize", nanogui::Vector2f(m_size.x(), m_size.y()) * m_pixel_ratio);
+    cardShader->set_uniform("cardSize", nanogui::Vector3f(Card::W, Card::H, Card::R));
+    cardShader->set_uniform("center", nanogui::Vector3f(.5f, .5f, 0.f));
 }
 
 MainApplication::~MainApplication() {

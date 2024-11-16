@@ -1,8 +1,9 @@
 #include "game/logic/basic.h"
 
-const float Card::W = 5;
-const float Card::H = 7;
-const float Card::D = 1;
+const float Card::W = 5.f;
+const float Card::H = 7.f;
+const float Card::D = 1.f;
+const float Card::R = .6f;
 
 Card::Card(const nanogui::Vector3f &pos) {
     this->pos = pos;
