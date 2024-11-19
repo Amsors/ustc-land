@@ -32,4 +32,5 @@ add_executable(ustc_land ${SOURCES})
 target_link_libraries(ustc_land
         PUBLIC ${CMAKE_SOURCE_DIR}/libs/${CMAKE_BUILD_TYPE}/glfw3.lib
         PUBLIC ${CMAKE_SOURCE_DIR}/libs/${CMAKE_BUILD_TYPE}/nanogui${LIB_SUFFIX}.lib
+        PUBLIC ${CMAKE_SOURCE_DIR}/libs/${CMAKE_BUILD_TYPE}/jsoncpp.lib
 )

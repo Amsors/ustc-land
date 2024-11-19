@@ -1,0 +1,64 @@
+{
+  "type": "attribute",
+  "attributeValueSum": 6,
+  "attributeValue": [
+    {
+      "name": "GPA",
+      "visibility": true,
+      "max": 4.3,
+      "initial": 3.0
+    },
+    {
+      "name": "physicalHealth",
+      "visibility": true,
+      "max": 100,
+      "initial": 60
+    },
+    {
+      "name": "mentalHealth",
+      "visibility": true,
+      "max": 100,
+      "initial": 60
+    },
+    {
+      "name": "luckyValue",
+      "visibility": true,
+      "max": 100,
+      "initial": 60
+    },
+    {
+      "name": "secondClass",
+      "visibility": true,
+      "max": 9999,
+      "initial": 0
+    },
+    {
+      "name": "redAndPro",
+      "visibility": true,
+      "max": 9999,
+      "initial": 0
+    }
+  ],
+  "attributeArraySum": 3,
+  "attributeArrayMaxLength": 100,
+  "attributeArray": [
+    {
+      "name": "classChosen",
+      "visibility": true,
+      "arrayLengthStrategy": "match",
+      "arrayLengthMatchKey": "classSum"
+    },
+    {
+      "name": "finalTestBonus",
+      "visibility": false,
+      "arrayLengthStrategy": "match",
+      "arrayLengthMatchKey": "classSum"
+    },
+    {
+      "name": "classAttendance",
+      "visibility": false,
+      "arrayLengthStrategy": "match",
+      "arrayLengthMatchKey": "classSum"
+    }
+  ]
+}

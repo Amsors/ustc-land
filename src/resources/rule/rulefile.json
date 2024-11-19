@@ -1,0 +1,10 @@
+{
+  "jsonFileSum": 123,
+  "jsonFile": [
+    "attribute.json",
+    "class.json",
+    "item.json",
+    "spot.json",
+    "formula.json"
+  ]
+}
