@@ -3,55 +3,18 @@
   "formulaSum": 123,
   "formula": [
     {
-      "spotName": "teachingBuilding",
-      "formulaSum": 123,
-      "formula": [
-        {
-          "formulaType": "common",
-          "cardGroupSum": 2,
-          "cardGroup": [
-            {
-              "cardType": "role",
-              "record": 0
-            },
-            {
-              "cardType": "item",
-              "cardSubtype": "book",
-              "record": "classIndex"
-            }
-          ],
-          "withReward": 1,
-          "rewardSum": 123,
-          "reward": [
-            {
-              "possibility": 100,
-              "rewardType": "attributeValue",
-              "attributeName": "GPA",
-              "attributeChangeType": "ratioRest",
-              "attributeChange": 0.3
-            },
-            {
-              "possibility": 100,
-              "rewardType": "attributeValue",
-              "attributeName": "finalTestBonus",
-              "attributeChangeType": "ratioRest",
-              "attributeChange": 0.3
-            },
-            {
-              "possibility": 100,
-              "rewardType": "attibuteArray",
-              "readRecord": "classIndex",
-              "attributeName": "classAttencance",
-              "attributeChangeType": "add",
-              "attributeChange": 1
-            }
-          ],
-          "trigger": "123"
-        }
+      "formulaName": "findgoldmine",
+      "cardSetName": "findgoldmine",
+      "cardNum": 3,
+      "cardSet": [
+        "Role",
+        "TeachingBuilding",
+        "ExperimentTool"
+      ],
+      "rewardSum": 123,
+      "reward": [
+
       ]
-    },
-    {
-      "spotName": ""
     }
   ]
 }

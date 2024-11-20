@@ -1,0 +1,39 @@
+{
+  "type": "advancement",
+  "advancementSum": 123,
+  "advancement": [
+    {
+      "name": "FindGoldMine",
+      "formulaNeededSum": 1,
+      "formulaNeeded": [
+        "findgoldmine"
+      ],
+      "cardNeedSum": 1,
+      "cardNeeded": [
+        "TeachingBuilding"
+      ],
+      "attributeValueNeededSum": 1,
+      "attributeValueNeeded": [
+        {
+          "attributeName": "GPA",
+          "upper": 5,
+          "lower": 0
+        }
+      ],
+      "attributeArrayNeededSum": 1,
+      "attributeArrayNeeded": [
+        {
+          "attributeName": "__TEST",
+          "restrictionSum": 1,
+          "restriction": [
+            {
+              "index": 0,
+              "upper": 100,
+              "lower": 0
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
