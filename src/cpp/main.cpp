@@ -9,7 +9,8 @@
 #include "spdlog/spdlog.h"
 #include "spdlog/sinks/daily_file_sink.h"
 #include "spdlog/sinks/wincolor_sink.h"
-#include "game/logic/main.h"
+#include "game/logic/mainlogic.h"
+#include "game/logic/register.h"
 
 #ifdef __USTC_LAND_RELEASE__
 #   pragma comment(linker, "/SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup")
@@ -19,6 +20,7 @@
 
 int main() {
     reg.regValue.emplace(std::pair<std::string, int>("classSum",5));
+    reg.regValue.emplace(std::pair<std::string, int>("__TEST_VALUE_SIX", 6));
     readAttributeJson();
 
     std::cout << "finished!";

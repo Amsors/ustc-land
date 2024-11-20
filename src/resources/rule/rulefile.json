@@ -5,6 +5,7 @@
     "class.json",
     "item.json",
     "spot.json",
-    "formula.json"
+    "formula.json",
+    "advancement.json"
   ]
 }
