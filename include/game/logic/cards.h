@@ -43,7 +43,7 @@ private:
 
 public:
 	bool check(CardSet a, CardSet b);
-	friend void readCardSetJson(Json::Value root,CardSet& cs);
+	friend void readCardSetJson();
 };
 
-void readCardSetJson(Json::Value root, CardSet& cs);
+void readCardSetJson();

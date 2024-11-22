@@ -3,7 +3,16 @@
   "classSum": 123,
   "class": [
     {
-      "name": "123"
+      "name": "LinearAlgebra",
+      "index": 0
+    },
+    {
+      "name": "MathematicalAnalysis",
+      "index": 1
+    },
+    {
+      "name": "QuantumMechanics",
+      "index": 2
     }
   ]
 }

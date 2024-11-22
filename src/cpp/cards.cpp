@@ -10,8 +10,8 @@ bool CardSet::check(CardSet a, CardSet b) {
 	if (a.getCardSum() != b.getCardSum()) {
 		return false;
 	}
-	std::priority_queue qa = a.getCardset();
-	std::priority_queue qb = b.getCardset();
+	std::priority_queue<std::string> qa = a.getCardset();
+	std::priority_queue<std::string> qb = b.getCardset();
 
 	//TODO ÔöÇ¿Â³°ôĞÔ
 	for (int i = 0; i < a.getCardSum(); i++) {
@@ -24,14 +24,6 @@ bool CardSet::check(CardSet a, CardSet b) {
 		qb.pop();
 	}
 	return true;
-}
-
-void readCardSetJson(Json::Value root, CardSet& cs) {
-	Json::Value jCS = root["cardSet"];
-	for (int i = 0; i < root["cardNum"].asInt(); i++) {
-		cs.getCardset().push(jCS[i].asString());
-	}
-	return;
 }
 
 SpotCard::SpotCard() {

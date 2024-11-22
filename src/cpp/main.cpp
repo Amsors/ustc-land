@@ -11,6 +11,7 @@
 #include "spdlog/sinks/wincolor_sink.h"
 #include "game/logic/mainlogic.h"
 #include "game/logic/register.h"
+#include "temp/temp.h"
 
 #ifdef __USTC_LAND_RELEASE__
 #   pragma comment(linker, "/SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup")
@@ -19,16 +20,11 @@
 #endif
 
 int main() {
-    reg.regValue.emplace(std::pair<std::string, int>("classSum",5));
-    reg.regValue.emplace(std::pair<std::string, int>("__TEST_VALUE_SIX", 6));
-    readAttributeJson();
-
-    std::cout << "finished!";
-    return 0;
 
     #ifndef __USTC_LAND_RELEASE__
     system("chcp 65001");
     #endif
+
 
     std::vector<spdlog::sink_ptr> sinks = {
         #ifndef __USTC_LAND_RELEASE__
@@ -40,7 +36,8 @@ int main() {
     const std::vector loggers = {
         std::make_shared<spdlog::logger>("main", begin(sinks), end(sinks)),
         std::make_shared<spdlog::logger>("i18n", begin(sinks), end(sinks)),
-        std::make_shared<spdlog::logger>("render", begin(sinks), end(sinks))
+        std::make_shared<spdlog::logger>("render", begin(sinks), end(sinks)),
+        std::make_shared<spdlog::logger>("readjson", begin(sinks), end(sinks))
     };
     for(const auto &logger: loggers) {
         spdlog::register_logger(logger);
@@ -50,6 +47,11 @@ int main() {
 
     stbi_set_flip_vertically_on_load(true);
     i18n::initTranslator();
+
+    /*reg.regValue.emplace(std::pair<std::string, int>("classSum", 5));
+    reg.regValue.emplace(std::pair<std::string, int>("__TEST_VALUE_SIX", 6));
+    readAttributeJson();*/
+    return 0;
 
     try {
         nanogui::init();

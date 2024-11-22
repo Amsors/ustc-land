@@ -1,6 +1,7 @@
 {
   "jsonFileSum": 123,
   "jsonFile": [
+    "cardset.json",
     "attribute.json",
     "class.json",
     "item.json",

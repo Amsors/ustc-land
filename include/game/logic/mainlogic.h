@@ -50,6 +50,8 @@ private:
 	std::map<std::string, std::pair<double,double>> attributeValueNeeded;
 	std::map<std::string, std::pair<int,std::pair<double, double>>> attributeArrayNeeded;
 	std::vector<std::string> formulaNeeded;
+	std::vector<std::string> itemNeeded;
+	std::vector<std::string> cardNeeded;
 	int established;
 
 	friend void readAdvancementJson();
