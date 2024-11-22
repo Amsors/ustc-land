@@ -5,12 +5,6 @@
     {
       "formulaName": "findgoldmine",
       "cardSetName": "findgoldmine",
-      "cardNum": 3,
-      "cardSet": [
-        "Role",
-        "TeachingBuilding",
-        "ExperimentTool"
-      ],
       "rewardSum": 123,
       "reward": [
 

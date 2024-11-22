@@ -1,6 +1,6 @@
 {
   "type": "advancement",
-  "advancementSum": 123,
+  "advancementSum": 1,
   "advancement": [
     {
       "name": "FindGoldMine",
@@ -8,9 +8,13 @@
       "formulaNeeded": [
         "findgoldmine"
       ],
-      "cardNeedSum": 1,
-      "cardNeeded": [
+      "cardNeededSum": 1,
+      "cardNeededed": [
         "TeachingBuilding"
+      ],
+      "itemNeededSum": 1,
+      "itemNeeded": [
+        "Pen"
       ],
       "attributeValueNeededSum": 1,
       "attributeValueNeeded": [

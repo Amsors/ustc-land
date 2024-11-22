@@ -1,0 +1,9 @@
+{
+  "type": "spot",
+  "spotSum": 1,
+  "spot": [
+    {
+      "name": "TeachingBuilidng"
+    }
+  ]
+}
