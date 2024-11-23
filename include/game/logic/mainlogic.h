@@ -25,7 +25,6 @@ private:
 	friend void readAdvancementJson();
 };
 
-void readAttributeJson();
 
 class AttributeChange {
 private:

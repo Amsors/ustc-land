@@ -45,5 +45,3 @@ public:
 	bool check(CardSet a, CardSet b);
 	friend void readCardSetJson();
 };
-
-void readCardSetJson();

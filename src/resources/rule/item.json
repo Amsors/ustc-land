@@ -1,9 +1,12 @@
 {
   "type": "item",
-  "spotSum": 1,
-  "spot": [
+  "itemSum": 2,
+  "item": [
     {
       "name": "Pen"
+    },
+    {
+      "name": "ExperimentTool"
     }
   ]
 }
