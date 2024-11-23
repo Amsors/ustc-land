@@ -8,11 +8,12 @@
 #include "nanogui/layout.h"
 #include "nanogui/renderpass.h"
 #include "nanogui/shader.h"
+#include "nanovg/nanovg.h"
 #include "nanovg/stb_image.h"
 #include "spdlog/spdlog.h"
 
 MainApplication::MainApplication():
-    nanogui::Screen({300, 200}, "USTC Land", false, false), camera(0, -4, -40) {
+    nanogui::Screen({300, 200}, "USTC Land", false, true), camera(0, -4, -40) {
     SPDLOG_LOGGER_TRACE(spdlog::get("render"), "Main window created! size of the window: (x: {}, y: {}); pixel ratio: {:.2}", m_size.x(), m_size.y(), m_pixel_ratio);
 
     // 加载字体
