@@ -10,21 +10,16 @@
 #include "nanogui/layout.h"
 #include "nanogui/screen.h"
 #include "nanogui/tabwidget.h"
+#include "nanovg/nanovg.h"
 #include "spdlog/spdlog.h"
 
 Bar::Bar(nanogui::Widget *parent, const double moveSpeed, const SizeProvider &width, const SizeProvider &height, const SizeProvider &margin, const DistanceProvider &distance0, const DistanceProvider &maxDistance):
     nanogui::Window(parent, ""), MOVE_SPEED(moveSpeed),
     WIDTH(width(screen())), HEIGHT(height(screen())), MARGIN(margin(screen())),
-    MAX_DISTANCE(maxDistance(WIDTH, HEIGHT, MARGIN)), distance(distance0(WIDTH, HEIGHT, MARGIN)), stroke() {
+    MAX_DISTANCE(maxDistance(WIDTH, HEIGHT, MARGIN)), distance(distance0(WIDTH, HEIGHT, MARGIN)) {
     m_theme->m_window_fill_focused = BAR_BACKGROUND;
     m_theme->m_window_fill_unfocused = BAR_BACKGROUND;
     m_theme->m_text_color = BAR_TEXT;
-
-    NVGcontext *ctx = screen()->nvg_context();
-    int strokeImage = nvgCreateImage(ctx, "textures/bound_stroke.png", NVG_IMAGE_REPEATX | NVG_IMAGE_REPEATY);
-    int imageWidth, imageHeight;
-    nvgImageSize(ctx, strokeImage, &imageWidth, &imageHeight);
-    stroke = nvgImagePattern(ctx, 0, 0, imageWidth, imageHeight, 0, strokeImage, 1.f);
 }
 
 // 禁用拖动操作
@@ -37,8 +32,8 @@ void Bar::draw(NVGcontext *ctx) {
 
     // TODO: 采用随机笔刷来绘制更好看的边框
     nvgSave(ctx);
-    nvgStrokePaint(ctx, stroke);
-    nvgStrokeWidth(ctx, 5.f);
+    nvgStrokeWidth(ctx, 8.f);
+    nvgStrokeColor(ctx, nvgRGB(0, 0, 0));
     nvgBeginPath(ctx);
     nvgRect(ctx, m_pos.x() - .5f, m_pos.y() - .5f, m_size.x() + 1.f, m_size.y() + 1.f);
     nvgStroke(ctx);
@@ -110,10 +105,10 @@ ListBar::ListBar(nanogui::Widget *parent, const double moveSpeed):
     x = -MARGIN - WIDTH;
     y = MARGIN;
     set_position({static_cast<int>(x), static_cast<int>(y)});
-    set_layout(new nanogui::GroupLayout(MARGIN));
+    set_layout(new nanogui::GroupLayout(0));
 
-    auto *tab = new StyledTabWidget(this, stroke, "msyhbd");
-    tab->set_font_size(20);
+    auto *tab = new StyledTabWidget(this, "msyh", "msyhbd");
+    tab->set_font_size(HEIGHT / 15);
     auto *list1 = new nanogui::Widget(tab);
     auto *list2 = new nanogui::Widget(tab);
     tab->append_tab("list1", list1);

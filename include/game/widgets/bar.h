@@ -1,6 +1,6 @@
 #pragma once
+
 #include "nanogui/window.h"
-#include "nanovg/nanovg.h"
 
 class Bar: public nanogui::Window {
 public:
@@ -22,11 +22,10 @@ public:
 
 protected:
     const double MOVE_SPEED;
-    double x = 0., y = 0.;
     const int WIDTH, HEIGHT, MARGIN;
     const double MAX_DISTANCE;
+    double x = 0., y = 0.;
     double distance;
-    NVGpaint stroke;
 };
 
 class WelcomeBar final: public Bar {
