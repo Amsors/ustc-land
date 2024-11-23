@@ -1,12 +1,33 @@
 {
-  "jsonFileSum": 123,
+  "jsonFileSum": 7,
   "jsonFile": [
-    "cardset.json",
-    "attribute.json",
-    "class.json",
-    "item.json",
-    "spot.json",
-    "formula.json",
-    "advancement.json"
+    {
+      "name": "cardset.json",
+      "importance": 60
+    },
+    {
+      "name": "attribute.json",
+      "importance": 80
+    },
+    {
+      "name": "class.json",
+      "importance": 100
+    },
+    {
+      "name": "item.json",
+      "importance": 70
+    },
+    {
+      "name": "spot.json",
+      "importance": 70
+    },
+    {
+      "name": "formula.json",
+      "importance": 50
+    },
+    {
+      "name": "advancement.json",
+      "importance": 40
+    }
   ]
 }

@@ -1,14 +1,20 @@
 {
   "type": "cardSet",
-  "cardSetSum": 123,
+  "cardSetSum": 1,
   "cardSet": [
     {
       "cardSetName": "123",
-      "cardNum": "3",
+      "cardNum": 3,
       "card": [
-        "Role",
-        "TeachingBuilding",
-        "ExperimentTool"
+        {
+          "name": "Role"
+        },  
+        {
+          "name":"TeachingBuilding"
+        },
+        {
+          "name":"ExperimentTool"
+        }
       ]
     }
   ]

@@ -5,6 +5,8 @@
 
 class Register {
 public:
+	std::vector<std::pair<std::string,int>> regJsonFile;
+
 	std::map<std::string, int> regValue;
 
 	std::map<std::string, Attribute*> regAttribute;

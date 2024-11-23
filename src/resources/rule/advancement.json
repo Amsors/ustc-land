@@ -6,15 +6,21 @@
       "name": "FindGoldMine",
       "formulaNeededSum": 1,
       "formulaNeeded": [
-        "findgoldmine"
+        {
+          "name": "cs_FindGoldMine"
+        }
       ],
       "cardNeededSum": 1,
-      "cardNeededed": [
-        "TeachingBuilding"
+      "cardNeeded": [
+        {
+          "name": "TeachingBuilding"
+        }
       ],
       "itemNeededSum": 1,
       "itemNeeded": [
-        "Pen"
+        {
+          "name": "Pen"
+        }
       ],
       "attributeValueNeededSum": 1,
       "attributeValueNeeded": [
@@ -27,7 +33,7 @@
       "attributeArrayNeededSum": 1,
       "attributeArrayNeeded": [
         {
-          "attributeName": "__TEST",
+          "attributeName": "classChosen",
           "restrictionSum": 1,
           "restriction": [
             {

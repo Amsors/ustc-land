@@ -11,7 +11,7 @@
 #include "spdlog/sinks/wincolor_sink.h"
 #include "game/logic/mainlogic.h"
 #include "game/logic/register.h"
-#include "temp/temp.h"
+#include "game/logic/readjson.h"
 
 #ifdef __USTC_LAND_RELEASE__
 #   pragma comment(linker, "/SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup")
@@ -47,11 +47,9 @@ int main() {
 
     stbi_set_flip_vertically_on_load(true);
     i18n::initTranslator();
-
-    /*reg.regValue.emplace(std::pair<std::string, int>("classSum", 5));
+    
     reg.regValue.emplace(std::pair<std::string, int>("__TEST_VALUE_SIX", 6));
-    readAttributeJson();*/
-    return 0;
+    readJson();
 
     try {
         nanogui::init();

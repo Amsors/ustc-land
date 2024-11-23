@@ -1,10 +1,10 @@
 {
   "type": "formula",
-  "formulaSum": 123,
+  "formulaSum": 1,
   "formula": [
     {
-      "formulaName": "findgoldmine",
-      "cardSetName": "findgoldmine",
+      "formulaName": "f_FindGoleMine",
+      "cardSetName": "cs_FindGoldMine",
       "rewardSum": 123,
       "reward": [
 

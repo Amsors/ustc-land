@@ -39,7 +39,7 @@
       "initial": 0
     }
   ],
-  "attributeArraySum": 4,
+  "attributeArraySum": 3,
   "attributeArrayMaxLength": 100,
   "attributeArray": [
     {
@@ -59,12 +59,6 @@
       "visibility": false,
       "arrayLengthStrategy": "match",
       "arrayLengthMatchKey": "classSum"
-    },
-    {
-      "name": "__TEST",
-      "visibility": false,
-      "arrayLengthStrategy": "match",
-      "arrayLengthMatchKey": "__TEST_VALUE_SIX"
     }
   ]
 }
