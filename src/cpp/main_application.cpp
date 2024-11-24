@@ -105,6 +105,11 @@ bool MainApplication::mouse_button_event(const nanogui::Vector2i &p, const int b
                 std::vector<std::shared_ptr<Card>> newStack;
                 newStack.emplace_back(std::make_shared<Card>());
                 cards.emplace_back(std::move(newStack));
+                /*SPDLOG_LOGGER_TRACE(spdlog::get("main"), "now there are {} cards", cards.size());
+                for (int i = 0; i < cards.size(); i++) {
+                    SPDLOG_LOGGER_TRACE(spdlog::get("main"), "    card {} has {} cards", i,cards.at(i));
+                }*/
+                show_card();
                 return true;
             }
         } else {
@@ -265,4 +270,13 @@ void MainApplication::quitGame() {
     state = QUITTING;
     // 清空卡牌列表，同时调用卡牌的析构函数，进行保存
     cards.clear();
+}
+
+void MainApplication::show_card() {
+    for (int i = 0; i < this->cards.size(); i++) {
+        std::cout << "stack: " << i << ":\n";
+        for (int j = 0; j < this->cards.at(i).size(); j++) {
+            std::cout << "    card " << j << " " << this->cards.at(i).at(j).get()->getColor().r() << std::endl;
+        }
+    }
 }

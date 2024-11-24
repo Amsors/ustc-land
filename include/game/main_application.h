@@ -23,6 +23,7 @@ public:
     bool mouse_motion_event(const nanogui::Vector2i &p, const nanogui::Vector2i &rel, int button, int modifiers) override;
     void draw(NVGcontext *ctx) override;
     void draw_contents() override;
+    void show_card();
 
     [[nodiscard]] nanogui::Vector2f screenToWorldZ0(const nanogui::Vector2f &p) const {
         nanogui::Vector4f worldPos = iVp * nanogui::Vector4f(p.x() * 2.f / m_size.x() - 1, 1 - p.y() * 2.f / m_size.y(), .9f, 1.f);
