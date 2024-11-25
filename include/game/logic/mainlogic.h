@@ -16,13 +16,13 @@ private:
 	std::string name;
 	bool visibility;
 	double max;
-	double initial;
-	std::vector<int> attributeArray;
-	std::string attributeArrayMatch;
+	double attributeValue;
+	std::map<std::string,double> attributeArray;
+	std::string attributeMatchKey;
 	bool isArray;
 
 	friend void readAttributeJson();
-	friend void readAdvancementJson();
+	//friend void readAdvancementJson();
 };
 
 
@@ -33,8 +33,7 @@ private:
 	std::string changeType;
 	/*
 	changeType:
-	ratio  ratiorest  add  mult
-	index
+	ratio  ratio_of_rest  add  mult
 	*/
 	int change;
 	int index;
@@ -47,7 +46,7 @@ public:
 private:
 	std::string name;
 	std::map<std::string, std::pair<double,double>> attributeValueNeeded;
-	std::map<std::string, std::pair<int,std::pair<double, double>>> attributeArrayNeeded;
+	std::map<std::string, std::pair<std::string,std::pair<double, double>>> attributeArrayNeeded;
 	std::vector<std::string> formulaNeeded;
 	std::vector<std::string> itemNeeded;
 	std::vector<std::string> cardNeeded;
@@ -69,9 +68,15 @@ private:
 
 class Reward {
 
+	friend void readRewardJson();
 };
 
 class Formula {
 private:
-	Reward reward;
+	std::string formulaName;
+	std::string cardSetName;
+	std::vector<std::string> rewardName;
+
+
+	friend void readFormulaJson();
 };

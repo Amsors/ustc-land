@@ -37,7 +37,7 @@
           "restrictionSum": 1,
           "restriction": [
             {
-              "index": 0,
+              "name": "Physics",
               "upper": 100,
               "lower": 0
             }

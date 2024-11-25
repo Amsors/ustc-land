@@ -5,9 +5,17 @@
     {
       "formulaName": "f_FindGoleMine",
       "cardSetName": "cs_FindGoldMine",
-      "rewardSum": 123,
+      "rewardSum": 3,
       "reward": [
-
+        {
+          "name": "r_AddGPA_0.3"
+        },
+        {
+          "name": "r_FB_Physics"
+        },
+        {
+          "name": "r_C_item_pen"
+        }
       ]
     }
   ]

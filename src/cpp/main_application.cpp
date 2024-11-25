@@ -272,7 +272,11 @@ void MainApplication::quitGame() {
     cards.clear();
 }
 
+
+int __showcardtmp;
 void MainApplication::show_card() {
+    __showcardtmp++;
+    std::cout << "\n\n\nstep: " << __showcardtmp << std::endl;
     for (int i = 0; i < this->cards.size(); i++) {
         std::cout << "stack: " << i << ":\n";
         for (int j = 0; j < this->cards.at(i).size(); j++) {

@@ -1,4 +1,4 @@
-#include <vector>
+ï»¿#include <vector>
 #include <map>
 #include <queue>
 
@@ -13,7 +13,7 @@ bool CardSet::check(CardSet a, CardSet b) {
 	std::priority_queue<std::string> qa = a.getCardset();
 	std::priority_queue<std::string> qb = b.getCardset();
 
-	//TODO ÔöÇ¿Â³°ôĞÔ
+	//TODO å¢å¼ºé²æ£’æ€§
 	for (int i = 0; i < a.getCardSum(); i++) {
 		std::string qas = qa.top();
 		std::string qbs = qb.top();

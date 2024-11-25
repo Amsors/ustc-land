@@ -44,21 +44,18 @@
   "attributeArray": [
     {
       "name": "classChosen",
-      "visibility": true,
-      "arrayLengthStrategy": "match",
-      "arrayLengthMatchKey": "classSum"
+      "match": "class",
+      "visibility": true
     },
     {
       "name": "finalTestBonus",
-      "visibility": false,
-      "arrayLengthStrategy": "match",
-      "arrayLengthMatchKey": "classSum"
+      "match": "class",
+      "visibility": false
     },
     {
       "name": "classAttendance",
-      "visibility": false,
-      "arrayLengthStrategy": "match",
-      "arrayLengthMatchKey": "classSum"
+      "match": "class",
+      "visibility": false
     }
   ]
 }

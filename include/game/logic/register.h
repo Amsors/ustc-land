@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include <iostream>
 #include "game/logic/mainlogic.h"
 #include "game/logic/cards.h"
@@ -11,17 +11,17 @@ public:
 
 	std::map<std::string, Attribute*> regAttribute;
 	std::map<std::string, Advancement*> regAdvancement;
-	std::map<std::string, int> classNameToIndex;
 
-	std::map<std::string, bool> cardAttained;//ÊÇ·ñ»ñÈ¡¹ı¿¨ÅÆ
-	//TODO Ôö¼Ócard¹¹Ôìº¯ÊıÖĞµÄ³õÊ¼»¯
-	std::map<std::string, bool> formulaAttained;//ÊÇ·ñºÏ³É¹ıÅä·½
+	std::map<std::string, std::vector<std::string>> regArrayElements;
+
+	std::map<std::string, bool> cardAttained;//æ˜¯å¦è·å–è¿‡å¡ç‰Œ
+	std::map<std::string, bool> formulaAttained;//æ˜¯å¦åˆæˆè¿‡é…æ–¹
 	std::map<std::string, bool> itemAttained;
 	
 	std::map<std::string, CardSet*> cardSetPtr;
 	std::map<std::string, Formula*> formulaPtr;
 
-	std::map<std::string, std::vector<SpotCard*>> spotCardPtr;//¼ÇÂ¼ËùÓĞµØµã¿¨ÅÆµÄÖ¸Õë£¬ÏÂÍ¬
+	std::map<std::string, std::vector<SpotCard*>> spotCardPtr;//è®°å½•æ‰€æœ‰åœ°ç‚¹å¡ç‰Œçš„æŒ‡é’ˆï¼Œä¸‹åŒ
 	std::map<std::string, std::vector<RoleCard*>> roleCardPtr;
 	std::map<std::string, std::vector<ItemCard*>> ItemCardPtr;
 

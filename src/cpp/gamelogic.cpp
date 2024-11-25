@@ -9,7 +9,6 @@ Attribute::Attribute() {
 	name = "default";
 	visibility = false;
 	max = 0;
-	initial = 0;
 	isArray = false;
 }
 
@@ -18,7 +17,6 @@ void Attribute::showAttribute() {
 	cout << this->name << endl;
 	cout << "is array:" << this->isArray << endl;
 	cout << "visiable:" << this->visibility << endl;
-	cout << "max:" << this->max << " " << "initial:" << this->initial << endl;
 	if (this->isArray) {
 		cout << "array length:" << this->attributeArray.size() << endl;
 	}

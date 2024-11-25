@@ -1,4 +1,4 @@
-#include "game/logic/basic.h"
+﻿#include "game/logic/basic.h"
 
 const float Card::W = 5;
 const float Card::H = 7;
