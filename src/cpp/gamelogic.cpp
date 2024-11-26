@@ -12,14 +12,14 @@ Attribute::Attribute() {
 	isArray = false;
 }
 
-void Attribute::showAttribute() {
-	using namespace std;
-	cout << this->name << endl;
-	cout << "is array:" << this->isArray << endl;
-	cout << "visiable:" << this->visibility << endl;
-	if (this->isArray) {
-		cout << "array length:" << this->attributeArray.size() << endl;
-	}
-	cout << endl;
-	return;
-}
+//void Attribute::showAttribute() {
+//	using namespace std;
+//	cout << this->name << endl;
+//	cout << "is array:" << this->isArray << endl;
+//	cout << "visiable:" << this->visibility << endl;
+//	if (this->isArray) {
+//		cout << "array length:" << this->attributeArray.size() << endl;
+//	}
+//	cout << endl;
+//	return;
+//}

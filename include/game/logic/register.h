@@ -15,7 +15,6 @@ public:
 	std::map<std::string, std::vector<std::string>> regArrayElements;
 
 	std::map<std::string, bool> cardAttained;//是否获取过卡牌
-	std::map<std::string, bool> itemAttained;
 	std::map<std::string, bool> formulaAttained;//是否合成过配方
 	
 	std::map<std::string, CardSet*> cardSetPtr;

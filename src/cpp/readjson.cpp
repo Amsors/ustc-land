@@ -155,29 +155,29 @@ void readAdvancementJson() {
 			Json::Value singleAttribute = tryReadArray(jAttributeValueNeeded, j);
 			double upper = tryReadDouble(singleAttribute, "upper");
 			double lower = tryReadDouble(singleAttribute, "lower");
-			std::pair<double, double> rangetmp(upper,lower);
-			std::string stmp = tryReadString(singleAttribute, "attributeName");
+			std::pair<double, double> range(upper,lower);
+			std::string attributeName = tryReadString(singleAttribute, "attributeName");
 			newAdvancement->attributeValueNeeded.emplace(std::pair<std::string, std::pair<double, double>>(
-				stmp, rangetmp));
+				attributeName, range));
 		}
 
 		int attributeArrayNeededSum = tryReadInt(singleAdvancement, "attributeArrayNeededSum");
 		Json::Value jAttributeArrayNeeded = tryReadValue(singleAdvancement, "attributeArrayNeeded");
 		for (int j = 0; j < attributeArrayNeededSum; j++) {
 			Json::Value jSingleAttribute = tryReadArray(jAttributeArrayNeeded, j);
-			std::string stmp = tryReadString(jSingleAttribute, "attributeName");
+			std::string attributeName = tryReadString(jSingleAttribute, "attributeName");
 
 			int restrictionSum = tryReadInt(jSingleAttribute, "restrictionSum");
 			Json::Value jrestriction = tryReadValue(jSingleAttribute, "restriction");
 			for (int k = 0; k < restrictionSum; k++) {
-				Json::Value singlerestriction = tryReadArray(jrestriction, k);
-				double tryupper = tryReadDouble(singlerestriction, "upper");
-				double trylower = tryReadDouble(singlerestriction, "lower");
-				std::pair<double, double> rangetmp(tryupper,trylower);
-				std::string tryString = tryReadString(singlerestriction, "name");
-				std::pair<std::string, std::pair<double, double>> detailtmp(tryString, rangetmp);
+				Json::Value singleRestriction = tryReadArray(jrestriction, k);
+				double upper = tryReadDouble(singleRestriction, "upper");
+				double lower = tryReadDouble(singleRestriction, "lower");
+				std::pair<double, double> range(upper,lower);
+				std::string name = tryReadString(singleRestriction, "name");
+				std::pair<std::string, std::pair<double, double>> detail(name, range);
 				newAdvancement->attributeArrayNeeded.emplace(std::pair<std::string, std::pair<std::string, std::pair<double, double>>>(
-					stmp, detailtmp
+					attributeName, detail
 				));
 			}
 		}
@@ -246,10 +246,18 @@ void readRewardJson() {
 			newReward->changeValue = changeValue;
 		}
 		else if (type == "attributeArray") {
+			std::string attributeName = tryReadString(jSingleReward, "attributeName");
+			std::string change = tryReadString(jSingleReward, "change");
+			double changeValue = tryReadDouble(jSingleReward, "changeValue");
+			std::string key = tryReadString(jSingleReward, "key");
 
+			newReward->attributeName = attributeName;
+			newReward->change = change;
+			newReward->changeValue = changeValue;
+			newReward->key = key;
 		}
 		else if (type == "card") {
-
+			std::string cardName = tryReadString(jSingleReward, "cardName");
 		}
 
 		reg.rewardPtr.emplace(std::pair<std::string, Reward*>(name, newReward));
@@ -301,6 +309,16 @@ void readSpotJSon() {
 	Json::Value root;
 	reader.parse(inFile, root);
 
+	int spotSum = tryReadInt(root, "spotSum");
+	reg.regValue.emplace(std::pair<std::string, int>("spotSum", spotSum));
+	Json::Value jSpot = tryReadValue(root, "spot");
+	for (int i = 0; i < spotSum; i++) {
+		Json::Value jSingleSpot = tryReadArray(jSpot, i);
+		std::string onename = tryReadString(jSingleSpot, "name");
+
+		reg.regArrayElements["spot"].push_back(onename);
+		reg.cardAttained.emplace(std::pair<std::string, bool>(onename, false));
+	}
 	
 	inFile.close();
 }
@@ -328,6 +346,17 @@ void readItemJson() {
 	Json::Reader reader;
 	Json::Value root;
 	reader.parse(inFile, root);
+
+	int itemSum = tryReadInt(root, "itemSum");
+	reg.regValue.emplace(std::pair<std::string, int>("itemSum", itemSum));
+	Json::Value jItem = tryReadValue(root, "item");
+	for (int i = 0; i < itemSum; i++) {
+		Json::Value jSingleItem = tryReadArray(jItem, i);
+		std::string onename = tryReadString(jSingleItem, "name");
+
+		reg.regArrayElements["item"].push_back(onename);
+		reg.cardAttained.emplace(std::pair<std::string, bool>(onename, false));
+	}
 
 	inFile.close();
 }
