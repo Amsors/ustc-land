@@ -13,16 +13,20 @@ public:
 	void showAttribute();
 
 private:
+	//for all
 	std::string name;
 	bool visibility;
-	double max;
-	double attributeValue;
-	std::map<std::string,double> attributeArray;
-	std::string attributeMatchKey;
 	bool isArray;
 
+	//for attributeValue
+	double max;
+	double attributeValue;
+
+	//for attributeArray
+	std::map<std::string,double> attributeArray;
+	std::string attributeMatchKey;
+
 	friend void readAttributeJson();
-	//friend void readAdvancementJson();
 };
 
 
@@ -55,18 +59,22 @@ private:
 	friend void readAdvancementJson();
 };
 
-//class AdvancementMgr {
-//private:
-//
-//
-//public:
-//
-//	friend void readAdvancementJson();
-//};
-//
-//extern AdvancementMgr advMgr;
-
 class Reward {
+private:
+	//for all
+	std::string name;
+
+	//for attributeValue & attrbuteArray
+	std::string attributeName;
+	std::string change;
+	double changeValue;
+
+	//for attributeArray
+	std::string key;
+
+	//for card
+	std::string type;
+	std::string cardName;
 
 	friend void readRewardJson();
 };

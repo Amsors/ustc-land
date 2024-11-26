@@ -195,10 +195,10 @@ void readCardSetJson() {
 	reader.parse(inFile, root);
 
 	int cardSetSum = tryReadInt(root, "cardSetSum");
-	Json::Value jcardSet = tryReadValue(root, "cardSet");
+	Json::Value jCardSet = tryReadValue(root, "cardSet");
 	for (int i = 0; i < cardSetSum; i++) {
 		
-		Json::Value jSingleCardSet = tryReadArray(jcardSet, i);
+		Json::Value jSingleCardSet = tryReadArray(jCardSet, i);
 		std::string cardSetName = tryReadString(jSingleCardSet, "cardSetName");
 		Json::Value jCard = tryReadValue(jSingleCardSet, "card");
 		int cardNum = tryReadInt(jSingleCardSet, "cardNum");
@@ -217,6 +217,46 @@ void readCardSetJson() {
 
 	inFile.close();
 	return;
+}
+
+void readRewardJson() {
+	std::ifstream inFile("rule/reward.json");
+	Json::Reader reader;
+	Json::Value root;
+	reader.parse(inFile, root);
+
+	int rewardSum = tryReadInt(root, "rewardSum");
+	Json::Value jReward = tryReadValue(root, "reward");
+
+	for (int i = 0; i < rewardSum; i++) {
+		Reward* newReward = new Reward;
+
+		Json::Value jSingleReward = tryReadArray(jReward, i);
+
+		std::string type = tryReadString(jSingleReward, "type");
+		std::string name = tryReadString(jSingleReward, "name");
+
+		if (type == "attributeValue") {
+			std::string attributeName = tryReadString(jSingleReward, "attributeName");
+			std::string change = tryReadString(jSingleReward, "change");
+			double changeValue = tryReadDouble(jSingleReward, "changeValue");
+
+			newReward->attributeName = attributeName;
+			newReward->change = change;
+			newReward->changeValue = changeValue;
+		}
+		else if (type == "attributeArray") {
+
+		}
+		else if (type == "card") {
+
+		}
+
+		reg.rewardPtr.emplace(std::pair<std::string, Reward*>(name, newReward));
+
+	}
+
+	inFile.close();
 }
 
 void readFormulaJson() {
@@ -305,19 +345,29 @@ void readJson() {
 		
 		if (s == "attribute.json") {
 			readAttributeJson();
-		}else if (s == "advancement.json") {
+		}
+		else if (s == "advancement.json") {
 			readAdvancementJson();
-		}else if (s == "cardset.json") {
+		}
+		else if (s == "cardset.json") {
 			readCardSetJson();
-		}else if (s == "spot.json") {
+		}
+		else if (s == "spot.json") {
 			readSpotJSon();
-		}else if (s == "formula.json") {
+		}
+		else if (s == "formula.json") {
 			readFormulaJson();
-		}else if (s == "class.json") {
+		}
+		else if (s == "class.json") {
 			readClassJson();
-		}else if (s == "item.json") {
+		}
+		else if (s == "item.json") {
 			readItemJson();
-		}else {
+		}
+		else if (s == "reward.json") {
+			readRewardJson();
+		}
+		else{
 			SPDLOG_LOGGER_WARN(spdlog::get("readjson"), "no match for {}", s);
 		}
 

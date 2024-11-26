@@ -1,5 +1,5 @@
 {
-  "jsonFileSum": 7,
+  "jsonFileSum": 8,
   "jsonFile": [
     {
       "name": "cardset.json",
@@ -28,6 +28,10 @@
     {
       "name": "advancement.json",
       "importance": 40
+    },
+    {
+      "name": "reward.json",
+      "importance": 60
     }
   ]
 }
