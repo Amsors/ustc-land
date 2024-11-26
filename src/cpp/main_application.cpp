@@ -13,7 +13,7 @@
 #include "spdlog/spdlog.h"
 
 MainApplication::MainApplication():
-    nanogui::Screen({300, 200}, "USTC Land", false, true), camera(0, -4, -40) {
+    nanogui::Screen({300, 200}, "USTC Land", false, false), camera(0, -4, -40) {
     SPDLOG_LOGGER_TRACE(spdlog::get("render"), "Main window created! size of the window: (x: {}, y: {}); pixel ratio: {:.2}", m_size.x(), m_size.y(), m_pixel_ratio);
 
     // 加载字体
@@ -42,7 +42,9 @@ MainApplication::MainApplication():
         int channels;
         const std::string &imageFile = fmt::format("textures/background/{}.png", i);
         const ImageData texture_data(stbi_load(imageFile.c_str(), &size.x(), &size.y(), &channels, 0), stbi_image_free);
+        #ifndef __USTC_LAND_RELEASE__
         assert(channels == 4);
+        #endif
         auto *tex = new nanogui::Texture(nanogui::Texture::PixelFormat::RGBA, nanogui::Texture::ComponentFormat::UInt8, size, nanogui::Texture::InterpolationMode::Bilinear, nanogui::Texture::InterpolationMode::Bilinear);
         tex->upload(texture_data.get());
         bgTextures.emplace_back(tex);
@@ -56,6 +58,10 @@ MainApplication::MainApplication():
     };
     constexpr float texCoords[] = {
         1.f, 0.f, 1.f, 1.f, 0.f, 1.f, 0.f, 0.f
+    };
+    constexpr float he = (Card::W - Card::TS) / (2 * Card::TS), ve = (Card::H - Card::TS) / (2 * Card::TS);
+    constexpr float cardTexCoords[] = {
+        1 + he, -ve, 1 + he, 1 + ve, -he, 1 + ve, -he, -ve
     };
 
     const nanogui::Matrix4f p = nanogui::Matrix4f::perspective(.78539816f, 10.f, 60.f, m_size.x() * 1.f / m_size.y());
@@ -71,7 +77,7 @@ MainApplication::MainApplication():
 
     cardShader->set_buffer("indices", nanogui::VariableType::UInt32, {3 * 2}, indices);
     cardShader->set_buffer("positions", nanogui::VariableType::Float32, {4, 3}, positions);
-    // cardShader->set_buffer("texCoords", nanogui::VariableType::Float32, {4, 2}, texCoords);
+    cardShader->set_buffer("texCoords", nanogui::VariableType::Float32, {4, 2}, cardTexCoords);
     cardShader->set_uniform("vp", vp);
     cardShader->set_uniform("iVp", iVp);
     cardShader->set_uniform("windowSize", nanogui::Vector2f(m_size.x(), m_size.y()) * m_pixel_ratio);
@@ -109,7 +115,7 @@ bool MainApplication::mouse_button_event(const nanogui::Vector2i &p, const int b
             mouseState = RIGHT;
             if(state == PLAYING) {
                 std::vector<std::shared_ptr<Card>> newStack;
-                newStack.emplace_back(std::make_shared<Card>());
+                newStack.emplace_back(std::make_shared<Card>(Card::ROLE, "man"));
                 cards.emplace_back(std::move(newStack));
                 /*SPDLOG_LOGGER_TRACE(spdlog::get("main"), "now there are {} cards", cards.size());
                 for (int i = 0; i < cards.size(); i++) {
@@ -254,6 +260,7 @@ void MainApplication::draw_contents() {
                         nanogui::Matrix4f::scale({Card::W, Card::H, 1.f});
                     cardShader->set_uniform("model", model);
                     cardShader->set_uniform("cardColor", card->getColor());
+                    cardShader->set_texture("tex", card->getTexture().get());
                     // cardShader->set_texture("tex", cardTextures[0].get());
                     cardShader->begin();
                     cardShader->draw_array(nanogui::Shader::PrimitiveType::Triangle, 0, 6, true);
@@ -281,11 +288,9 @@ void MainApplication::quitGame() {
 
 int __showcardtmp;
 void MainApplication::show_card() {
-    __showcardtmp++;
-    std::cout << "\n\n\nstep: " << __showcardtmp << std::endl;
-    for (int i = 0; i < this->cards.size(); i++) {
+    for(int i = 0; i < this->cards.size(); i++) {
         std::cout << "stack: " << i << ":\n";
-        for (int j = 0; j < this->cards.at(i).size(); j++) {
+        for(int j = 0; j < this->cards.at(i).size(); j++) {
             std::cout << "    card " << j << " " << this->cards.at(i).at(j).get()->getColor().r() << std::endl;
         }
     }

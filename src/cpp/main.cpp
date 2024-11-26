@@ -47,6 +47,7 @@ int main() {
 
     stbi_set_flip_vertically_on_load(true);
     i18n::initTranslator();
+    initTexturePaths();
     
     reg.regValue.emplace(std::pair<std::string, int>("__TEST_VALUE_SIX", 6));
     readJson();

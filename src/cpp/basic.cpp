@@ -1,13 +1,19 @@
 ﻿#include "game/logic/basic.h"
 
-const float Card::W = 5.f;
-const float Card::H = 7.f;
-const float Card::D = 1.f;
-const float Card::R = .6f;
+#include "nanogui/texture.h"
+#include "nanovg/stb_image.h"
 
-Card::Card(const nanogui::Vector3f &pos) {
-    this->pos = pos;
-    color = nanogui::Color(rand() % 256 / 256.f, rand() % 256 / 256.f, rand() % 256 / 256.f, 1.f);
+Card::Card(const Type type, const std::string &name, const nanogui::Vector3f &pos):
+    pos(pos), name(name), type(type), color(colorSetter(type)) {
+    nanogui::Vector2i size;
+    int channels;
+    const ImageData texture_data(stbi_load(("textures" + getTexturePath(name)).c_str(), &size.x(), &size.y(), &channels, 0), stbi_image_free);
+    #ifndef __USTC_LAND_RELEASE__
+    assert(channels == 4);
+    #endif
+    auto *tex = new nanogui::Texture(nanogui::Texture::PixelFormat::RGBA, nanogui::Texture::ComponentFormat::UInt8, size, nanogui::Texture::InterpolationMode::Bilinear, nanogui::Texture::InterpolationMode::Bilinear);
+    tex->upload(texture_data.get());
+    texture = tex;
 }
 
 void Card::calc(const double deltaTime) {}

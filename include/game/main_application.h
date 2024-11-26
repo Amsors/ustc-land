@@ -42,8 +42,6 @@ public:
     }
 
 private:
-    using ImageData = std::unique_ptr<uint8_t[], void(*)(void *)>;
-
     const double TICK = .05;
     const std::vector<std::pair<nanogui::Vector2f, int>> BG_TEXTURE_POSITIONS = {
         {{25.21f, 12.3f}, 0}, {{13.5f, -2.34f}, 1}, {{-3.68f, 1.56f}, 2}, {{6.11f, 1.89f}, 3}, {{-19.16f, -3.72f}, 4}, {{-5.44f, 6.72f}, 5}, {{-21.73f, 3.68f}, 6},
