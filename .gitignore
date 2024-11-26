@@ -3,7 +3,7 @@ out/
 cmake-build-*/
 
 # 运行目录
-run/
+/run/
 
 # IDE相关文件
 
@@ -35,10 +35,10 @@ run/
 mono_crash.*
 
 # Build results
-[Dd]ebug/
-[Dd]ebugPublic/
-[Rr]elease/
-[Rr]eleases/
+# [Dd]ebug/
+# [Dd]ebugPublic/
+# [Rr]elease/
+# [Rr]eleases/
 x64/
 x86/
 [Ww][Ii][Nn]32/

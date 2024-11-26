@@ -8,6 +8,7 @@
 
 inline const nanogui::Color BAR_BACKGROUND(0xFF, 0xF9, 0xE3, 0xFF);
 inline const nanogui::Color BAR_TEXT(0x00, 0x00, 0x00, 0xFF);
+using ImageData = std::unique_ptr<uint8_t[], void(*)(void *)>;
 
 class GameObject {
 public:
@@ -64,3 +65,7 @@ struct fmt::formatter<nanogui::Array<Value, size>>: fmt::formatter<std::string> 
  * @return 是否加载成功
  */
 bool loadShaders(const std::string &name, std::string &vs, std::string &fs);
+
+void initTexturePaths();
+
+std::string &getTexturePath(const std::string &name);

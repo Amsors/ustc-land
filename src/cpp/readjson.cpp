@@ -9,8 +9,8 @@
 
 #include "spdlog/spdlog.h"
 
-std::string tryReadString(Json::Value &v,std::string key) {
-	if (v.isMember(key)) {
+std::string tryReadString(Json::Value &v, std::string key) {
+	if(v.isMember(key)) {
 		return v[key].asString();
 	}
 	SPDLOG_LOGGER_WARN(spdlog::get("readjson"), "key: {} not found", key);
@@ -18,7 +18,7 @@ std::string tryReadString(Json::Value &v,std::string key) {
 }
 
 int tryReadInt(Json::Value &v, std::string key) {
-	if (v.isMember(key)) {
+	if(v.isMember(key)) {
 		return v[key].asInt();
 	}
 	SPDLOG_LOGGER_WARN(spdlog::get("readjson"), "key: {} not found", key);
@@ -26,7 +26,7 @@ int tryReadInt(Json::Value &v, std::string key) {
 }
 
 bool tryReadBool(Json::Value &v, std::string key) {
-	if (v.isMember(key)) {
+	if(v.isMember(key)) {
 		return v[key].asBool();
 	}
 	SPDLOG_LOGGER_WARN(spdlog::get("readjson"), "key: {} not found", key);
@@ -34,7 +34,7 @@ bool tryReadBool(Json::Value &v, std::string key) {
 }
 
 double tryReadDouble(Json::Value &v, std::string key) {
-	if (v.isMember(key)) {
+	if(v.isMember(key)) {
 		return v[key].asDouble();
 	}
 	SPDLOG_LOGGER_WARN(spdlog::get("readjson"), "key: {} not found", key);
@@ -42,7 +42,7 @@ double tryReadDouble(Json::Value &v, std::string key) {
 }
 
 Json::Value tryReadArray(Json::Value &v, int i) {
-	if (v.size()>i) {
+	if(v.size() > i) {
 		return v[i];
 	}
 	SPDLOG_LOGGER_WARN(spdlog::get("readjson"), "invalid index: {} for Value array", i);
@@ -50,7 +50,7 @@ Json::Value tryReadArray(Json::Value &v, int i) {
 }
 
 Json::Value tryReadValue(Json::Value &v, std::string key) {
-	if (v.isMember(key)) {
+	if(v.isMember(key)) {
 		return v[key];
 	}
 	SPDLOG_LOGGER_WARN(spdlog::get("readjson"), "key: {} not found", key);
@@ -63,11 +63,11 @@ void readAttributeJson() {
 	Json::Value root;
 	reader.parse(inFile, root);
 
-	int attributeValueSum = tryReadInt(root,"attributeValueSum");
+	int attributeValueSum = tryReadInt(root, "attributeValueSum");
 	Json::Value jAttributeValue = tryReadValue(root, "attributeValue");
-	for (int i = 0; i < attributeValueSum; i++) {
+	for(int i = 0; i < attributeValueSum; i++) {
 		Json::Value jSingleAttributeValue = tryReadArray(jAttributeValue, i);
-		Attribute* newAttribute = new Attribute();
+		Attribute *newAttribute = new Attribute();
 
 		newAttribute->isArray = 0;
 		newAttribute->name = tryReadString(jSingleAttributeValue, "name");
@@ -79,32 +79,31 @@ void readAttributeJson() {
 			"Value", i, jSingleAttributeValue["name"].asString());
 		//newAttribute->showAttribute();
 
-		reg.regAttribute.emplace(std::pair<std::string, Attribute*>(newAttribute->name, newAttribute));
+		reg.regAttribute.emplace(std::pair(newAttribute->name, newAttribute));
 	}
 
 	int attributeArraySum = tryReadInt(root, "attributeArraySum");
 	Json::Value jAttributeArray = tryReadValue(root, "attributeArray");
-	for (int i = 0; i < attributeArraySum; i++) {
+	for(int i = 0; i < attributeArraySum; i++) {
 		Json::Value jSingleAttributeArray = tryReadArray(jAttributeArray, i);
 
 		std::string arrayLengthStrategy = tryReadString(jSingleAttributeArray, "arrayLengthStrategy");
-		if (arrayLengthStrategy == "match") {
+		if(arrayLengthStrategy == "match") {
 			std::string keyTemp = tryReadString(jSingleAttributeArray, "arrayLengthMatchKey");
 			int length = 0;
-			if (reg.regValue.find(keyTemp) == reg.regValue.end()) {
+			if(reg.regValue.find(keyTemp) == reg.regValue.end()) {
 				SPDLOG_LOGGER_WARN(spdlog::get("readjson"), "key: {} not found in reg.regValue", keyTemp);
-			}
-			else {
+			} else {
 				length = reg.regValue[keyTemp];
 			}
 
-			Attribute* newAttribute = new Attribute();
+			Attribute *newAttribute = new Attribute();
 
-			newAttribute->isArray = 1;
+			newAttribute->isArray = true;
 			newAttribute->name = tryReadString(jSingleAttributeArray, "name");
 			newAttribute->visibility = tryReadBool(jSingleAttributeArray, "visibility");
 
-			for (int j = 0; j < length; j++) {
+			for(int j = 0; j < length; j++) {
 				newAttribute->attributeArray.push_back(0);
 			}
 			newAttribute->attributeArrayMatch = tryReadString(jSingleAttributeArray, "arrayLengthMatchKey");
@@ -113,7 +112,7 @@ void readAttributeJson() {
 				"Array", i, jSingleAttributeArray["name"].asString());
 			//newAttribute->showAttribute();
 
-			reg.regAttribute.emplace(std::pair<std::string, Attribute*>(newAttribute->name, newAttribute));
+			reg.regAttribute.emplace(std::pair(newAttribute->name, newAttribute));
 		}
 	}
 
@@ -129,15 +128,15 @@ void readAdvancementJson() {
 
 	int advancementSum = tryReadInt(root, "advancementSum");
 	Json::Value jAdcancement = tryReadValue(root, "advancement");
-	for (int i = 0; i < advancementSum; i++) {
+	for(int i = 0; i < advancementSum; i++) {
 		Json::Value singleAdvancement = tryReadArray(jAdcancement, i);
-		Advancement* newAdvancement = new Advancement();
+		Advancement *newAdvancement = new Advancement();
 
 		newAdvancement->name = tryReadString(singleAdvancement, "name");
 
 		int formulaNeededSum = tryReadInt(singleAdvancement, "formulaNeededSum");
 		Json::Value jFormulaNeeded = tryReadValue(singleAdvancement, "formulaNeeded");
-		for (int j = 0; j < formulaNeededSum; j++) {
+		for(int j = 0; j < formulaNeededSum; j++) {
 			Json::Value jSingleFormulaNeeded = tryReadArray(jFormulaNeeded, j);
 			std::string needName = tryReadString(jSingleFormulaNeeded, "name");
 			newAdvancement->formulaNeeded.push_back(needName);
@@ -145,7 +144,7 @@ void readAdvancementJson() {
 
 		int cardNeededSum = tryReadInt(singleAdvancement, "cardNeededSum");
 		Json::Value jCardNeeded = tryReadValue(singleAdvancement, "cardNeeded");
-		for (int j = 0; j < cardNeededSum; j++) {
+		for(int j = 0; j < cardNeededSum; j++) {
 			Json::Value jSingleCardNeeded = tryReadArray(jCardNeeded, j);
 			std::string needName = tryReadString(jSingleCardNeeded, "name");
 			newAdvancement->cardNeeded.push_back(needName);
@@ -153,7 +152,7 @@ void readAdvancementJson() {
 
 		int itemNeededSum = tryReadInt(singleAdvancement, "itemNeededSum");
 		Json::Value jItemNeeded = tryReadValue(singleAdvancement, "itemNeeded");
-		for (int j = 0; j < itemNeededSum; j++) {
+		for(int j = 0; j < itemNeededSum; j++) {
 			Json::Value jSingleItemNeeded = tryReadArray(jItemNeeded, j);
 			std::string needName = tryReadString(jSingleItemNeeded, "name");
 			newAdvancement->itemNeeded.push_back(needName);
@@ -161,48 +160,43 @@ void readAdvancementJson() {
 
 		int attributeValueNeededSum = tryReadInt(singleAdvancement, "attributeValueNeededSum");
 		Json::Value jAttributeValueNeeded = tryReadValue(singleAdvancement, "attributeValueNeeded");
-		for (int j = 0; j < attributeValueNeededSum; j++) {
+		for(int j = 0; j < attributeValueNeededSum; j++) {
 			Json::Value singleAttribute = tryReadArray(jAttributeValueNeeded, j);
 			double upper = tryReadDouble(singleAttribute, "upper");
 			double lower = tryReadDouble(singleAttribute, "lower");
-			std::pair<double, double> rangetmp(upper,lower);
+			std::pair<double, double> rangetmp(upper, lower);
 			std::string stmp = tryReadString(singleAttribute, "attributeName");
-			newAdvancement->attributeValueNeeded.emplace(std::pair<std::string, std::pair<double, double>>(
+			newAdvancement->attributeValueNeeded.emplace(std::pair(
 				stmp, rangetmp));
 		}
 
 		int attributeArrayNeededSum = tryReadInt(singleAdvancement, "attributeArrayNeededSum");
 		Json::Value jAttributeArrayNeeded = tryReadValue(singleAdvancement, "attributeArrayNeeded");
-		for (int j = 0; j < attributeArrayNeededSum; j++) {
+		for(int j = 0; j < attributeArrayNeededSum; j++) {
 			Json::Value jSingleAttribute = tryReadArray(jAttributeArrayNeeded, j);
 			std::string stmp = tryReadString(jSingleAttribute, "attributeName");
 
-			std::string keytmp;
-			if (reg.regAttribute.find(stmp) == reg.regAttribute.end()) {
+			if(reg.regAttribute.find(stmp) == reg.regAttribute.end()) {
 				SPDLOG_LOGGER_WARN(spdlog::get("readjson"), "key: {} not found in reg.regAttribute", stmp);
-			}
-			else {
-				keytmp = reg.regAttribute[stmp]->attributeArrayMatch;
 			}
 			int restrictionSum = tryReadInt(jSingleAttribute, "restrictionSum");
 			Json::Value jrestriction = tryReadValue(jSingleAttribute, "restriction");
-			for (int k = 0; k < restrictionSum; k++) {
+			for(int k = 0; k < restrictionSum; k++) {
 				Json::Value singlerestriction = tryReadArray(jrestriction, k);
 				double tryupper = tryReadDouble(singlerestriction, "upper");
 				double trylower = tryReadDouble(singlerestriction, "lower");
-				std::pair<double, double> rangetmp(tryupper,trylower);
+				std::pair rangetmp(tryupper, trylower);
 				int tryindex = tryReadInt(singlerestriction, "index");
-				std::pair<int, std::pair<double, double>> detailtmp(tryindex, rangetmp);
-				newAdvancement->attributeArrayNeeded.emplace(std::pair<std::string, std::pair<int, std::pair<double, double>>>(
+				std::pair detailtmp(tryindex, rangetmp);
+				newAdvancement->attributeArrayNeeded.emplace(std::pair(
 					stmp, detailtmp
 				));
 			}
 		}
-		
-		reg.regAdvancement.emplace(std::pair<std::string, Advancement*>(newAdvancement->name, newAdvancement));
+
+		reg.regAdvancement.emplace(std::pair(newAdvancement->name, newAdvancement));
 	}
 	inFile.close();
-	return;
 }
 
 void readCardSetJson() {
@@ -213,27 +207,24 @@ void readCardSetJson() {
 
 	int cardSetSum = tryReadInt(root, "cardSetSum");
 	Json::Value jcardSet = tryReadValue(root, "cardSet");
-	for (int i = 0; i < cardSetSum; i++) {
-		
+	for(int i = 0; i < cardSetSum; i++) {
 		Json::Value jSingleCardSet = tryReadArray(jcardSet, i);
 		std::string cardSetName = tryReadString(jSingleCardSet, "cardSetName");
 		Json::Value jCard = tryReadValue(jSingleCardSet, "card");
 		int cardNum = tryReadInt(jSingleCardSet, "cardNum");
 
-		CardSet* newCardSet = new CardSet;
-		
-		for (int j = 0; j < cardNum; j++) {
+		CardSet *newCardSet = new CardSet;
+
+		for(int j = 0; j < cardNum; j++) {
 			Json::Value oneCard = tryReadArray(jCard, j);
 			std::string oneCardName = tryReadString(oneCard, "name");
 			newCardSet->cardSet.emplace(oneCardName);
 		}
-		reg.cardSetPtr.emplace(std::pair<std::string, CardSet*>(
+		reg.cardSetPtr.emplace(std::pair(
 			cardSetName, newCardSet));
-
 	}
 
 	inFile.close();
-	return;
 }
 
 void readFormulaJson() {
@@ -244,21 +235,19 @@ void readFormulaJson() {
 
 	int formulaSum = tryReadInt(root, "formulaSum");
 	Json::Value jFormula = tryReadValue(root, "formula");
-	for (int i = 0; i < formulaSum; i++) {
+	for(int i = 0; i < formulaSum; i++) {
 		Json::Value jSingleFormula = tryReadArray(jFormula, i);
 
-		Formula* newFormula = new Formula;
+		Formula *newFormula = new Formula;
 		std::string formulaName = tryReadString(jSingleFormula, "formulaName");
-		
-		reg.formulaAttained.emplace(std::pair<std::string, bool>(formulaName, false));
-		reg.formulaPtr.emplace(std::pair<std::string, Formula*>(
-			jSingleFormula["formulaName"].asString(), newFormula));
-		//TODO reward²¿·Ö
 
+		reg.formulaAttained.emplace(std::pair(formulaName, false));
+		reg.formulaPtr.emplace(std::pair(
+			jSingleFormula["formulaName"].asString(), newFormula));
+		//TODO rewardéƒ¨åˆ†
 	}
 
 	inFile.close();
-	return;
 }
 
 void readSpotJSon() {
@@ -267,7 +256,6 @@ void readSpotJSon() {
 	Json::Value root;
 	reader.parse(inFile, root);
 
-	
 	inFile.close();
 }
 
@@ -280,12 +268,12 @@ void readClassJson() {
 	int classSum = tryReadInt(root, "classSum");
 	reg.regValue.emplace(std::pair<std::string, int>("classSum", classSum));
 	Json::Value jClass = tryReadValue(root, "class");
-	for (int i = 0; i < classSum; i++) {
+	for(int i = 0; i < classSum; i++) {
 		Json::Value jSingleClass = tryReadArray(jClass, i);
 		std::string onename = tryReadString(jSingleClass, "name");
 		int oneindex = tryReadInt(jSingleClass, "index");
 		reg.classNameToIndex.emplace(std::pair<std::string, int>(
-			onename,oneindex));
+			onename, oneindex));
 	}
 
 	inFile.close();
@@ -300,36 +288,31 @@ void readItemJson() {
 	inFile.close();
 }
 
-
 void readJson() {
 	readRuleFileJson();
-	sort(reg.regJsonFile.begin(), reg.regJsonFile.end(), 
-		[](const std::pair<std::string, int>& a, const std::pair<std::string, int>& b) {
+	sort(reg.regJsonFile.begin(), reg.regJsonFile.end(),
+		[](const std::pair<std::string, int> &a, const std::pair<std::string, int> &b) {
 			return a.second > b.second;
 		});
-	for (int i = 0; i < reg.regJsonFile.size(); i++) {
-		std::string s = reg.regJsonFile.at(i).first;
-		int imp = reg.regJsonFile.at(i).second;
-		
-		if (s == "attribute.json") {
+	for(auto &[file, importance]: reg.regJsonFile) {
+		if(file == "attribute.json") {
 			readAttributeJson();
-		}else if (s == "advancement.json") {
+		} else if(file == "advancement.json") {
 			readAdvancementJson();
-		}else if (s == "cardset.json") {
+		} else if(file == "cardset.json") {
 			readCardSetJson();
-		}else if (s == "spot.json") {
+		} else if(file == "spot.json") {
 			readSpotJSon();
-		}else if (s == "formula.json") {
+		} else if(file == "formula.json") {
 			readFormulaJson();
-		}else if (s == "class.json") {
+		} else if(file == "class.json") {
 			readClassJson();
-		}else if (s == "item.json") {
+		} else if(file == "item.json") {
 			readItemJson();
-		}else {
-			SPDLOG_LOGGER_WARN(spdlog::get("readjson"), "no match for {}", s);
+		} else {
+			SPDLOG_LOGGER_WARN(spdlog::get("readjson"), "no match for {}", file);
 		}
-
-		SPDLOG_LOGGER_TRACE(spdlog::get("readjson"), "read json file {} (importance {} ) successfully", s, imp);
+		SPDLOG_LOGGER_TRACE(spdlog::get("readjson"), "read json file {} (importance {} ) successfully", file, importance);
 	}
 }
 
@@ -341,11 +324,11 @@ void readRuleFileJson() {
 
 	int jsonFileSum = tryReadInt(root, "jsonFileSum");
 	Json::Value jJsonFile = tryReadValue(root, "jsonFile");
-	for (int i = 0; i < jsonFileSum; i++) {
+	for(int i = 0; i < jsonFileSum; i++) {
 		Json::Value jSingleJsonFile = tryReadArray(jJsonFile, i);
 		std::string oneName = tryReadString(jSingleJsonFile, "name");
 		int oneImportance = tryReadInt(jSingleJsonFile, "importance");
-		reg.regJsonFile.push_back(std::pair<std::string, int>(oneName, oneImportance));
+		reg.regJsonFile.emplace_back(oneName, oneImportance);
 	}
 
 	inFile.close();

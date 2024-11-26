@@ -4,30 +4,6 @@
 #include "json/json.h"
 #include "basic.h"
 
-class RoleCard: public Card {
-public:
-	RoleCard();
-
-private:
-	std::string name;
-};
-
-class SpotCard : public Card {
-public:
-	SpotCard();
-
-private:
-	std::string name;
-};
-
-class ItemCard :public Card {
-public:
-	ItemCard();
-
-private:
-	std::string name;
-};
-
 class CardSet {
 public:
 	std::priority_queue<std::string>& getCardset() {

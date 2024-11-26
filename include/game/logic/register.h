@@ -13,19 +13,13 @@ public:
 	std::map<std::string, Advancement*> regAdvancement;
 	std::map<std::string, int> classNameToIndex;
 
-	std::map<std::string, bool> cardAttained;//ÊÇ·ñ»ñÈ¡¹ı¿¨ÅÆ
-	//TODO Ôö¼Ócard¹¹Ôìº¯ÊıÖĞµÄ³õÊ¼»¯
-	std::map<std::string, bool> formulaAttained;//ÊÇ·ñºÏ³É¹ıÅä·½
+	std::map<std::string, bool> cardAttained;//æ˜¯å¦è·å–è¿‡å¡ç‰Œ
+	//TODO å¢åŠ cardæ„é€ å‡½æ•°ä¸­çš„åˆå§‹åŒ–
+	std::map<std::string, bool> formulaAttained;//æ˜¯å¦åˆæˆè¿‡é…æ–¹
 	std::map<std::string, bool> itemAttained;
-	
+
 	std::map<std::string, CardSet*> cardSetPtr;
 	std::map<std::string, Formula*> formulaPtr;
-
-	std::map<std::string, std::vector<SpotCard*>> spotCardPtr;//¼ÇÂ¼ËùÓĞµØµã¿¨ÅÆµÄÖ¸Õë£¬ÏÂÍ¬
-	std::map<std::string, std::vector<RoleCard*>> roleCardPtr;
-	std::map<std::string, std::vector<ItemCard*>> ItemCardPtr;
-
-	
 };
 
 extern Register reg;
