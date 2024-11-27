@@ -11,9 +11,10 @@
 #include "nanovg/nanovg.h"
 #include "nanovg/stb_image.h"
 #include "spdlog/spdlog.h"
+#include "game/logic/register.h"
 
 MainApplication::MainApplication():
-    nanogui::Screen({300, 200}, "USTC Land", false, false), camera(0, -4, -40) {
+    nanogui::Screen({600, 400}, "USTC Land", false, false), camera(0, -4, -40) {
     SPDLOG_LOGGER_TRACE(spdlog::get("render"), "Main window created! size of the window: (x: {}, y: {}); pixel ratio: {:.2}", m_size.x(), m_size.y(), m_pixel_ratio);
 
     // 加载字体
@@ -114,15 +115,7 @@ bool MainApplication::mouse_button_event(const nanogui::Vector2i &p, const int b
         if(down) {
             mouseState = RIGHT;
             if(state == PLAYING) {
-                std::vector<std::shared_ptr<Card>> newStack;
-                newStack.emplace_back(std::make_shared<Card>(Card::ROLE, "man"));
-                cards.emplace_back(std::move(newStack));
-                /*SPDLOG_LOGGER_TRACE(spdlog::get("main"), "now there are {} cards", cards.size());
-                for (int i = 0; i < cards.size(); i++) {
-                    SPDLOG_LOGGER_TRACE(spdlog::get("main"), "    card {} has {} cards", i,cards.at(i));
-                }*/
-                show_card();
-                return true;
+                return add_card();
             }
         } else {
             mouseState = NONE;
@@ -170,6 +163,8 @@ bool MainApplication::mouse_button_event(const nanogui::Vector2i &p, const int b
                         break;
                     }
                 }
+
+                check_card();
                 movingStack = false;
                 return true;
             }
@@ -285,13 +280,81 @@ void MainApplication::quitGame() {
     cards.clear();
 }
 
+bool MainApplication::add_card() {
+    std::vector<std::shared_ptr<Card>> newStack;
 
-int __showcardtmp;
+
+    int randkind = std::rand() % 3;
+    if (randkind == 0) {
+        newStack.emplace_back(std::make_shared<Card>(Card::ROLE, "_man"));
+    }
+    else if (randkind == 1) {
+        int num = reg.regArrayElements["item"].size();
+        int randcard = std::rand() % num;
+        std::string name = reg.regArrayElements["item"].at(randcard);
+        std::cout << "trying to add card " << name << std::endl;
+        newStack.emplace_back(std::make_shared<Card>(Card::ITEM, name));
+    }
+    else if (randkind == 2) {
+        int num = reg.regArrayElements["spot"].size();
+        int randcard = std::rand() % num;
+        std::string name = reg.regArrayElements["spot"].at(randcard);
+        std::cout << "trying to add card " << name << std::endl;
+        newStack.emplace_back(std::make_shared<Card>(Card::SPOT, name));
+    }
+
+    cards.emplace_back(std::move(newStack));
+    show_card();
+    return true;
+}
+
 void MainApplication::show_card() {
+    return;
+
     for(int i = 0; i < this->cards.size(); i++) {
         std::cout << "stack: " << i << ":\n";
         for(int j = 0; j < this->cards.at(i).size(); j++) {
-            std::cout << "    card " << j << " " << this->cards.at(i).at(j).get()->getColor().r() << std::endl;
+            std::cout << "    card " << j << " " << this->cards.at(i).at(j).get()->getName() << std::endl;
         }
+    }
+}
+
+void MainApplication::check_card() {
+    int stackSum = this->cards.size();
+
+    for (int i = 0; i < stackSum; i++) {
+        CardSet tmp(this->cards.at(i));
+        auto it = reg.cardSetMap.find(tmp);
+        if (it == reg.cardSetMap.end()) {
+
+        }
+        else {
+            std::cout << "match " << it->second << std::endl;
+        }
+    }
+}
+
+void MainApplication::give_reward() {
+    return ;
+    Reward* r = reg.rewardPtr[this->rewards.front()];
+    this->rewards.pop();
+    if (r->type == "card") {
+        bool given = false;
+        for (std::string i : reg.allCardType) {
+            if (reg.allCard[i].contains(r->cardName)) {
+
+                given = true;
+                break;
+            }
+        }
+        if (!given) {
+            SPDLOG_LOGGER_WARN(spdlog::get("main"), "reward {} : {} do not exist", r->type, r->cardName);
+        }
+    }
+    else if (r->type == "AttributaValue") {
+
+    }
+    else if (r->type == "AttributeArray") {
+
     }
 }

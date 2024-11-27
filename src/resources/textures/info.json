@@ -1,3 +1,8 @@
 {
-  "man": "/role/man.png"
+  "_man": "/role/_man.png",
+  "_brick": "/item/_brick.png",
+  "_coin": "/item/_coin.png",
+  "_apple": "/item/_apple.png",
+  "_banana": "/item/_banana.png",
+  "_home": "/spot/_home.png"
 }

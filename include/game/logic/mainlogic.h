@@ -1,4 +1,5 @@
 #pragma once
+
 #include <iostream>
 #include <vector>
 #include <string>
@@ -6,11 +7,13 @@
 #include <queue>
 
 #include "game/logic/cards.h"
+#include "game/main_application.h"
 
 class Attribute {
 public:
 	Attribute();
-	void showAttribute();
+	//void showAttribute();
+	double getAttributeValue() const;
 
 private:
 	//for all
@@ -77,6 +80,7 @@ private:
 	std::string cardName;
 
 	friend void readRewardJson();
+	friend class MainApplication;
 };
 
 class Formula {

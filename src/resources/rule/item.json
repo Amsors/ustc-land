@@ -1,12 +1,18 @@
 {
   "type": "item",
-  "itemSum": 2,
+  "itemSum": 4,
   "item": [
     {
-      "name": "Pen"
+      "name": "_banana"
     },
     {
-      "name": "ExperimentTool"
+      "name": "_apple"
+    },
+    {
+      "name": "_coin"
+    },
+    {
+      "name": "_brick"
     }
   ]
 }

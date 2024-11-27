@@ -23,3 +23,7 @@ Attribute::Attribute() {
 //	cout << endl;
 //	return;
 //}
+
+double Attribute::getAttributeValue() const {
+	return this->attributeValue;
+}

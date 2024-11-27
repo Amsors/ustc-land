@@ -6,18 +6,23 @@
 
 class CardSet {
 public:
+	CardSet() {};
+	CardSet(std::vector<std::shared_ptr<Card>> stack);
 	std::priority_queue<std::string>& getCardset() {
 		return cardSet;
 	}
 	int getCardSum() {
 		return cardSum;
 	}
+	void showCardDetail();
 private:
 	int cardSum;
-	std::string careSetName;
 	std::priority_queue<std::string> cardSet;
 
 public:
-	bool check(CardSet a, CardSet b);
+	bool operator< (const CardSet& cmp)const;
+	bool operator== (const CardSet& cmp)const;
+
+public:
 	friend void readCardSetJson();
 };

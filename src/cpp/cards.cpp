@@ -4,23 +4,44 @@
 
 #include "game/logic/cards.h"
 #include "game/logic/register.h"
+#include "spdlog/spdlog.h"
 
-bool CardSet::check(CardSet a, CardSet b) {
-	if(a.getCardSum() != b.getCardSum()) {
+CardSet::CardSet(std::vector<std::shared_ptr<Card>> stack) {
+	int cardSum = stack.size();
+	this->cardSum = cardSum;
+	for (int i = 0; i < cardSum; i++) {
+		this->cardSet.emplace(stack.at(i)->getName());
+	}
+	return;
+}
+
+bool CardSet::operator< (const CardSet& cmp) const {
+	if (this->cardSum < cmp.cardSum) {
+		return true;
+	}
+	else if (this->cardSum > cmp.cardSum) {
 		return false;
 	}
-	std::priority_queue<std::string> qa = a.getCardset();
-	std::priority_queue<std::string> qb = b.getCardset();
-
-	//TODO 增强鲁棒性
-	for(int i = 0; i < a.getCardSum(); i++) {
-		std::string qas = qa.top();
-		std::string qbs = qb.top();
-		if(qas != qbs) {
-			return false;
+	else {
+		for (int i = 0; i < this->cardSum; i++) {
+			if (this->cardSet.top() < cmp.cardSet.top()) {
+				return true;
+			}
+			else if (this->cardSet.top() > cmp.cardSet.top()) {
+				return false;
+			}
 		}
-		qa.pop();
-		qb.pop();
 	}
-	return true;
+	//SPDLOG_LOGGER_WARN(spdlog::get("main"),"find two identical cardsets.");
+	return false;
+}
+
+void CardSet::showCardDetail() {
+	std::cout << "\nthere are " << this->cardSum << "cards\n";
+	CardSet tmp = *this;
+	for (int i = 0; i < this->cardSum; i++) {
+		std::cout << tmp.cardSet.top() << " ";
+		tmp.cardSet.pop();
+	}
+	std::cout << "\n";
 }
