@@ -5,6 +5,7 @@
 #include "logic/basic.h"
 #include "nanogui/screen.h"
 #include "widgets/bar.h"
+#include "game/logic/mainlogic.h"
 
 class MainApplication final: public nanogui::Screen {
 public:
@@ -23,7 +24,11 @@ public:
     bool mouse_motion_event(const nanogui::Vector2i &p, const nanogui::Vector2i &rel, int button, int modifiers) override;
     void draw(NVGcontext *ctx) override;
     void draw_contents() override;
+
     void show_card();
+    bool add_card();
+    void check_card();
+    void give_reward();
 
     [[nodiscard]] nanogui::Vector2f screenToWorldZ0(const nanogui::Vector2f &p) const {
         nanogui::Vector4f worldPos = iVp * nanogui::Vector4f(p.x() * 2.f / m_size.x() - 1, 1 - p.y() * 2.f / m_size.y(), .9f, 1.f);
@@ -62,4 +67,5 @@ private:
 
     std::vector<std::vector<std::shared_ptr<Card>>> cards; // 越在下面的卡牌，对应的下标越小；不同牌堆之间的顺序不确定
     bool movingStack = false;
+    std::queue<std::string> rewards;
 };

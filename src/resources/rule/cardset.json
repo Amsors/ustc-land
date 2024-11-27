@@ -1,6 +1,6 @@
 {
   "type": "cardSet",
-  "cardSetSum": 1,
+  "cardSetSum": 2,
   "cardSet": [
     {
       "cardSetName": "123",
@@ -8,12 +8,27 @@
       "card": [
         {
           "name": "Role"
-        },  
-        {
-          "name":"TeachingBuilding"
         },
         {
-          "name":"ExperimentTool"
+          "name": "TeachingBuilding"
+        },
+        {
+          "name": "ExperimentTool"
+        }
+      ]
+    },
+    {
+      "cardSetName": "__test",
+      "cardNum": 3,
+      "card": [
+        {
+        "name": "_banana"
+        },
+        {
+        "name": "_man"
+        },
+        {
+        "name": "_brick"
         }
       ]
     }
