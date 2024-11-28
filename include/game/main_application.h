@@ -25,10 +25,12 @@ public:
     void draw(NVGcontext *ctx) override;
     void draw_contents() override;
 
-    void show_card();
-    bool add_card();
-    void check_card();
-    void give_reward();
+    void showCard();
+    bool addCard();
+    void checkCard(std::vector<std::shared_ptr<Card>>& stack);
+    void giveReward();
+    
+    void check_all_cards();
 
     [[nodiscard]] nanogui::Vector2f screenToWorldZ0(const nanogui::Vector2f &p) const {
         nanogui::Vector4f worldPos = iVp * nanogui::Vector4f(p.x() * 2.f / m_size.x() - 1, 1 - p.y() * 2.f / m_size.y(), .9f, 1.f);
@@ -67,4 +69,5 @@ private:
     std::vector<std::vector<std::shared_ptr<Card>>> cards; // 越在下面的卡牌，对应的下标越小；不同牌堆之间的顺序不确定
     bool movingStack = false;
     std::queue<std::string> rewards;
+    std::vector<std::vector<std::shared_ptr<Card>>*> waitingStacks;
 };
