@@ -157,7 +157,7 @@ bool MainApplication::mouse_button_event(const nanogui::Vector2i &p, const int b
         if(down) {
             mouseState = RIGHT;
             if(state == PLAYING) {
-                return add_card();
+                return addCard();
             }
         } else {
             mouseState = NONE;
@@ -205,13 +205,14 @@ bool MainApplication::mouse_button_event(const nanogui::Vector2i &p, const int b
                             cards.back()[j]->moveTo({pos2.x(), pos2.y() - Card::D * (j + 1)});
                         }
                         it->insert(it->end(), cards.back().begin(), cards.back().end());
+                        checkCard(*it);
                         cards.erase(cards.end() - 1);
                         break;
                     }
                 }
 
-                check_card();
-                give_reward();
+                //check_all_cards();
+                giveReward();
                 movingStack = false;
                 return true;
             }
@@ -346,7 +347,7 @@ void MainApplication::quitGame() {
     cards.clear();
 }
 
-bool MainApplication::add_card() {
+bool MainApplication::addCard() {
     std::vector<std::shared_ptr<Card>> newStack;
 
 
@@ -370,11 +371,11 @@ bool MainApplication::add_card() {
     }
 
     cards.emplace_back(std::move(newStack));
-    show_card();
+    showCard();
     return true;
 }
 
-void MainApplication::show_card() {
+void MainApplication::showCard() {
     return;
 
     for(int i = 0; i < this->cards.size(); i++) {
@@ -385,7 +386,26 @@ void MainApplication::show_card() {
     }
 }
 
-void MainApplication::check_card() {
+void MainApplication::checkCard(std::vector<std::shared_ptr<Card>>& stack) {
+    CardSet tmp(stack);
+    tmp.showCardDetail();
+    auto it = reg.cardSetMap.find(tmp);
+    if (it == reg.cardSetMap.end()) {
+
+    }
+    else {
+        std::cout << "match " << it->second << std::endl;
+        for (int j = 0; j < reg.cardSetToFormula[it->second].size(); j++) {
+            std::string formulaName = reg.cardSetToFormula[it->second].at(j);
+            for (int k = 0; k < reg.formulaPtr[formulaName]->getRewardName().size(); k++) {
+                this->rewards.push(reg.formulaPtr[formulaName]->getRewardName().at(k));
+            }
+        }
+        reg.outputAttribute();
+    }
+}
+
+void MainApplication::check_all_cards() {
     int stackSum = this->cards.size();
     std::cout << "------------\n";
     for (int i = 0; i < stackSum; i++) {
@@ -411,7 +431,7 @@ void MainApplication::check_card() {
     //reg.outputAttribute();
 }
 
-void MainApplication::give_reward() {
+void MainApplication::giveReward() {
     
     while (this->rewards.empty()==false) {
         Reward* r = reg.rewardPtr[this->rewards.front()];
