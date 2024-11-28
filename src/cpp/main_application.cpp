@@ -31,7 +31,8 @@ MainApplication::MainApplication():
     cardShader = new nanogui::Shader(renderPass, "card", cvs, cfs, nanogui::Shader::BlendMode::AlphaBlend);
 
     if(m_fullscreen) {
-        m_size /= m_pixel_ratio;
+        m_size.x() /= m_pixel_ratio;
+        m_size.y() /= m_pixel_ratio;
     }
     welcomeBar = new WelcomeBar(this, 500.);
     listBar = new ListBar(this, 440.);
@@ -165,6 +166,7 @@ bool MainApplication::mouse_button_event(const nanogui::Vector2i &p, const int b
                 }
 
                 check_card();
+                give_reward();
                 movingStack = false;
                 return true;
             }
@@ -321,40 +323,107 @@ void MainApplication::show_card() {
 
 void MainApplication::check_card() {
     int stackSum = this->cards.size();
-
+    std::cout << "------------\n";
     for (int i = 0; i < stackSum; i++) {
         CardSet tmp(this->cards.at(i));
+        std::cout << "\nstack " << i << " ";
+        tmp.showCardDetail();
         auto it = reg.cardSetMap.find(tmp);
         if (it == reg.cardSetMap.end()) {
 
         }
         else {
             std::cout << "match " << it->second << std::endl;
+            for (int j = 0; j < reg.cardSetToFormula[it->second].size(); j++) {
+                std::string formulaName = reg.cardSetToFormula[it->second].at(j);
+                for (int k = 0; k < reg.formulaPtr[formulaName]->getRewardName().size(); k++) {
+                    this->rewards.push(reg.formulaPtr[formulaName]->getRewardName().at(k));
+                }
+            }
+            reg.outputAttribute();
         }
     }
+
+    //reg.outputAttribute();
 }
 
 void MainApplication::give_reward() {
-    return ;
-    Reward* r = reg.rewardPtr[this->rewards.front()];
-    this->rewards.pop();
-    if (r->type == "card") {
-        bool given = false;
-        for (std::string i : reg.allCardType) {
-            if (reg.allCard[i].contains(r->cardName)) {
-
-                given = true;
-                break;
+    
+    while (this->rewards.empty()==false) {
+        Reward* r = reg.rewardPtr[this->rewards.front()];
+        SPDLOG_LOGGER_TRACE(spdlog::get("main"), "try giving reward {}", r->getName());
+        if (r->getType() == "card") {
+            /*bool given = false;
+            for (std::string i : reg.allCardType) {
+                if (reg.allCard[i].contains(r->getCardName())) {
+                    
+                    given = true;
+                    break;
+                }
+            }
+            if (!given) {
+                SPDLOG_LOGGER_WARN(spdlog::get("main"), "reward {} : {} does not exist", r->getType(), r->getCardName());
+            }*/
+            if (reg.allCard["item"].contains(r->getCardName())) {
+                std::vector<std::shared_ptr<Card>> newStack;
+                newStack.emplace_back(std::make_shared<Card>(Card::ITEM, r->getCardName()));
+                cards.emplace_back(std::move(newStack));
+            }
+            else if (reg.allCard["role"].contains(r->getCardName())) {
+                std::vector<std::shared_ptr<Card>> newStack;
+                newStack.emplace_back(std::make_shared<Card>(Card::ROLE, r->getCardName()));
+                cards.emplace_back(std::move(newStack));
+            }
+            else if (reg.allCard["spot"].contains(r->getCardName())) {
+                std::vector<std::shared_ptr<Card>> newStack;
+                newStack.emplace_back(std::make_shared<Card>(Card::SPOT, r->getCardName()));
+                cards.emplace_back(std::move(newStack));
+            }
+            else {
+                SPDLOG_LOGGER_WARN(spdlog::get("main"), "no card {}", r->getCardName());
             }
         }
-        if (!given) {
-            SPDLOG_LOGGER_WARN(spdlog::get("main"), "reward {} : {} do not exist", r->type, r->cardName);
+        else if (r->getType() == "attributeValue") {
+            if (reg.regAttribute.contains(r->getAttributeName()) == false) {
+                SPDLOG_LOGGER_WARN(spdlog::get("main"), "reward {} : {} does not exist", r->getType(), r->getAttributeName());
+            }
+            if (r->getChange() == "ratio_of_rest") {
+                reg.regAttribute[r->getAttributeName()]->getAttributeValue() +=
+                    (reg.regAttribute[r->getAttributeName()]->getMax() -
+                        reg.regAttribute[r->getAttributeName()]->getAttributeValue()) * (r->getChangeValue());
+            }
+            else if (r->getChange() == "add") {
+                reg.regAttribute[r->getAttributeName()]->getAttributeValue() += r->getChangeValue();
+            }
+            else if (r->getChange() == "mult") {
+                reg.regAttribute[r->getAttributeName()]->getAttributeValue() *= r->getChangeValue();
+            }
+            else {
+                SPDLOG_LOGGER_WARN(spdlog::get("main"), "change: {} does not exist", r->getChange());
+            }
         }
+        else if (r->getType() == "attributeArray") {
+            if (reg.regAttribute.contains(r->getAttributeName()) == false) {
+                SPDLOG_LOGGER_WARN(spdlog::get("main"), "reward {} : {} does not exist", r->getType(), r->getAttributeName());
+            }
+            if (reg.regAttribute[r->getAttributeName()]->getAttributeArray().contains(r->getKey()) == false) {
+                SPDLOG_LOGGER_WARN(spdlog::get("main"), "{} not in registered array {}", r->getKey(),
+                    reg.regAttribute[r->getAttributeName()]->getAttributeMatchKey());
+            }
+            if (r->getChange() == "add") {
+                reg.regAttribute[r->getAttributeName()]->getAttributeArray()[r->getKey()] += r->getChangeValue();
+            }
+            else if (r->getChange() == "mult") {
+                reg.regAttribute[r->getAttributeName()]->getAttributeArray()[r->getKey()] *= r->getChangeValue();
+            }
+            else {
+                SPDLOG_LOGGER_WARN(spdlog::get("main"), "change: {} does not exist", r->getChange());
+            }
+        }
+        else {
+            SPDLOG_LOGGER_WARN(spdlog::get("main"), "reward type: {} does not exist", r->getType());
+        }
+        this->rewards.pop();
     }
-    else if (r->type == "AttributaValue") {
-
-    }
-    else if (r->type == "AttributeArray") {
-
-    }
+    
 }

@@ -22,15 +22,17 @@ bool CardSet::operator< (const CardSet& cmp) const {
 	else if (this->cardSum > cmp.cardSum) {
 		return false;
 	}
-	else {
-		for (int i = 0; i < this->cardSum; i++) {
-			if (this->cardSet.top() < cmp.cardSet.top()) {
-				return true;
-			}
-			else if (this->cardSet.top() > cmp.cardSet.top()) {
-				return false;
-			}
+	std::priority_queue<std::string> tmp1 = this->cardSet;
+	std::priority_queue<std::string> tmp2 = cmp.cardSet;
+	for (int i = 0; i < this->cardSum; i++) {
+		if (tmp1.top() < tmp2.top()) {
+			return true;
 		}
+		else if (tmp1.top() > tmp2.top()) {
+			return false;
+		}
+		tmp1.pop();
+		tmp2.pop();
 	}
 	//SPDLOG_LOGGER_WARN(spdlog::get("main"),"find two identical cardsets.");
 	return false;
