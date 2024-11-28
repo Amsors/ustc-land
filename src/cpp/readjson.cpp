@@ -77,9 +77,9 @@ void readAttributeJson() {
 
 		SPDLOG_LOGGER_TRACE(spdlog::get("readjson"), "read attribute successfully. kind: {}, index: {}, name: {}",
 			"Value", i, jSingleAttributeValue["name"].asString());
-		//newAttribute->showAttribute();
 
 		reg.regAttribute.emplace(std::pair(newAttribute->name, newAttribute));
+		reg.allAttribute.push_back(newAttribute->name);
 	}
 
 	int attributeArraySum = tryReadInt(root, "attributeArraySum");
@@ -94,6 +94,7 @@ void readAttributeJson() {
 		newAttribute->visibility = tryReadBool(jSingleAttributeArray, "visibility");
 		
 		std::string match = tryReadString(jSingleAttributeArray, "match");
+		newAttribute->attributeMatchKey = match;
 		for (int j = 0; j < reg.regArrayElements[match].size(); j++) {
 			newAttribute->attributeArray.emplace(
 				std::pair<std::string, double>(reg.regArrayElements[match].at(j), 0.0)
@@ -102,9 +103,9 @@ void readAttributeJson() {
 
 		SPDLOG_LOGGER_TRACE(spdlog::get("readjson"), "read attribute successfully. kind: {}, index: {}, name: {}",
 			"Array", i, jSingleAttributeArray["name"].asString());
-		//newAttribute->showAttribute();
 
 		reg.regAttribute.emplace(std::pair<std::string, Attribute*>(newAttribute->name, newAttribute));
+		reg.allAttribute.push_back(newAttribute->name);
 	}
 
 	inFile.close();
@@ -237,6 +238,9 @@ void readRewardJson() {
 
 		std::string type = tryReadString(jSingleReward, "type");
 		std::string name = tryReadString(jSingleReward, "name");
+		
+		newReward->type = type;
+		newReward->name = name;
 
 		if (type == "attributeValue") {
 			std::string attributeName = tryReadString(jSingleReward, "attributeName");
@@ -260,6 +264,10 @@ void readRewardJson() {
 		}
 		else if (type == "card") {
 			std::string cardName = tryReadString(jSingleReward, "cardName");
+			newReward->cardName = cardName;
+		}
+		else {
+			SPDLOG_LOGGER_WARN(spdlog::get("readjson"), "no match type for {}",type);
 		}
 
 		reg.rewardPtr.emplace(std::pair<std::string, Reward*>(name, newReward));

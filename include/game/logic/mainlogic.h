@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include <iostream>
 #include <vector>
@@ -13,8 +13,28 @@ class Attribute {
 public:
 	Attribute();
 	//void showAttribute();
-	double getAttributeValue() const;
-
+	double& getAttributeValue() {
+		return this->attributeValue;
+	}
+	double getMax() const {
+		return this->max;
+	}
+	bool getIsArray() const {
+		return this->isArray;
+	}
+	bool getVisibility() const {
+		return this->visibility;
+	}
+	std::map<std::string, double>& getAttributeArray() {
+		return this->attributeArray;
+	}
+	std::string getName() {
+		return this->name;
+	}
+	std::string getAttributeMatchKey() {
+		return this->attributeMatchKey;
+	}
+	
 private:
 	//for all
 	std::string name;
@@ -40,7 +60,7 @@ private:
 	std::string changeType;
 	/*
 	changeType:
-	ratio  ratio_of_rest  add  mult
+	ratio_of_rest  add  mult
 	*/
 	int change;
 	int index;
@@ -63,27 +83,55 @@ private:
 };
 
 class Reward {
+public:
+	std::string getName() {
+		return this->name;
+	}
+	std::string getAttributeName() {
+		return this->attributeName;
+	}
+	std::string getChange() {
+		return this->change;
+	}
+	double getChangeValue() {
+		return this->changeValue;
+	}
+	std::string getKey() {
+		return this->key;
+	}
+	std::string getType() const {
+		std::string tmps = this->type;
+		return tmps;
+	}
+	std::string getCardName() {
+		return this->cardName;
+	}
 private:
 	//for all
 	std::string name;
+	std::string type;
 
 	//for attributeValue & attrbuteArray
 	std::string attributeName;
 	std::string change;
+	//ratio_of_rest  add  mult
 	double changeValue;
 
 	//for attributeArray
 	std::string key;
 
 	//for card
-	std::string type;
 	std::string cardName;
 
 	friend void readRewardJson();
-	friend class MainApplication;
+	//friend class MainApplication;
 };
 
 class Formula {
+public:
+	std::vector<std::string>& getRewardName() {
+		return this->rewardName;
+	}
 private:
 	std::string formulaName;
 	std::string cardSetName;

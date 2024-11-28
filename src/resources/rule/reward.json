@@ -1,0 +1,39 @@
+{
+  "type": "reward",
+  "rewardSum": 5,
+  "reward": [
+    {
+      "name": "r_GPA_0.3",
+      "type": "attributeValue",
+      "attributeName": "GPA",
+      "change": "ratio_of_rest",
+      "changeValue": 0.3
+    },
+    {
+      "name": "r_FB_Physics",
+      "type": "attributeArray",
+      "attributeName": "finalTestBonus",
+      "key": "Physics",
+      "change": "add",
+      "changeValue": 1
+    },
+    {
+      "name": "r_C_item_pen",
+      "type": "card",
+      "cardName": "pen"
+    },
+    {
+      "name": "_test",
+      "type": "attributeArray",
+      "attributeName": "classChosen",
+      "key": "Physics",
+      "change": "add",
+      "changeValue": 1
+    },
+    {
+      "name": "_test2",
+      "type": "card",
+      "cardName": "_coin"
+    }
+  ]
+}
