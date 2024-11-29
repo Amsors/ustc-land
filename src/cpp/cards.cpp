@@ -6,7 +6,7 @@
 #include "game/logic/register.h"
 #include "spdlog/spdlog.h"
 
-CardSet::CardSet(std::vector<std::shared_ptr<Card>> stack) {
+CardSet::CardSet(const std::vector<std::shared_ptr<Card>>& stack) {
 	int cardSum = stack.size();
 	this->cardSum = cardSum;
 	for (int i = 0; i < cardSum; i++) {
@@ -39,7 +39,7 @@ bool CardSet::operator< (const CardSet& cmp) const {
 }
 
 void CardSet::showCardDetail() {
-	std::cout << "\nthere are " << this->cardSum << "cards\n";
+	std::cout << "\nthere are " << this->cardSum << " cards\n";
 	CardSet tmp = *this;
 	for (int i = 0; i < this->cardSum; i++) {
 		std::cout << tmp.cardSet.top() << " ";

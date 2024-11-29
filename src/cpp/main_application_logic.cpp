@@ -28,11 +28,9 @@ bool MainApplication::addCard() {
         std::cout << "trying to add card " << name << std::endl;
         newStack.emplace_back(std::make_shared<Card>(Card::SPOT, name));
     }
-    Stack tmp = Stack(newStack, UNCHECKED, lastFrame, stamp);
-    stacks.emplace_back(tmp);
-    //cards.emplace_back(std::move(newStack));
-    //cardStatus.emplace_back(std::tuple(UNCHECKED,"N/A", 0.0,this->stamp));
+    Stack tmp = Stack(newStack, UNCHECKED, stamp);
     stamp++;
+    stacks.emplace_back(tmp);
 
     showCard();
     return true;
@@ -41,40 +39,48 @@ bool MainApplication::addCard() {
 void MainApplication::showCard() {
     return;
 
-    for (int i = 0; i < this->cards.size(); i++) {
+    for (int i = 0; i < this->stacks.size(); i++) {
         std::cout << "stack: " << i << ":\n";
-        for (int j = 0; j < this->cards.at(i).size(); j++) {
-            std::cout << "    card " << j << " " << this->cards.at(i).at(j).get()->getName() << std::endl;
+        for (int j = 0; j < this->stacks.at(i).cards.size(); j++) {
+            std::cout << "    card " << j << " " << this->stacks.at(i).cards.at(j).get()->getName() << std::endl;
         }
     }
 }
 
+int framecnt = 0;
 void MainApplication::checkCard() {
+    framecnt++;
+    int dooutput = 0;
+    if (framecnt == 100) {
+        std::cout << "=====\n";
+        dooutput = 1;
+        framecnt = 0;
+    }
+    
     for (int i = 0; i < stacks.size(); i++) {
-        if (/*std::get<CHECKSTATUS>(this->cardStatus[i])*/ != UNCHECKED) {
+        
+        if (dooutput) {
+            std::cout << "checking stack " << i << " stamp is " << this->stacks[i].stamp
+                << " status is " << this->stacks[i].status << "\n";
+        }
+
+        if (stacks[i].status != UNCHECKED) {
             continue;
         }
-        std::vector<std::shared_ptr<Card>>& stack = this->cards.at(i);
+        std::vector<std::shared_ptr<Card>>& stack = this->stacks.at(i).cards;
         CardSet tmp(stack);
         tmp.showCardDetail();
+        std::cout << "  total " << stack.size() << " stacks\n";
         auto it = reg.cardSetMap.find(tmp);
         if (it == reg.cardSetMap.end()) {
-            std::get<CHECKSTATUS>(cardStatus[i]) = CHECKED_N;
-            std::get<CARDSET>(cardStatus[i]) = "N/A";
-            std::get<TIME>(cardStatus[i]) = lastFrame;
+            stacks[i].status = CHECKED_N;
         }
         else {
             std::cout << "match " << it->second << std::endl;
-            std::get<CHECKSTATUS>(cardStatus[i]) = CHECKED_P;
-            std::get<CARDSET>(cardStatus[i]) = it->second;
-            std::get<TIME>(cardStatus[i]) = lastFrame;
 
-            /*for (int j = 0; j < reg.cardSetToFormula[it->second].size(); j++) {
-                std::string formulaName = reg.cardSetToFormula[it->second].at(j);
-                for (int k = 0; k < reg.formulaPtr[formulaName]->getRewardName().size(); k++) {
-                    this->rewards.push(reg.formulaPtr[formulaName]->getRewardName().at(k));
-                }
-            }*/
+            stacks[i].status = CHECKED_P;
+            stacks[i].cardSet = it->second;
+            stacks[i].timeUntil = reg.cardSetTimeNeeded[it->second] + lastFrame;
 
             reg.outputAttribute();
         }
@@ -83,32 +89,23 @@ void MainApplication::checkCard() {
 }
 
 void MainApplication::check_all_cards() {
-    int stackSum = this->cards.size();
+    int stackSum = this->stacks.size();
     std::cout << "------------\n";
     for (int i = 0; i < stackSum; i++) {
-        CardSet tmp(this->cards.at(i));
+        CardSet tmp(this->stacks.at(i).cards);
         std::cout << "\nstack " << i << " ";
-        tmp.showCardDetail();
-        auto it = reg.cardSetMap.find(tmp);
-        if (it == reg.cardSetMap.end()) {
-
-        }
-        else {
-            std::cout << "match " << it->second << std::endl;
-            for (int j = 0; j < reg.cardSetToFormula[it->second].size(); j++) {
-                std::string formulaName = reg.cardSetToFormula[it->second].at(j);
-                for (int k = 0; k < reg.formulaPtr[formulaName]->getRewardName().size(); k++) {
-                    this->rewards.push(reg.formulaPtr[formulaName]->getRewardName().at(k));
-                }
-            }
-            reg.outputAttribute();
-        }
+        tmp.showCardDetail();  
     }
-
     //reg.outputAttribute();
 }
 
 void MainApplication::giveReward() {
+    while (this->rewards.size() > 0) {
+        std::cout << "reward!\n";
+        rewards.pop();
+    }
+    /*
+    
 
     while (this->rewards.empty() == false) {
         Reward* r = reg.rewardPtr[this->rewards.front()];
@@ -121,10 +118,10 @@ void MainApplication::giveReward() {
                     given = true;
                     break;
                 }
-            }
+            }  //
             if (!given) {
                 SPDLOG_LOGGER_WARN(spdlog::get("main"), "reward {} : {} does not exist", r->getType(), r->getCardName());
-            }*/
+            }
             if (reg.allCard["item"].contains(r->getCardName())) {
                 std::vector<std::shared_ptr<Card>> newStack;
                 newStack.emplace_back(std::make_shared<Card>(Card::ITEM, r->getCardName()));
@@ -195,9 +192,22 @@ void MainApplication::giveReward() {
         }
         this->rewards.pop();
     }
-
+    */
 }
 
 void MainApplication::processWaitingCard() {
+
+    for (auto& stack : this->stacks) {
+        if (stack.status < CHECKED_P) {
+            continue;
+        }
+        if (stack.timeUntil <= lastFrame) {
+            std::cout << "need " << stack.timeUntil << " now " << lastFrame << "\n";
+            for (int i = 0; i < reg.cardSetToFormula[stack.cardSet].size(); i++) {
+                rewards.emplace(reg.cardSetToFormula[stack.cardSet].at(i));
+            }
+            stack.status = UNCHECKED;
+        }
+    }
     return;
 }

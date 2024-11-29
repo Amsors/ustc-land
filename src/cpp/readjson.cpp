@@ -207,7 +207,7 @@ void readCardSetJson() {
 		double timeNeeded = tryReadDouble(jSingleCardSet, "timeNeeded");
 		
 		CardSet newCardSet;
-		newCardSet.timeNeeded = timeNeeded;
+		reg.cardSetTimeNeeded[cardSetName] = timeNeeded;
 
 		for(int j = 0; j < cardNum; j++) {
 			Json::Value oneCard = tryReadArray(jCard, j);
@@ -387,7 +387,6 @@ void readRoleJson() {
 	reg.regValue.emplace(std::pair<std::string, int>("roleSum", roleSum));
 
 	Json::Value jRole = tryReadValue(root, "role");
-	assert(false);
 	for (int i = 0; i < roleSum; i++) {
 		Json::Value jSingleRole = tryReadArray(jRole, i);
 		std::string onename = tryReadString(jSingleRole, "name");

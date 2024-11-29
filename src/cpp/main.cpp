@@ -51,7 +51,6 @@ int main() {
     
     reg.regValue.emplace(std::pair<std::string, int>("__TEST_VALUE_SIX", 6));
     readJson();
-    assert(false);
 
     try {
         nanogui::init();

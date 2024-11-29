@@ -126,29 +126,28 @@ bool MainApplication::mouse_button_event(const nanogui::Vector2i &p, const int b
         if(down) {
             mouseState = LEFT;
             const nanogui::Vector2f cursor = screenToWorldZ0(p);
-            for(int i = 0; i < cards.size(); i++) {
-                for(auto ritCard = cards[i].rbegin(); ritCard != cards[i].rend(); ++ritCard) {
+            for(int i = 0; i < stacks.size(); i++) {
+                for(auto ritCard = stacks[i].cards.rbegin(); ritCard != stacks[i].cards.rend(); ++ritCard) {
                     if((*ritCard)->contains(cursor)) {
-                        if(ritCard != cards[i].rend() - 1) {
-                            std::vector sub(ritCard.base() - 1, cards[i].end());//取走的牌
-                            cards[i].erase(ritCard.base() - 1, cards[i].end());//剩余的牌
+                        if(ritCard != stacks[i].cards.rend() - 1) {
+                            std::vector sub(ritCard.base() - 1, stacks[i].cards.end());//取走的牌
+                            stacks[i].cards.erase(ritCard.base() - 1, stacks[i].cards.end());//剩余的牌
 
-                            cardStatus[i] = std::tuple(UNCHECKED, "N/A", 0.00, stamp);
+                            stacks[i].initial();
+                            stacks[i].stamp = stamp;
                             stamp++;
 
-                            if(cards[i].empty()) {
-                                cards.erase(cards.begin() + i);
-                                cardStatus.erase(cardStatus.begin() + i);
+                            if(stacks[i].cards.empty()) {
+                                stacks.erase(stacks.begin() + i);
                             }
-                            cards.emplace_back(std::move(sub));
-                            cardStatus.emplace_back(std::tuple(UNCHECKED, "N/A", 0.00, stamp));
+                            Stack tmp = Stack(sub, UNCHECKED, stamp);
+                            stacks.emplace_back(tmp);
                             stamp++;
                             movingStack = true;
                             return true;
                         }
                         // 确保选中的牌堆是最后渲染出来的（即永远在最上方）
-                        std::swap(cards[i], cards.back());
-                        std::swap(cardStatus[i], cardStatus.back());
+                        std::swap(stacks[i], stacks.back());
                         movingStack = true;
                         return true;
                     }
@@ -158,26 +157,24 @@ bool MainApplication::mouse_button_event(const nanogui::Vector2i &p, const int b
             mouseState = NONE;
             if(movingStack) {
                 // 尝试合并两堆卡牌
-                const nanogui::Vector3f &pos = cards.back().back()->getPosition();
-                const float chosenH = cards.back()[0]->getPosition().y() + Card::H - pos.y();
-                for(auto it = cards.begin(); it != cards.end() - 1; ++it) {
-                    const nanogui::Vector3f &pos2 = it->back()->getPosition();
+                const nanogui::Vector3f &pos = stacks.back().cards.back()->getPosition();
+                const float chosenH = stacks.back().cards[0]->getPosition().y() + Card::H - pos.y();
+                for(auto it = stacks.begin(); it != stacks.end() - 1; ++it) {
+                    const nanogui::Vector3f &pos2 = it->cards.back()->getPosition();
                     if(std::abs(pos2.x() - pos.x()) <= Card::W &&
-                        std::abs(pos2.y() - pos.y()) <= std::min(chosenH, (*it)[0]->getPosition().y() + Card::H - pos2.y())) {
-                        for(int j = 0; j < cards.back().size(); j++) {
-                            cards.back()[j]->moveTo({pos2.x(), pos2.y() - Card::D * (j + 1)});
+                        std::abs(pos2.y() - pos.y()) <= std::min(chosenH, (*it).cards[0]->getPosition().y() + Card::H - pos2.y())) {
+                        for(int j = 0; j < stacks.back().cards.size(); j++) {
+                            stacks.back().cards[j]->moveTo({pos2.x(), pos2.y() - Card::D * (j + 1)});
                         }
-                        it->insert(it->end(), cards.back().begin(), cards.back().end());
-                        //checkCard(it-cards.begin());
+                        it->cards.insert(it->cards.end(), stacks.back().cards.begin(), stacks.back().cards.end());
+                        it->status = UNCHECKED;
+                        it->stamp = stamp;
+                        stamp++;
 
-                        cards.erase(cards.end() - 1);
-                        cardStatus.erase(cardStatus.end() - 1);
+                        stacks.erase(stacks.end() - 1);
                         break;
                     }
                 }
-
-                //check_all_cards();
-                giveReward();
                 movingStack = false;
                 return true;
             }
@@ -194,7 +191,7 @@ bool MainApplication::mouse_motion_event(const nanogui::Vector2i &p, const nanog
         case LEFT:
             if(movingStack) {
                 const nanogui::Vector2f delta = screenToWorldZ0(p) - screenToWorldZ0(p - rel);
-                for(const auto &card: cards.back()) {
+                for(const auto &card: stacks.back().cards) {
                     card->move(delta);
                 }
             }
@@ -255,14 +252,14 @@ void MainApplication::draw_contents() {
             }
             break;
         case PLAYING:
-            for(const auto &stack: cards) {
-                for(const auto &card: stack) {
+            for(const auto &stack: stacks) {
+                for(const auto &card: stack.cards) {
                     card->calc(deltaTime);
                 }
             }
         // TODO: 绘制前景（卡牌、特效等）
-            for(const auto &stack: cards) {
-                for(const auto &card: stack) {
+            for(const auto &stack: stacks) {
+                for(const auto &card: stack.cards) {
                     nanogui::Matrix4f model =
                         nanogui::Matrix4f::translate(card->getPosition()) *
                         nanogui::Matrix4f::scale({Card::W, Card::H, 1.f});
@@ -293,5 +290,5 @@ void MainApplication::startGame() {
 void MainApplication::quitGame() {
     state = QUITTING;
     // 清空卡牌列表，同时调用卡牌的析构函数，进行保存
-    cards.clear();
+    stacks.clear();
 }

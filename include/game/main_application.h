@@ -8,6 +8,28 @@
 #include "widgets/bar.h"
 #include "game/logic/mainlogic.h"
 
+class Stack {
+protected:
+    Stack(std::vector<std::shared_ptr<Card>>& src, int sta, int stp) {
+        this->cards = src;
+        this->stamp = stp;
+        this->status = sta;
+    }
+
+    std::vector<std::shared_ptr<Card>> cards;
+    int status;
+    std::string cardSet;
+    int stamp;
+    double timeUntil;
+
+    void initial() {
+        this->status = 0;
+    }
+
+    friend class MainApplication;
+};
+
+
 class MainApplication final : public nanogui::Screen {
 public:
     enum State {
@@ -84,20 +106,4 @@ private:
     int stamp = 0;
     //std::vector<std::tuple<int, std::string, double, int>> cardStatus;
     std::vector<Stack> stacks;
-};
-
-class Stack {
-public:
-    Stack(std::vector<std::shared_ptr<Card>>& src,int sta,double tm,int stp){
-        this->cards = src;
-        this->stamp = stp;
-        this->timeUntil = tm;
-        this->status = sta;
-    }
-
-    std::vector<std::shared_ptr<Card>> cards;
-    int status;
-    std::string cardSet;
-    int stamp;
-    double timeUntil;
 };
