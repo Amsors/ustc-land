@@ -17,6 +17,7 @@ public:
 	void showCardDetail();
 private:
 	int cardSum;
+	double timeNeeded;
 	std::priority_queue<std::string> cardSet;
 
 public:

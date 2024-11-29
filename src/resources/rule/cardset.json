@@ -5,6 +5,7 @@
     {
       "cardSetName": "123",
       "cardNum": 3,
+      "timeNeeded": 1,
       "card": [
         {
           "name": "Role"
@@ -20,15 +21,16 @@
     {
       "cardSetName": "__test",
       "cardNum": 3,
+      "timeNeeded": 1,
       "card": [
         {
-        "name": "_banana"
+          "name": "_banana"
         },
         {
-        "name": "_man"
+          "name": "_man"
         },
         {
-        "name": "_brick"
+          "name": "_brick"
         }
       ]
     }

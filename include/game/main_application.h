@@ -1,13 +1,14 @@
 #pragma once
 
 #include <memory>
+#include <tuple>
 
 #include "logic/basic.h"
 #include "nanogui/screen.h"
 #include "widgets/bar.h"
 #include "game/logic/mainlogic.h"
 
-class MainApplication final: public nanogui::Screen {
+class MainApplication final : public nanogui::Screen {
 public:
     enum State {
         TITLE, PREPARING, PLAYING, PAUSED, QUITTING, OVER
@@ -17,22 +18,31 @@ public:
         NONE, LEFT, RIGHT
     };
 
+    enum CardStatus {
+        CHECKSTATUS, CARDSET, TIME, STAMP
+    };
+    
+    enum  CheckStatus {
+        UNCHECKED, CHECKED_N, CHECKED_P
+    };
+
     MainApplication();
     ~MainApplication() override;
     bool keyboard_event(int key, int scancode, int action, int modifiers) override;
-    bool mouse_button_event(const nanogui::Vector2i &p, int button, bool down, int modifiers) override;
-    bool mouse_motion_event(const nanogui::Vector2i &p, const nanogui::Vector2i &rel, int button, int modifiers) override;
-    void draw(NVGcontext *ctx) override;
+    bool mouse_button_event(const nanogui::Vector2i& p, int button, bool down, int modifiers) override;
+    bool mouse_motion_event(const nanogui::Vector2i& p, const nanogui::Vector2i& rel, int button, int modifiers) override;
+    void draw(NVGcontext* ctx) override;
     void draw_contents() override;
 
     void showCard();
     bool addCard();
-    void checkCard(std::vector<std::shared_ptr<Card>>& stack);
+    void checkCard();
     void giveReward();
-    
+    void processWaitingCard();
+
     void check_all_cards();
 
-    [[nodiscard]] nanogui::Vector2f screenToWorldZ0(const nanogui::Vector2f &p) const {
+    [[nodiscard]] nanogui::Vector2f screenToWorldZ0(const nanogui::Vector2f& p) const {
         nanogui::Vector4f worldPos = iVp * nanogui::Vector4f(p.x() * 2.f / m_size.x() - 1, 1 - p.y() * 2.f / m_size.y(), .9f, 1.f);
         worldPos /= worldPos[3];
         return {
@@ -57,17 +67,37 @@ private:
 
     std::vector<nanogui::ref<nanogui::Texture>> bgTextures;
     nanogui::Matrix4f iVp;
-    nanogui::RenderPass *renderPass;
-    nanogui::Shader *bgShader, *cardShader;
+    nanogui::RenderPass* renderPass;
+    nanogui::Shader* bgShader, * cardShader;
     nanogui::Vector3f camera;
 
-    Bar *welcomeBar, *listBar, *infoBar; // HUD
+    Bar* welcomeBar, * listBar, * infoBar; // HUD
     State state = TITLE;
     double lastFrame = 0.;
     MouseState mouseState = NONE;
 
-    std::vector<std::vector<std::shared_ptr<Card>>> cards; // 越在下面的卡牌，对应的下标越小；不同牌堆之间的顺序不确定
+    //std::vector<std::vector<std::shared_ptr<Card>>> cards; // 越在下面的卡牌，对应的下标越小；不同牌堆之间的顺序不确定
+
     bool movingStack = false;
     std::queue<std::string> rewards;
-    std::vector<std::vector<std::shared_ptr<Card>>*> waitingStacks;
+
+    int stamp = 0;
+    //std::vector<std::tuple<int, std::string, double, int>> cardStatus;
+    std::vector<Stack> stacks;
+};
+
+class Stack {
+public:
+    Stack(std::vector<std::shared_ptr<Card>>& src,int sta,double tm,int stp){
+        this->cards = src;
+        this->stamp = stp;
+        this->timeUntil = tm;
+        this->status = sta;
+    }
+
+    std::vector<std::shared_ptr<Card>> cards;
+    int status;
+    std::string cardSet;
+    int stamp;
+    double timeUntil;
 };

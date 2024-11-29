@@ -130,17 +130,25 @@ bool MainApplication::mouse_button_event(const nanogui::Vector2i &p, const int b
                 for(auto ritCard = cards[i].rbegin(); ritCard != cards[i].rend(); ++ritCard) {
                     if((*ritCard)->contains(cursor)) {
                         if(ritCard != cards[i].rend() - 1) {
-                            std::vector sub(ritCard.base() - 1, cards[i].end());
-                            cards[i].erase(ritCard.base() - 1, cards[i].end());
+                            std::vector sub(ritCard.base() - 1, cards[i].end());//取走的牌
+                            cards[i].erase(ritCard.base() - 1, cards[i].end());//剩余的牌
+
+                            cardStatus[i] = std::tuple(UNCHECKED, "N/A", 0.00, stamp);
+                            stamp++;
+
                             if(cards[i].empty()) {
                                 cards.erase(cards.begin() + i);
+                                cardStatus.erase(cardStatus.begin() + i);
                             }
                             cards.emplace_back(std::move(sub));
+                            cardStatus.emplace_back(std::tuple(UNCHECKED, "N/A", 0.00, stamp));
+                            stamp++;
                             movingStack = true;
                             return true;
                         }
                         // 确保选中的牌堆是最后渲染出来的（即永远在最上方）
                         std::swap(cards[i], cards.back());
+                        std::swap(cardStatus[i], cardStatus.back());
                         movingStack = true;
                         return true;
                     }
@@ -160,8 +168,10 @@ bool MainApplication::mouse_button_event(const nanogui::Vector2i &p, const int b
                             cards.back()[j]->moveTo({pos2.x(), pos2.y() - Card::D * (j + 1)});
                         }
                         it->insert(it->end(), cards.back().begin(), cards.back().end());
-                        checkCard(*it);
+                        //checkCard(it-cards.begin());
+
                         cards.erase(cards.end() - 1);
+                        cardStatus.erase(cardStatus.end() - 1);
                         break;
                     }
                 }
@@ -265,6 +275,9 @@ void MainApplication::draw_contents() {
                     cardShader->end();
                 }
             }
+            checkCard();
+            processWaitingCard();
+            giveReward();
             break;
         default:
             break;
@@ -281,169 +294,4 @@ void MainApplication::quitGame() {
     state = QUITTING;
     // 清空卡牌列表，同时调用卡牌的析构函数，进行保存
     cards.clear();
-}
-
-bool MainApplication::addCard() {
-    std::vector<std::shared_ptr<Card>> newStack;
-
-
-    int randkind = std::rand() % 3;
-    if (randkind == 0) {
-        newStack.emplace_back(std::make_shared<Card>(Card::ROLE, "_man"));
-    }
-    else if (randkind == 1) {
-        int num = reg.regArrayElements["item"].size();
-        int randcard = std::rand() % num;
-        std::string name = reg.regArrayElements["item"].at(randcard);
-        std::cout << "trying to add card " << name << std::endl;
-        newStack.emplace_back(std::make_shared<Card>(Card::ITEM, name));
-    }
-    else if (randkind == 2) {
-        int num = reg.regArrayElements["spot"].size();
-        int randcard = std::rand() % num;
-        std::string name = reg.regArrayElements["spot"].at(randcard);
-        std::cout << "trying to add card " << name << std::endl;
-        newStack.emplace_back(std::make_shared<Card>(Card::SPOT, name));
-    }
-
-    cards.emplace_back(std::move(newStack));
-    showCard();
-    return true;
-}
-
-void MainApplication::showCard() {
-    return;
-
-    for(int i = 0; i < this->cards.size(); i++) {
-        std::cout << "stack: " << i << ":\n";
-        for(int j = 0; j < this->cards.at(i).size(); j++) {
-            std::cout << "    card " << j << " " << this->cards.at(i).at(j).get()->getName() << std::endl;
-        }
-    }
-}
-
-void MainApplication::checkCard(std::vector<std::shared_ptr<Card>>& stack) {
-    CardSet tmp(stack);
-    tmp.showCardDetail();
-    auto it = reg.cardSetMap.find(tmp);
-    if (it == reg.cardSetMap.end()) {
-
-    }
-    else {
-        std::cout << "match " << it->second << std::endl;
-        for (int j = 0; j < reg.cardSetToFormula[it->second].size(); j++) {
-            std::string formulaName = reg.cardSetToFormula[it->second].at(j);
-            for (int k = 0; k < reg.formulaPtr[formulaName]->getRewardName().size(); k++) {
-                this->rewards.push(reg.formulaPtr[formulaName]->getRewardName().at(k));
-            }
-        }
-        reg.outputAttribute();
-    }
-}
-
-void MainApplication::check_all_cards() {
-    int stackSum = this->cards.size();
-    std::cout << "------------\n";
-    for (int i = 0; i < stackSum; i++) {
-        CardSet tmp(this->cards.at(i));
-        std::cout << "\nstack " << i << " ";
-        tmp.showCardDetail();
-        auto it = reg.cardSetMap.find(tmp);
-        if (it == reg.cardSetMap.end()) {
-
-        }
-        else {
-            std::cout << "match " << it->second << std::endl;
-            for (int j = 0; j < reg.cardSetToFormula[it->second].size(); j++) {
-                std::string formulaName = reg.cardSetToFormula[it->second].at(j);
-                for (int k = 0; k < reg.formulaPtr[formulaName]->getRewardName().size(); k++) {
-                    this->rewards.push(reg.formulaPtr[formulaName]->getRewardName().at(k));
-                }
-            }
-            reg.outputAttribute();
-        }
-    }
-
-    //reg.outputAttribute();
-}
-
-void MainApplication::giveReward() {
-    
-    while (this->rewards.empty()==false) {
-        Reward* r = reg.rewardPtr[this->rewards.front()];
-        SPDLOG_LOGGER_TRACE(spdlog::get("main"), "try giving reward {}", r->getName());
-        if (r->getType() == "card") {
-            /*bool given = false;
-            for (std::string i : reg.allCardType) {
-                if (reg.allCard[i].contains(r->getCardName())) {
-                    
-                    given = true;
-                    break;
-                }
-            }
-            if (!given) {
-                SPDLOG_LOGGER_WARN(spdlog::get("main"), "reward {} : {} does not exist", r->getType(), r->getCardName());
-            }*/
-            if (reg.allCard["item"].contains(r->getCardName())) {
-                std::vector<std::shared_ptr<Card>> newStack;
-                newStack.emplace_back(std::make_shared<Card>(Card::ITEM, r->getCardName()));
-                cards.emplace_back(std::move(newStack));
-            }
-            else if (reg.allCard["role"].contains(r->getCardName())) {
-                std::vector<std::shared_ptr<Card>> newStack;
-                newStack.emplace_back(std::make_shared<Card>(Card::ROLE, r->getCardName()));
-                cards.emplace_back(std::move(newStack));
-            }
-            else if (reg.allCard["spot"].contains(r->getCardName())) {
-                std::vector<std::shared_ptr<Card>> newStack;
-                newStack.emplace_back(std::make_shared<Card>(Card::SPOT, r->getCardName()));
-                cards.emplace_back(std::move(newStack));
-            }
-            else {
-                SPDLOG_LOGGER_WARN(spdlog::get("main"), "no card {}", r->getCardName());
-            }
-        }
-        else if (r->getType() == "attributeValue") {
-            if (reg.regAttribute.contains(r->getAttributeName()) == false) {
-                SPDLOG_LOGGER_WARN(spdlog::get("main"), "reward {} : {} does not exist", r->getType(), r->getAttributeName());
-            }
-            if (r->getChange() == "ratio_of_rest") {
-                reg.regAttribute[r->getAttributeName()]->getAttributeValue() +=
-                    (reg.regAttribute[r->getAttributeName()]->getMax() -
-                        reg.regAttribute[r->getAttributeName()]->getAttributeValue()) * (r->getChangeValue());
-            }
-            else if (r->getChange() == "add") {
-                reg.regAttribute[r->getAttributeName()]->getAttributeValue() += r->getChangeValue();
-            }
-            else if (r->getChange() == "mult") {
-                reg.regAttribute[r->getAttributeName()]->getAttributeValue() *= r->getChangeValue();
-            }
-            else {
-                SPDLOG_LOGGER_WARN(spdlog::get("main"), "change: {} does not exist", r->getChange());
-            }
-        }
-        else if (r->getType() == "attributeArray") {
-            if (reg.regAttribute.contains(r->getAttributeName()) == false) {
-                SPDLOG_LOGGER_WARN(spdlog::get("main"), "reward {} : {} does not exist", r->getType(), r->getAttributeName());
-            }
-            if (reg.regAttribute[r->getAttributeName()]->getAttributeArray().contains(r->getKey()) == false) {
-                SPDLOG_LOGGER_WARN(spdlog::get("main"), "{} not in registered array {}", r->getKey(),
-                    reg.regAttribute[r->getAttributeName()]->getAttributeMatchKey());
-            }
-            if (r->getChange() == "add") {
-                reg.regAttribute[r->getAttributeName()]->getAttributeArray()[r->getKey()] += r->getChangeValue();
-            }
-            else if (r->getChange() == "mult") {
-                reg.regAttribute[r->getAttributeName()]->getAttributeArray()[r->getKey()] *= r->getChangeValue();
-            }
-            else {
-                SPDLOG_LOGGER_WARN(spdlog::get("main"), "change: {} does not exist", r->getChange());
-            }
-        }
-        else {
-            SPDLOG_LOGGER_WARN(spdlog::get("main"), "reward type: {} does not exist", r->getType());
-        }
-        this->rewards.pop();
-    }
-    
 }
