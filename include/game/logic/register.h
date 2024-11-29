@@ -20,6 +20,7 @@ public:
 	std::map<std::string, bool> itemAttained;
 
 	std::map<CardSet, std::string> cardSetMap;
+	std::map<std::string, double> cardSetTimeNeeded;
 
 	std::vector<std::string> allCardType;
 	std::map<std::string, std::set<std::string>> allCard;

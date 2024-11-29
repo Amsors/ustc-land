@@ -7,7 +7,7 @@
 class CardSet {
 public:
 	CardSet() {};
-	CardSet(std::vector<std::shared_ptr<Card>> stack);
+	CardSet(const std::vector<std::shared_ptr<Card>>& stack);
 	std::priority_queue<std::string>& getCardset() {
 		return cardSet;
 	}

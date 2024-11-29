@@ -204,8 +204,10 @@ void readCardSetJson() {
 		std::string cardSetName = tryReadString(jSingleCardSet, "cardSetName");
 		Json::Value jCard = tryReadValue(jSingleCardSet, "card");
 		int cardNum = tryReadInt(jSingleCardSet, "cardNum");
+		double timeNeeded = tryReadDouble(jSingleCardSet, "timeNeeded");
 		
 		CardSet newCardSet;
+		reg.cardSetTimeNeeded[cardSetName] = timeNeeded;
 
 		for(int j = 0; j < cardNum; j++) {
 			Json::Value oneCard = tryReadArray(jCard, j);
@@ -373,6 +375,29 @@ void readItemJson() {
 	inFile.close();
 }
 
+void readRoleJson() {
+	std::ifstream inFile("rule/role.json");
+	Json::Reader reader;
+	Json::Value root;
+	reader.parse(inFile, root);
+
+	reg.allCardType.push_back("role");
+
+	int roleSum = tryReadInt(root, "roleSum");
+	reg.regValue.emplace(std::pair<std::string, int>("roleSum", roleSum));
+
+	Json::Value jRole = tryReadValue(root, "role");
+	for (int i = 0; i < roleSum; i++) {
+		Json::Value jSingleRole = tryReadArray(jRole, i);
+		std::string onename = tryReadString(jSingleRole, "name");
+
+		reg.regArrayElements["role"].push_back(onename);
+		reg.allCard["item"].insert(onename);
+	}
+
+	inFile.close();
+}
+
 void readJson() {
 	readRuleFileJson();
 	sort(reg.regJsonFile.begin(), reg.regJsonFile.end(),
@@ -403,6 +428,9 @@ void readJson() {
 		}
 		else if (file == "reward.json") {
 			readRewardJson();
+		}
+		else if (file == "role.json") {
+			readRoleJson();
 		}
 		else{
 			SPDLOG_LOGGER_WARN(spdlog::get("readjson"), "no match for {}", file);

@@ -1,11 +1,34 @@
 #pragma once
 
 #include <memory>
+#include <tuple>
 
+#include "game/logic/mainlogic.h"
 #include "logic/basic.h"
 #include "nanogui/screen.h"
 #include "widgets/bar.h"
-#include "game/logic/mainlogic.h"
+
+class Stack {
+protected:
+    Stack(std::vector<std::shared_ptr<Card>>& src, int sta, int stp) {
+        this->cards = src;
+        this->stamp = stp;
+        this->status = sta;
+    }
+
+    std::vector<std::shared_ptr<Card>> cards;
+    int status;
+    std::string cardSet;
+    int stamp;
+    double timeUntil;
+
+    void initial() {
+        this->status = 0;
+    }
+
+    friend class MainApplication;
+};
+
 
 class MainApplication final: public nanogui::Screen {
 public:
@@ -15,6 +38,14 @@ public:
 
     enum MouseState {
         NONE, LEFT, RIGHT
+    };
+
+    enum CardStatus {
+        CHECKSTATUS, CARDSET, TIME, STAMP
+    };
+
+    enum  CheckStatus {
+        UNCHECKED, CHECKED_N, CHECKED_P
     };
 
     MainApplication();
@@ -27,9 +58,10 @@ public:
 
     void showCard();
     bool addCard();
-    void checkCard(std::vector<std::shared_ptr<Card>>& stack);
+    void checkCard();
     void giveReward();
-    
+    void processWaitingCard();
+
     void check_all_cards();
 
     [[nodiscard]] nanogui::Vector2f screenToWorldZ0(const nanogui::Vector2f &p) const {
@@ -67,8 +99,12 @@ private:
     double lastFrame = 0.;
     MouseState mouseState = NONE;
 
-    std::vector<std::vector<std::shared_ptr<Card>>> cards; // 越在下面的卡牌，对应的下标越小；不同牌堆之间的顺序不确定
+    //std::vector<std::vector<std::shared_ptr<Card>>> cards; // 越在下面的卡牌，对应的下标越小；不同牌堆之间的顺序不确定
+
     bool movingStack = false;
     std::queue<std::string> rewards;
-    std::vector<std::vector<std::shared_ptr<Card>>*> waitingStacks;
+
+    int stamp = 0;
+    //std::vector<std::tuple<int, std::string, double, int>> cardStatus;
+    std::vector<Stack> stacks;
 };
