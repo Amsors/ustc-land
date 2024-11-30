@@ -2,6 +2,7 @@
 #include <iostream>
 #include "game/logic/mainlogic.h"
 #include "game/logic/cards.h"
+#include "nanogui/screen.h"
 #include <set>
 
 class Register {
@@ -23,6 +24,7 @@ public:
 	std::map<std::string, double> cardSetTimeNeeded;
 
 	std::vector<std::string> allCardType;
+	std::map<std::string, nanogui::Color> cardTypeColor;
 	std::map<std::string, std::set<std::string>> allCard;
 	std::vector<std::string> allAttribute;
 

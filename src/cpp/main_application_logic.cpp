@@ -7,32 +7,52 @@
 
 
 bool MainApplication::addCard() {
-    std::vector<std::shared_ptr<Card>> newStack;
 
+    while (newCards.empty() == false) {
+        std::string card = newCards.front();
+        newCards.pop();
+        bool given = false;
+        for (const auto& cardType : reg.allCardType) {
+            if (reg.allCard[cardType].contains(card)) {
 
-    int randkind = std::rand() % 3;
-    if (randkind == 0) {
-        newStack.emplace_back(std::make_shared<Card>(Card::ROLE, "_man"));
-    }
-    else if (randkind == 1) {
-        int num = reg.regArrayElements["item"].size();
-        int randcard = std::rand() % num;
-        std::string name = reg.regArrayElements["item"].at(randcard);
-        std::cout << "trying to add card " << name << std::endl;
-        newStack.emplace_back(std::make_shared<Card>(Card::ITEM, name));
-    }
-    else if (randkind == 2) {
-        int num = reg.regArrayElements["spot"].size();
-        int randcard = std::rand() % num;
-        std::string name = reg.regArrayElements["spot"].at(randcard);
-        std::cout << "trying to add card " << name << std::endl;
-        newStack.emplace_back(std::make_shared<Card>(Card::SPOT, name));
-    }
-    Stack tmp = Stack(newStack, UNCHECKED, stamp);
-    stamp++;
-    stacks.emplace_back(tmp);
+                std::vector<std::shared_ptr<Card>> newStack;
+                newStack.emplace_back(std::make_shared<Card>(cardType, card));
+                Stack tmp = Stack(newStack, UNCHECKED, stamp);
+                stamp++;
+                stacks.emplace_back(tmp);
 
-    showCard();
+                given = true;
+                break;
+            }
+        }
+        if (given == false) {
+            SPDLOG_LOGGER_WARN(spdlog::get("main"), "no registered card: {}", card);
+        }
+    }
+
+    //int randkind = std::rand() % 3;
+    //if (randkind == 0) {
+    //    newStack.emplace_back(std::make_shared<Card>("role", "_man"));
+    //}
+    //else if (randkind == 1) {
+    //    int num = reg.regArrayElements["item"].size();
+    //    int randcard = std::rand() % num;
+    //    std::string name = reg.regArrayElements["item"].at(randcard);
+    //    //std::cout << "trying to add card " << name << std::endl;
+    //    newStack.emplace_back(std::make_shared<Card>("item", name));
+    //}
+    //else if (randkind == 2) {
+    //    int num = reg.regArrayElements["spot"].size();
+    //    int randcard = std::rand() % num;
+    //    std::string name = reg.regArrayElements["spot"].at(randcard);
+    //    //std::cout << "trying to add card " << name << std::endl;
+    //    newStack.emplace_back(std::make_shared<Card>("spot", name));
+    //}
+    //Stack tmp = Stack(newStack, UNCHECKED, stamp);
+    //stamp++;
+    //stacks.emplace_back(tmp);
+
+    //showCard();
     return true;
 }
 
@@ -51,15 +71,15 @@ int framecnt = 0;
 void MainApplication::checkCard() {
     framecnt++;
     int dooutput = 0;
-    if (framecnt == 100) {
-        std::cout << "=====\n";
+    if (framecnt == 100 && 0) {
+        std::cout << "=====output at "<<lastFrame<<"\n";
         dooutput = 1;
         framecnt = 0;
     }
     
     for (int i = 0; i < stacks.size(); i++) {
         
-        if (dooutput) {
+        if (dooutput && 0) {
             std::cout << "checking stack " << i << " stamp is " << this->stacks[i].stamp
                 << " status is " << this->stacks[i].status << "\n";
         }
@@ -69,20 +89,21 @@ void MainApplication::checkCard() {
         }
         std::vector<std::shared_ptr<Card>>& stack = this->stacks.at(i).cards;
         CardSet tmp(stack);
-        tmp.showCardDetail();
-        std::cout << "  total " << stack.size() << " stacks\n";
+        //tmp.showCardDetail();
+        //std::cout << "  total " << stack.size() << " stacks\n";
         auto it = reg.cardSetMap.find(tmp);
         if (it == reg.cardSetMap.end()) {
             stacks[i].status = CHECKED_N;
         }
         else {
-            std::cout << "match " << it->second << std::endl;
+            SPDLOG_LOGGER_TRACE(spdlog::get("main"),
+                "match cardset: {} at time: {}. stack stamp: {}", it->second, lastFrame, stacks[i].stamp);
 
             stacks[i].status = CHECKED_P;
             stacks[i].cardSet = it->second;
             stacks[i].timeUntil = reg.cardSetTimeNeeded[it->second] + lastFrame;
 
-            reg.outputAttribute();
+            //reg.outputAttribute();
         }
     }
     
@@ -100,54 +121,25 @@ void MainApplication::check_all_cards() {
 }
 
 void MainApplication::giveReward() {
-    while (this->rewards.size() > 0) {
-        std::cout << "reward!\n";
-        rewards.pop();
-    }
-    /*
-    
-
     while (this->rewards.empty() == false) {
         Reward* r = reg.rewardPtr[this->rewards.front()];
         SPDLOG_LOGGER_TRACE(spdlog::get("main"), "try giving reward {}", r->getName());
         if (r->getType() == "card") {
-            /*bool given = false;
+            bool given = false;
             for (std::string i : reg.allCardType) {
                 if (reg.allCard[i].contains(r->getCardName())) {
 
+                    std::vector<std::shared_ptr<Card>> newStack;
+                    newStack.emplace_back(std::make_shared<Card>(i, r->getCardName()));
+                    Stack tmp = Stack(newStack, UNCHECKED, stamp);
+                    stamp++;
+                    stacks.emplace_back(tmp);
                     given = true;
                     break;
                 }
-            }  //
+            }
             if (!given) {
                 SPDLOG_LOGGER_WARN(spdlog::get("main"), "reward {} : {} does not exist", r->getType(), r->getCardName());
-            }
-            if (reg.allCard["item"].contains(r->getCardName())) {
-                std::vector<std::shared_ptr<Card>> newStack;
-                newStack.emplace_back(std::make_shared<Card>(Card::ITEM, r->getCardName()));
-                cards.emplace_back(std::move(newStack));
-
-                cardStatus.emplace_back(std::tuple(UNCHECKED, "N/A", 0.0, this->stamp));
-                stamp++;
-            }
-            else if (reg.allCard["role"].contains(r->getCardName())) {
-                std::vector<std::shared_ptr<Card>> newStack;
-                newStack.emplace_back(std::make_shared<Card>(Card::ROLE, r->getCardName()));
-                cards.emplace_back(std::move(newStack));
-
-                cardStatus.emplace_back(std::tuple(UNCHECKED, "N/A", 0.0, this->stamp));
-                stamp++;
-            }
-            else if (reg.allCard["spot"].contains(r->getCardName())) {
-                std::vector<std::shared_ptr<Card>> newStack;
-                newStack.emplace_back(std::make_shared<Card>(Card::SPOT, r->getCardName()));
-                cards.emplace_back(std::move(newStack));
-
-                cardStatus.emplace_back(std::tuple(UNCHECKED, "N/A", 0.0, this->stamp));
-                stamp++;
-            }
-            else {
-                SPDLOG_LOGGER_WARN(spdlog::get("main"), "no card {}", r->getCardName());
             }
         }
         else if (r->getType() == "attributeValue") {
@@ -191,8 +183,8 @@ void MainApplication::giveReward() {
             SPDLOG_LOGGER_WARN(spdlog::get("main"), "reward type: {} does not exist", r->getType());
         }
         this->rewards.pop();
-    }
-    */
+        //reg.outputAttribute();
+    } 
 }
 
 void MainApplication::processWaitingCard() {
@@ -202,9 +194,12 @@ void MainApplication::processWaitingCard() {
             continue;
         }
         if (stack.timeUntil <= lastFrame) {
-            std::cout << "need " << stack.timeUntil << " now " << lastFrame << "\n";
+            //std::cout << "need " << stack.timeUntil << " now " << lastFrame << "\n";
             for (int i = 0; i < reg.cardSetToFormula[stack.cardSet].size(); i++) {
-                rewards.emplace(reg.cardSetToFormula[stack.cardSet].at(i));
+                std::string formulaName = reg.cardSetToFormula[stack.cardSet].at(i);
+                for (int j = 0; j < reg.formulaPtr[formulaName]->getRewardName().size(); j++) {
+                    rewards.emplace(reg.formulaPtr[formulaName]->getRewardName().at(j));
+                }
             }
             stack.status = UNCHECKED;
         }

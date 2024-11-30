@@ -116,7 +116,15 @@ bool MainApplication::mouse_button_event(const nanogui::Vector2i &p, const int b
         if(down) {
             mouseState = RIGHT;
             if(state == PLAYING) {
-                return addCard();
+
+                int typerandi = rand() % reg.allCardType.size();
+                std::string typerand = reg.allCardType.at(typerandi);
+                int namerandi = rand() % reg.allCard[typerand].size();
+                auto it = reg.allCard[typerand].begin();
+                std::advance(it, namerandi);
+                newCards.emplace(*it);
+
+                return true;
             }
         } else {
             mouseState = NONE;
@@ -275,6 +283,7 @@ void MainApplication::draw_contents() {
             checkCard();
             processWaitingCard();
             giveReward();
+            addCard();
             break;
         default:
             break;

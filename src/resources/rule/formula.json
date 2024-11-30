@@ -1,6 +1,6 @@
 {
   "type": "formula",
-  "formulaSum": 3,
+  "formulaSum": 4,
   "formula": [
     {
       "formulaName": "f_FindGoleMine",
@@ -41,6 +41,22 @@
       "reward": [
         {
           "name": "_test"
+        }
+      ]
+    },
+    {
+      "formulaName": "_test_formula2",
+      "cardSetName": "__test2",
+      "rewardSum": 3,
+      "reward": [
+        {
+          "name": "r_GPA_0.3"
+        },
+        {
+          "name": "_test"
+        },
+        {
+          "name": "_test2"
         }
       ]
     }

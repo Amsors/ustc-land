@@ -6,10 +6,11 @@
 #include <game/logic/cards.h>
 #include <game/logic/register.h>
 #include <game/logic/readjson.h>
+#include "nanogui/screen.h"
 
 #include "spdlog/spdlog.h"
 
-static std::string tryReadString(Json::Value &v, std::string key) {
+static std::string tryReadString(Json::Value &v,std::string key) {
 	if(v.isMember(key)) {
 		return v[key].asString();
 	}
@@ -39,6 +40,14 @@ static double tryReadDouble(Json::Value &v, std::string key) {
 	}
 	SPDLOG_LOGGER_WARN(spdlog::get("readjson"), "key: {} not found", key);
 	return v[key].asDouble();
+}
+
+static float tryReadFloat(Json::Value& v, std::string key) {
+	if (v.isMember(key)) {
+		return v[key].asFloat();
+	}
+	SPDLOG_LOGGER_WARN(spdlog::get("readjson"), "key: {} not found", key);
+	return v[key].asFloat();
 }
 
 static Json::Value tryReadArray(Json::Value &v, int i) {
@@ -392,7 +401,38 @@ void readRoleJson() {
 		std::string onename = tryReadString(jSingleRole, "name");
 
 		reg.regArrayElements["role"].push_back(onename);
-		reg.allCard["item"].insert(onename);
+		reg.allCard["role"].insert(onename);
+	}
+
+	inFile.close();
+}
+
+void readCardTypeJson() {
+	std::ifstream inFile("rule/cardtype.json");
+	Json::Reader reader;
+	Json::Value root;
+	reader.parse(inFile, root);
+
+	
+	int cardTypeSum = tryReadInt(root, "cardTypeSum");
+	reg.regValue.emplace(std::pair<std::string, int>("cardTypeSum", cardTypeSum));
+	Json::Value jCardType = tryReadValue(root, "cardType");
+	for (int i = 0; i < cardTypeSum; i++) {
+		Json::Value jSingleCardType = tryReadArray(jCardType, i);
+		std::string onename = tryReadString(jSingleCardType, "name");
+		float oneR = tryReadFloat(jSingleCardType, "R");
+		float oneG = tryReadFloat(jSingleCardType, "G");
+		float oneB = tryReadFloat(jSingleCardType, "B");
+		float oneA = tryReadFloat(jSingleCardType, "A");
+
+		if (std::find(reg.allCardType.begin(), reg.allCardType.end(), onename) == reg.allCardType.end()) {
+			SPDLOG_LOGGER_WARN(spdlog::get("readjson"), "cardtype: {} not identified", onename);
+			continue;
+		}
+
+		nanogui::Color color = nanogui::Color(oneR, oneG, oneB, oneA);
+		reg.cardTypeColor.emplace(std::pair<std::string, nanogui::Color>(onename, color));
+
 	}
 
 	inFile.close();
@@ -431,6 +471,9 @@ void readJson() {
 		}
 		else if (file == "role.json") {
 			readRoleJson();
+		}
+		else if (file == "cardtype.json") {
+			readCardTypeJson();
 		}
 		else{
 			SPDLOG_LOGGER_WARN(spdlog::get("readjson"), "no match for {}", file);

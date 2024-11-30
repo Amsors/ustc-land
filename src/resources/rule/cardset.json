@@ -1,6 +1,6 @@
 {
   "type": "cardSet",
-  "cardSetSum": 3,
+  "cardSetSum": 4,
   "cardSet": [
     {
       "cardSetName": "123",
@@ -41,6 +41,19 @@
       "card": [
         {
           "name": "_banana"
+        },
+        {
+          "name": "_home"
+        }
+      ]
+    },
+    {
+      "cardSetName": "__test2",
+      "cardNum": 2,
+      "timeNeeded": 4,
+      "card": [
+        {
+          "name": "_man"
         },
         {
           "name": "_home"
