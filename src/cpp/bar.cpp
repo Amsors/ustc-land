@@ -30,7 +30,6 @@ bool Bar::mouse_drag_event(const nanogui::Vector2i &p, const nanogui::Vector2i &
 void Bar::draw(NVGcontext *ctx) {
     Window::draw(ctx);
 
-    // TODO: 采用随机笔刷来绘制更好看的边框
     nvgSave(ctx);
     nvgStrokeWidth(ctx, 8.f);
     nvgStrokeColor(ctx, nvgRGB(0, 0, 0));
