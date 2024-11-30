@@ -66,14 +66,49 @@ private:
 	int index;
 };
 
+class Range {
+protected:
+	double upper;
+	double lower;
+
+	friend class Advancement;
+	friend class AttributeValueNeeded;
+	friend class AttributeArrayNeeded;
+	friend void readAdvancementJson();
+};
+
+class AttributeValueNeeded {
+protected:
+	std::string name;
+	Range res;
+
+	friend class Advancement;
+	friend void readAdvancementJson();
+};
+
+class AttributeArrayNeeded {
+protected:
+	std::string name;
+	std::vector<std::pair<std::string,Range>> res;
+
+	friend class Advancement;
+	friend void readAdvancementJson();
+};
+
 class Advancement {
 public:
+	enum AdvancementStatus {
+		LOCKED_P, LOCKED_N, SHOWN_P, SHOWN_N
+	};
+
 	Advancement();
+	bool checkAdvancement();
 
 private:
 	std::string name;
-	std::map<std::string, std::pair<double,double>> attributeValueNeeded;
-	std::map<std::string, std::pair<std::string,std::pair<double, double>>> attributeArrayNeeded;
+	std::vector<AttributeValueNeeded> attributeValueNeeded;
+	std::vector<AttributeArrayNeeded> attributeArrayNeeded;
+
 	std::vector<std::string> formulaNeeded;
 	std::vector<std::string> itemNeeded;
 	std::vector<std::string> cardNeeded;
@@ -132,10 +167,14 @@ public:
 	std::vector<std::string>& getRewardName() {
 		return this->rewardName;
 	}
+	std::string& getVagueMatch(){
+		return vagueMatch;
+	}
 private:
 	std::string formulaName;
 	std::string cardSetName;
 	std::vector<std::string> rewardName;
+	std::string vagueMatch;
 
 
 	friend void readFormulaJson();

@@ -1,7 +1,5 @@
 #include "game/main_application.h"
 
-#include <iostream>
-
 #include "game/common.h"
 #include "GLFW/glfw3.h"
 #include "nanogui/button.h"
@@ -14,7 +12,7 @@
 #include "game/logic/register.h"
 
 MainApplication::MainApplication():
-    nanogui::Screen({400, 270}, "USTC Land", false, true), camera(0, -4, -40) {
+    nanogui::Screen({400, 270}, "USTC Land", false, false), camera(0, -4, -40) {
     SPDLOG_LOGGER_TRACE(spdlog::get("render"), "Main window created! size of the window: (x: {}, y: {}); pixel ratio: {:.2}", m_size.x(), m_size.y(), m_pixel_ratio);
 
     // 加载字体
@@ -157,7 +155,15 @@ bool MainApplication::mouse_button_event(const nanogui::Vector2i &p, const int b
         if(down) {
             mouseState = RIGHT;
             if(state == PLAYING) {
-                return addCard();
+
+                int typerandi = rand() % reg.allCardType.size();
+                std::string typerand = reg.allCardType.at(typerandi);
+                int namerandi = rand() % reg.allCard[typerand].size();
+                auto it = reg.allCard[typerand].begin();
+                std::advance(it, namerandi);
+                newCards.emplace(*it);
+
+                return true;
             }
         } else {
             mouseState = NONE;
@@ -185,10 +191,13 @@ bool MainApplication::mouse_button_event(const nanogui::Vector2i &p, const int b
                             stacks.emplace_back(tmp);
                             stamp++;
                             movingStack = true;
-                            return true;
+                        } else {
+                            // 确保选中的牌堆是最后渲染出来的（即永远在最上方）
+                            std::swap(stacks[i], stacks.back());
                         }
-                        // 确保选中的牌堆是最后渲染出来的（即永远在最上方）
-                        std::swap(stacks[i], stacks.back());
+                        for(const auto &card: stacks.back().cards) {
+                            card->move({0.f, 0.f, -1.f});
+                        }
                         movingStack = true;
                         return true;
                     }
@@ -197,7 +206,7 @@ bool MainApplication::mouse_button_event(const nanogui::Vector2i &p, const int b
         } else {
             mouseState = NONE;
             if(movingStack) {
-                for(const auto &movingCard: stacks.back()) {
+                for(const auto &movingCard: stacks.back().cards) {
                     movingCard->move({0.f, 0.f, 1.f});
                 }
                 // 尝试合并两堆卡牌
@@ -338,6 +347,10 @@ void MainApplication::draw_contents() {
             checkCard();
             processWaitingCard();
             giveReward();
+            //updateAdvancement();
+            //检查成就在givereward里完成
+
+            addCard();
             break;
         default:
             break;

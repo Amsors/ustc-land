@@ -1,13 +1,13 @@
 #pragma once
 #include <queue>
 
-#include "json/json.h"
 #include "basic.h"
+#include "json/json.h"
 
 class CardSet {
 public:
 	CardSet() {};
-	CardSet(const std::vector<std::shared_ptr<Card>>& stack);
+	CardSet(const std::vector<std::shared_ptr<Card>>& stack, std::string& valueMatch);
 	std::priority_queue<std::string>& getCardset() {
 		return cardSet;
 	}

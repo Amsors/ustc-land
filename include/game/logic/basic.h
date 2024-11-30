@@ -4,14 +4,14 @@
 
 class Card final: public GameObject {
 public:
-    enum Type {
+    /*enum Type {
         ROLE, SPOT, ITEM
-    };
+    };*/
 
     using Position = nanogui::Vector3f;
     using Angle = nanogui::Vector3f;
 
-    explicit Card(Type type, const std::string &name, const nanogui::Vector3f &pos = {0.f, 0.f, 0.f});
+    explicit Card(std::string type, const std::string &name, const nanogui::Vector3f &pos = {0.f, 0.f, 0.f});
     // TODO: 不能在析构方法中保存数据
     ~Card() override = default;
     void calc(double deltaTime) override;
@@ -43,10 +43,6 @@ public:
         return color;
     }
 
-    [[nodiscard]] Type getType() const {
-        return type;
-    }
-
     [[nodiscard]] const std::string &getName() const {
         return name;
     }
@@ -66,18 +62,19 @@ private:
     Angle angle;
     const std::string name;
     nanogui::ref<nanogui::Texture> texture;
-    const Type type;
+    //const Type type;
+    std::string type;
     const nanogui::Color color;
 
-    static nanogui::Color colorSetter(const Type type) {
-        switch(type) {
-            case ROLE:
-                return {0.9843f, 0.9608f, 0.8784f, 1.f}; // #FBF5E0
-            case SPOT:
-                return {0.9373f, 0.6902f, 0.4706f, 1.f}; // #EFB078
-            case ITEM:
-                return {0.9765f, 0.7412f, 0.6824f, 1.f}; // #F9BDAE
-        }
-        return {0.f, 0.f, 0.f, 0.f};
-    }
+    //static nanogui::Color colorSetter(const Type type) {
+    //    switch(type) {
+    //        case ROLE:
+    //            return {0.9843f, 0.9608f, 0.8784f, 1.f}; // #FBF5E0
+    //        case SPOT:
+    //            return {0.9373f, 0.6902f, 0.4706f, 1.f}; // #EFB078
+    //        case ITEM:
+    //            return {0.9765f, 0.7412f, 0.6824f, 1.f}; // #F9BDAE
+    //    }
+    //    return {0.f, 0.f, 0.f, 0.f};
+    //}
 };

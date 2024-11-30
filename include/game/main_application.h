@@ -14,6 +14,7 @@ protected:
         this->cards = src;
         this->stamp = stp;
         this->status = sta;
+        this->timeUntil = 1e10;
     }
 
     std::vector<std::shared_ptr<Card>> cards;
@@ -21,10 +22,14 @@ protected:
     std::string cardSet;
     int stamp;
     double timeUntil;
+    std::string vagueMatch;
+    std::vector<std::string> lostCard;
 
     void initial() {
         this->status = 0;
     }
+
+    void del(std::string a);
 
     friend class MainApplication;
 };
@@ -38,10 +43,6 @@ public:
 
     enum MouseState {
         NONE, LEFT, RIGHT
-    };
-
-    enum CardStatus {
-        CHECKSTATUS, CARDSET, TIME, STAMP
     };
 
     enum  CheckStatus {
@@ -61,6 +62,7 @@ public:
     void checkCard();
     void giveReward();
     void processWaitingCard();
+    void updateAdvancement();
 
     void check_all_cards();
 
@@ -102,9 +104,10 @@ private:
     //std::vector<std::vector<std::shared_ptr<Card>>> cards; // 越在下面的卡牌，对应的下标越小；不同牌堆之间的顺序不确定
 
     bool movingStack = false;
+
     std::queue<std::string> rewards;
+    std::queue<std::string> newCards;
 
     int stamp = 0;
-    //std::vector<std::tuple<int, std::string, double, int>> cardStatus;
     std::vector<Stack> stacks;
 };

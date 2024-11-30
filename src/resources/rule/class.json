@@ -1,18 +1,18 @@
 {
   "type": "class",
-  "classSum": 3,
+  "classSum": 4,
   "class": [
     {
-      "name": "LinearAlgebra",
-      "index": 0
+      "name": "LinearAlgebra"
     },
     {
-      "name": "MathematicalAnalysis",
-      "index": 1
+      "name": "MathematicalAnalysis"
     },
     {
-      "name": "QuantumMechanics",
-      "index": 2
+      "name": "QuantumMechanics"
+    },
+    {
+      "name": "Physics"
     }
   ]
 }

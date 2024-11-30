@@ -3,23 +3,23 @@
   "advancementSum": 1,
   "advancement": [
     {
-      "name": "FindGoldMine",
+      "name": "_test_adv",
       "formulaNeededSum": 1,
       "formulaNeeded": [
         {
-          "name": "cs_FindGoldMine"
+          "name": "_test_formula2"
         }
       ],
-      "cardNeededSum": 1,
+      "cardNeededSum": 3,
       "cardNeeded": [
         {
-          "name": "TeachingBuilding"
-        }
-      ],
-      "itemNeededSum": 1,
-      "itemNeeded": [
+          "name": "_man"
+        },
         {
-          "name": "Pen"
+          "name": "_home"
+        },
+        {
+          "name": "@COIN_fruit"
         }
       ],
       "attributeValueNeededSum": 1,
@@ -27,22 +27,12 @@
         {
           "attributeName": "GPA",
           "upper": 5,
-          "lower": 0
+          "lower": 4
         }
       ],
-      "attributeArrayNeededSum": 1,
+      "attributeArrayNeededSum": 0,
       "attributeArrayNeeded": [
-        {
-          "attributeName": "classChosen",
-          "restrictionSum": 1,
-          "restriction": [
-            {
-              "index": 0,
-              "upper": 100,
-              "lower": 0
-            }
-          ]
-        }
+
       ]
     }
   ]
