@@ -50,8 +50,9 @@ private:
 
     std::vector<nanogui::ref<nanogui::Texture>> bgTextures;
     nanogui::Matrix4f iVp;
-    nanogui::RenderPass *renderPass;
-    nanogui::Shader *bgShader, *cardShader;
+    nanogui::RenderPass *renderPass, *bgPass, *shadowPass;
+    nanogui::Shader *bgShader, *cardShader, *floorShader, *shadowShader;
+    nanogui::ref<nanogui::Texture> depthMap, bgTex;
     nanogui::Vector3f camera;
 
     Bar *welcomeBar, *listBar, *infoBar; // HUD

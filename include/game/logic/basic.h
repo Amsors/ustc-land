@@ -16,9 +16,10 @@ public:
     ~Card() override = default;
     void calc(double deltaTime) override;
 
-    void move(const nanogui::Vector2f &delta) {
+    void move(const nanogui::Vector3f &delta) {
         pos.x() += delta[0];
         pos.y() += delta[1];
+        pos.z() += delta[2];
     }
 
     void moveTo(const nanogui::Vector2f &pos) {
