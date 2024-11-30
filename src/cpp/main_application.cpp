@@ -283,6 +283,9 @@ void MainApplication::draw_contents() {
             checkCard();
             processWaitingCard();
             giveReward();
+            //updateAdvancement();
+            //检查成就在givereward里完成
+
             addCard();
             break;
         default:

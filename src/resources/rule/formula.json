@@ -3,7 +3,7 @@
   "formulaSum": 4,
   "formula": [
     {
-      "formulaName": "f_FindGoleMine",
+      "formulaName": "f_FindGoldMine",
       "cardSetName": "cs_FindGoldMine",
       "rewardSum": 3,
       "reward": [

@@ -58,6 +58,7 @@ public:
     void checkCard();
     void giveReward();
     void processWaitingCard();
+    void updateAdvancement();
 
     void check_all_cards();
 

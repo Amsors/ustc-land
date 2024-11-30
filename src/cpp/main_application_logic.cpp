@@ -20,6 +20,7 @@ bool MainApplication::addCard() {
                 Stack tmp = Stack(newStack, UNCHECKED, stamp);
                 stamp++;
                 stacks.emplace_back(tmp);
+                reg.cardAttained[card] = true;
 
                 given = true;
                 break;
@@ -30,29 +31,6 @@ bool MainApplication::addCard() {
         }
     }
 
-    //int randkind = std::rand() % 3;
-    //if (randkind == 0) {
-    //    newStack.emplace_back(std::make_shared<Card>("role", "_man"));
-    //}
-    //else if (randkind == 1) {
-    //    int num = reg.regArrayElements["item"].size();
-    //    int randcard = std::rand() % num;
-    //    std::string name = reg.regArrayElements["item"].at(randcard);
-    //    //std::cout << "trying to add card " << name << std::endl;
-    //    newStack.emplace_back(std::make_shared<Card>("item", name));
-    //}
-    //else if (randkind == 2) {
-    //    int num = reg.regArrayElements["spot"].size();
-    //    int randcard = std::rand() % num;
-    //    std::string name = reg.regArrayElements["spot"].at(randcard);
-    //    //std::cout << "trying to add card " << name << std::endl;
-    //    newStack.emplace_back(std::make_shared<Card>("spot", name));
-    //}
-    //Stack tmp = Stack(newStack, UNCHECKED, stamp);
-    //stamp++;
-    //stacks.emplace_back(tmp);
-
-    //showCard();
     return true;
 }
 
@@ -123,24 +101,10 @@ void MainApplication::check_all_cards() {
 void MainApplication::giveReward() {
     while (this->rewards.empty() == false) {
         Reward* r = reg.rewardPtr[this->rewards.front()];
+        this->rewards.pop();
         SPDLOG_LOGGER_TRACE(spdlog::get("main"), "try giving reward {}", r->getName());
         if (r->getType() == "card") {
-            bool given = false;
-            for (std::string i : reg.allCardType) {
-                if (reg.allCard[i].contains(r->getCardName())) {
-
-                    std::vector<std::shared_ptr<Card>> newStack;
-                    newStack.emplace_back(std::make_shared<Card>(i, r->getCardName()));
-                    Stack tmp = Stack(newStack, UNCHECKED, stamp);
-                    stamp++;
-                    stacks.emplace_back(tmp);
-                    given = true;
-                    break;
-                }
-            }
-            if (!given) {
-                SPDLOG_LOGGER_WARN(spdlog::get("main"), "reward {} : {} does not exist", r->getType(), r->getCardName());
-            }
+            newCards.push(r->getCardName());
         }
         else if (r->getType() == "attributeValue") {
             if (reg.regAttribute.contains(r->getAttributeName()) == false) {
@@ -182,8 +146,8 @@ void MainApplication::giveReward() {
         else {
             SPDLOG_LOGGER_WARN(spdlog::get("main"), "reward type: {} does not exist", r->getType());
         }
-        this->rewards.pop();
-        //reg.outputAttribute();
+        reg.outputAttribute();
+        updateAdvancement();
     } 
 }
 
@@ -197,6 +161,7 @@ void MainApplication::processWaitingCard() {
             //std::cout << "need " << stack.timeUntil << " now " << lastFrame << "\n";
             for (int i = 0; i < reg.cardSetToFormula[stack.cardSet].size(); i++) {
                 std::string formulaName = reg.cardSetToFormula[stack.cardSet].at(i);
+                reg.formulaAttained[formulaName] = true;
                 for (int j = 0; j < reg.formulaPtr[formulaName]->getRewardName().size(); j++) {
                     rewards.emplace(reg.formulaPtr[formulaName]->getRewardName().at(j));
                 }
@@ -205,4 +170,24 @@ void MainApplication::processWaitingCard() {
         }
     }
     return;
+}
+
+
+void MainApplication::updateAdvancement() {
+    //assert(false);
+    for (const auto& ad : reg.regAdvancement) {
+        if (reg.advancementStatus[ad.first] == Advancement::LOCKED_P) {
+            continue;
+        }
+        if (reg.advancementStatus[ad.first] == Advancement::SHOWN_P) {
+            continue;
+        }
+        if (ad.second->checkAdvancement() == true) {
+            SPDLOG_LOGGER_TRACE(spdlog::get("main"), "match advancement: {}", ad.first);
+            reg.advancementStatus[ad.first] = Advancement::SHOWN_P;
+        }
+        else {
+            std::cout << "do not match " << ad.first << "\n";
+        }
+    }
 }

@@ -128,6 +128,7 @@ void readAdvancementJson() {
 	reader.parse(inFile, root);
 
 	int advancementSum = tryReadInt(root, "advancementSum");
+	reg.regValue["advancementSum"] = advancementSum;
 	Json::Value jAdcancement = tryReadValue(root, "advancement");
 	for(int i = 0; i < advancementSum; i++) {
 		Json::Value singleAdvancement = tryReadArray(jAdcancement, i);
@@ -151,13 +152,13 @@ void readAdvancementJson() {
 			newAdvancement->cardNeeded.push_back(needName);
 		}
 
-		int itemNeededSum = tryReadInt(singleAdvancement, "itemNeededSum");
-		Json::Value jItemNeeded = tryReadValue(singleAdvancement, "itemNeeded");
-		for(int j = 0; j < itemNeededSum; j++) {
-			Json::Value jSingleItemNeeded = tryReadArray(jItemNeeded, j);
-			std::string needName = tryReadString(jSingleItemNeeded, "name");
-			newAdvancement->itemNeeded.push_back(needName);
-		}
+		//int itemNeededSum = tryReadInt(singleAdvancement, "itemNeededSum");
+		//Json::Value jItemNeeded = tryReadValue(singleAdvancement, "itemNeeded");
+		//for(int j = 0; j < itemNeededSum; j++) {
+		//	Json::Value jSingleItemNeeded = tryReadArray(jItemNeeded, j);
+		//	std::string needName = tryReadString(jSingleItemNeeded, "name");
+		//	newAdvancement->itemNeeded.push_back(needName);
+		//}
 
 		int attributeValueNeededSum = tryReadInt(singleAdvancement, "attributeValueNeededSum");
 		Json::Value jAttributeValueNeeded = tryReadValue(singleAdvancement, "attributeValueNeeded");
@@ -165,10 +166,14 @@ void readAdvancementJson() {
 			Json::Value singleAttribute = tryReadArray(jAttributeValueNeeded, j);
 			double upper = tryReadDouble(singleAttribute, "upper");
 			double lower = tryReadDouble(singleAttribute, "lower");
-			std::pair<double, double> range(upper,lower);
+
 			std::string attributeName = tryReadString(singleAttribute, "attributeName");
-			newAdvancement->attributeValueNeeded.emplace(std::pair<std::string, std::pair<double, double>>(
-				attributeName, range));
+
+			AttributeValueNeeded tmp;
+			tmp.name = attributeName;
+			tmp.res.lower = lower;
+			tmp.res.upper = upper;
+			newAdvancement->attributeValueNeeded.push_back(tmp);
 		}
 
 		int attributeArrayNeededSum = tryReadInt(singleAdvancement, "attributeArrayNeededSum");
@@ -176,6 +181,10 @@ void readAdvancementJson() {
 		for(int j = 0; j < attributeArrayNeededSum; j++) {
 			Json::Value jSingleAttribute = tryReadArray(jAttributeArrayNeeded, j);
 			std::string attributeName = tryReadString(jSingleAttribute, "attributeName");
+			std::string key = reg.regAttribute[attributeName]->getAttributeMatchKey();
+
+			AttributeArrayNeeded tmp;
+			tmp.name = attributeName;
 
 			int restrictionSum = tryReadInt(jSingleAttribute, "restrictionSum");
 			Json::Value jrestriction = tryReadValue(jSingleAttribute, "restriction");
@@ -183,16 +192,22 @@ void readAdvancementJson() {
 				Json::Value singleRestriction = tryReadArray(jrestriction, k);
 				double upper = tryReadDouble(singleRestriction, "upper");
 				double lower = tryReadDouble(singleRestriction, "lower");
-				std::pair<double, double> range(upper,lower);
 				std::string name = tryReadString(singleRestriction, "name");
-				std::pair<std::string, std::pair<double, double>> detail(name, range);
-				newAdvancement->attributeArrayNeeded.emplace(std::pair<std::string, std::pair<std::string, std::pair<double, double>>>(
-					attributeName, detail
-				));
+
+				if (reg.regAttribute[attributeName]->getAttributeArray().contains(name) == false) {
+					SPDLOG_LOGGER_WARN(spdlog::get("readjson"), "no element: {} in ArrayAttribute: {}", name, attributeName);
+					continue;
+				}
+				std::pair<std::string, Range> tmp2;
+				tmp2.first = name;
+				tmp2.second.lower = lower;
+				tmp2.second.upper = upper;
+				tmp.res.push_back(tmp2);
 			}
 		}
 
 		reg.regAdvancement.emplace(std::pair(newAdvancement->name, newAdvancement));
+		reg.advancementStatus.emplace(std::pair(newAdvancement->name, Advancement::AdvancementStatus::SHOWN_N));
 	}
 	inFile.close();
 }
@@ -401,6 +416,7 @@ void readRoleJson() {
 		std::string onename = tryReadString(jSingleRole, "name");
 
 		reg.regArrayElements["role"].push_back(onename);
+		reg.cardAttained.emplace(std::pair<std::string, bool>(onename, false));
 		reg.allCard["role"].insert(onename);
 	}
 

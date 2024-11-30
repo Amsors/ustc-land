@@ -6,7 +6,7 @@
       "name": "GPA",
       "visibility": true,
       "max": 4.3,
-      "initial": 3.0
+      "initial": 3.8
     },
     {
       "name": "physicalHealth",

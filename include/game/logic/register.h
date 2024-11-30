@@ -12,9 +12,10 @@ public:
 	std::map<std::string, int> regValue;
 	std::map<std::string, Attribute*> regAttribute;
 	std::map<std::string, Advancement*> regAdvancement;
+	std::map<std::string, int> advancementStatus;
 
 	std::map<std::string, std::vector<std::string>> regArrayElements;
-	//        数组注册名称      数组（元素为str）
+	//        数组注册名称      数组元素的索引
 
 	std::map<std::string, bool> cardAttained;
 	std::map<std::string, bool> formulaAttained;
