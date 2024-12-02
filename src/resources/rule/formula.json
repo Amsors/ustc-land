@@ -1,57 +1,25 @@
 {
   "type": "formula",
-  "formulaSum": 4,
+  "formulaSum": 2,
   "formula": [
     {
-      "formulaName": "f_FindGoldMine",
-      "cardSetName": "cs_FindGoldMine",
-      "rewardSum": 3,
-      "reward": [
-        {
-          "name": "r_AddGPA_0.3"
-        },
-        {
-          "name": "r_FB_Physics"
-        },
-        {
-          "name": "r_C_item_pen"
-        }
-      ]
-    },
-    {
-      "formulaName": "_test_formula",
-      "cardSetName": "__test",
-      "rewardSum": 3,
-      "reward": [
-        {
-          "name": "r_GPA_0.3"
-        },
-        {
-          "name": "_test"
-        },
-        {
-          "name": "_test2"
-        }
-      ]
-    },
-    {
       "formulaName": "_test_formula1",
-      "cardSetName": "__test1",
+      "cardSetName": "_cardset_test1",
+      "vagueMatch": "COIN",
       "rewardSum": 1,
       "reward": [
         {
-          "name": "_test"
+          "name": "r_GPA_0.3"
+
         }
       ]
     },
     {
       "formulaName": "_test_formula2",
-      "cardSetName": "__test2",
-      "rewardSum": 3,
+      "cardSetName": "_cardset_test2",
+      "vagueMatch": "#",
+      "rewardSum": 2,
       "reward": [
-        {
-          "name": "r_GPA_0.3"
-        },
         {
           "name": "_test"
         },

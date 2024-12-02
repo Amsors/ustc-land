@@ -6,11 +6,39 @@
 #include "game/logic/register.h"
 #include "spdlog/spdlog.h"
 
-CardSet::CardSet(const std::vector<std::shared_ptr<Card>>& stack) {
+CardSet::CardSet(const std::vector<std::shared_ptr<Card>>& stack, std::string& vagueMatch) {
 	int cardSum = stack.size();
 	this->cardSum = cardSum;
+	bool mark = false;
 	for (int i = 0; i < cardSum; i++) {
-		this->cardSet.emplace(stack.at(i)->getName());
+		std::string nametmp = stack.at(i)->getName();
+		std::string addtmp;
+		if (nametmp[0] == '@') {
+			if (mark) {
+				SPDLOG_LOGGER_WARN(spdlog::get("main"),"can not have more than one vague match card");
+			}
+			vagueMatch.clear();
+			for (int j = 0; j < nametmp.length(); j++) {
+				if (nametmp[j] >= 'A' && nametmp[j] <= 'Z') {
+					vagueMatch.push_back(nametmp[j]);
+				}
+				else if (nametmp[j] == '@') {
+					continue;
+				}
+				else {
+					addtmp.push_back(nametmp[j]);
+				}
+			}
+			mark = true;
+			addtmp = "@" + addtmp;
+		}
+		else {
+			addtmp = nametmp;
+		}
+		this->cardSet.emplace(addtmp);
+	}
+	if (mark == false) {
+		vagueMatch = '#';
 	}
 	return;
 }

@@ -1,60 +1,38 @@
 {
   "type": "cardSet",
-  "cardSetSum": 4,
+  "cardSetSum": 2,
   "cardSet": [
     {
-      "cardSetName": "123",
-      "cardNum": 3,
-      "timeNeeded": 1,
+      "cardSetName": "_cardset_test2",
+      "timeNeeded": 4,
+      "cardNum": 2,
       "card": [
-        {
-          "name": "Role"
-        },
-        {
-          "name": "TeachingBuilding"
-        },
-        {
-          "name": "ExperimentTool"
-        }
-      ]
-    },
-    {
-      "cardSetName": "__test",
-      "cardNum": 3,
-      "timeNeeded": 3,
-      "card": [
-        {
-          "name": "_banana"
-        },
         {
           "name": "_man"
-        },
-        {
-          "name": "_brick"
-        }
-      ]
-    },
-    {
-      "cardSetName": "__test1",
-      "cardNum": 2,
-      "timeNeeded": 3,
-      "card": [
-        {
-          "name": "_banana"
         },
         {
           "name": "_home"
         }
+      ],
+      "lostCardNum": 0,
+      "lostCard": [
+
       ]
     },
     {
-      "cardSetName": "__test2",
-      "cardNum": 2,
+      "cardSetName": "_cardset_test1",
       "timeNeeded": 4,
+      "cardNum": 2,
       "card": [
         {
-          "name": "_man"
+          "name": "@_fruit"
         },
+        {
+          "name": "_man"
+        }
+      ],
+      "lostCardNum": 1,
+      "lostCard": [
         {
           "name": "_home"
         }

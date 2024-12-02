@@ -1,44 +1,7 @@
 {
   "type": "advancement",
-  "advancementSum": 2,
+  "advancementSum": 1,
   "advancement": [
-    {
-      "name": "FindGoldMine",
-      "formulaNeededSum": 1,
-      "formulaNeeded": [
-        {
-          "name": "f_FindGoldMine"
-        }
-      ],
-      "cardNeededSum": 1,
-      "cardNeeded": [
-        {
-          "name": "TeachingBuilding"
-        }
-      ],
-      "attributeValueNeededSum": 1,
-      "attributeValueNeeded": [
-        {
-          "attributeName": "GPA",
-          "upper": 5,
-          "lower": 0
-        }
-      ],
-      "attributeArrayNeededSum": 1,
-      "attributeArrayNeeded": [
-        {
-          "attributeName": "classChosen",
-          "restrictionSum": 1,
-          "restriction": [
-            {
-              "name": "Physics",
-              "upper": 100,
-              "lower": 0
-            }
-          ]
-        }
-      ]
-    },
     {
       "name": "_test_adv",
       "formulaNeededSum": 1,
@@ -56,7 +19,7 @@
           "name": "_home"
         },
         {
-          "name": "_coin"
+          "name": "@COIN_fruit"
         }
       ],
       "attributeValueNeededSum": 1,

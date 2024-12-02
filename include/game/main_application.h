@@ -22,10 +22,14 @@ protected:
     std::string cardSet;
     int stamp;
     double timeUntil;
+    std::string vagueMatch;
+    std::vector<std::string> lostCard;
 
     void initial() {
         this->status = 0;
     }
+
+    void del(std::string a);
 
     friend class MainApplication;
 };
@@ -59,6 +63,7 @@ public:
     void giveReward();
     void processWaitingCard();
     void updateAdvancement();
+    //void deleteCard();
 
     void check_all_cards();
 

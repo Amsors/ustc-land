@@ -226,11 +226,14 @@ void readCardSetJson() {
 		
 		Json::Value jSingleCardSet = tryReadArray(jCardSet, i);
 		std::string cardSetName = tryReadString(jSingleCardSet, "cardSetName");
-		Json::Value jCard = tryReadValue(jSingleCardSet, "card");
 		int cardNum = tryReadInt(jSingleCardSet, "cardNum");
-		double timeNeeded = tryReadDouble(jSingleCardSet, "timeNeeded");
+		Json::Value jCard = tryReadValue(jSingleCardSet, "card");
+		int lostCardNum = tryReadInt(jSingleCardSet, "lostCardNum");
+		Json::Value jLostCard = tryReadValue(jSingleCardSet, "lostCard");
 		
 		CardSet newCardSet;
+
+		double timeNeeded = tryReadDouble(jSingleCardSet, "timeNeeded");
 		reg.cardSetTimeNeeded[cardSetName] = timeNeeded;
 
 		for(int j = 0; j < cardNum; j++) {
@@ -238,7 +241,17 @@ void readCardSetJson() {
 			std::string oneCardName = tryReadString(oneCard, "name");
 			newCardSet.cardSet.emplace(oneCardName);
 		}
+
+		std::vector<std::string> tmp;
+		for (int j = 0; j < lostCardNum; j++) {
+			Json::Value oneLostCard = tryReadArray(jLostCard, j);
+			std::string oneLostCardName = tryReadString(oneLostCard, "name");
+			tmp.emplace_back(oneLostCardName);
+		}
+		reg.cardSetLostCard.emplace(std::pair<std::string, std::vector<std::string>>(cardSetName, tmp));
+
 		newCardSet.cardSum = cardNum;
+		
 		/*reg.cardSetPtr.emplace(std::pair(
 			cardSetName, newCardSet));*/
 		reg.regArrayElements["cardSet"].push_back(cardSetName);
@@ -317,6 +330,9 @@ void readFormulaJson() {
 		std::string tryCardSet = tryReadString(jSingleFormula, "cardSetName");
 		std::string  tryFormulaName = tryReadString(jSingleFormula, "formulaName");
 		int tryRewardtSum = tryReadInt(jSingleFormula, "rewardSum");
+
+		std::string tryVagueMatch = tryReadString(jSingleFormula, "vagueMatch");
+		newFormula->vagueMatch = tryVagueMatch;
 
 		newFormula->formulaName = tryFormulaName;
 		newFormula->cardSetName = tryFormulaName;

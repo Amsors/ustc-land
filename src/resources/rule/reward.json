@@ -33,7 +33,7 @@
     {
       "name": "_test2",
       "type": "card",
-      "cardName": "_coin"
+      "cardName": "@COIN_fruit"
     }
   ]
 }

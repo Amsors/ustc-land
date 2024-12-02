@@ -167,10 +167,14 @@ public:
 	std::vector<std::string>& getRewardName() {
 		return this->rewardName;
 	}
+	std::string& getVagueMatch(){
+		return vagueMatch;
+	}
 private:
 	std::string formulaName;
 	std::string cardSetName;
 	std::vector<std::string> rewardName;
+	std::string vagueMatch;
 
 
 	friend void readFormulaJson();

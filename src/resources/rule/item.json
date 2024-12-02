@@ -3,13 +3,13 @@
   "itemSum": 4,
   "item": [
     {
-      "name": "_banana"
+      "name": "@BANANA_fruit"
     },
     {
       "name": "_apple"
     },
     {
-      "name": "_coin"
+      "name": "@COIN_fruit"
     },
     {
       "name": "_brick"

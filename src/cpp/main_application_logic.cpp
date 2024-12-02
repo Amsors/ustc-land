@@ -19,7 +19,14 @@ bool MainApplication::addCard() {
                 newStack.emplace_back(std::make_shared<Card>(cardType, card));
                 Stack tmp = Stack(newStack, UNCHECKED, stamp);
                 stamp++;
-                stacks.emplace_back(tmp);
+
+                //防止在拖动卡牌过程中因reward产生的新的卡牌成为被移动对象
+                if (stacks.empty()) {
+                    stacks.emplace_back(tmp);
+                }
+                else {
+                    stacks.insert(stacks.end()-1, tmp);
+                }
                 reg.cardAttained[card] = true;
 
                 given = true;
@@ -27,7 +34,7 @@ bool MainApplication::addCard() {
             }
         }
         if (given == false) {
-            SPDLOG_LOGGER_WARN(spdlog::get("main"), "no registered card: {}", card);
+            SPDLOG_LOGGER_WARN(spdlog::get("main"), "no registered card: {} when trying to add card", card);
         }
     }
 
@@ -45,30 +52,32 @@ void MainApplication::showCard() {
     }
 }
 
-int framecnt = 0;
+//int framecnt = 0;
 void MainApplication::checkCard() {
-    framecnt++;
-    int dooutput = 0;
-    if (framecnt == 100 && 0) {
-        std::cout << "=====output at "<<lastFrame<<"\n";
-        dooutput = 1;
-        framecnt = 0;
-    }
+//    framecnt++;
+//    int dooutput = 0;
+//    if (framecnt == 100) {
+//        std::cout << "=====output at "<<lastFrame<<"\n";
+//        dooutput = 1;
+//        framecnt = 0;
+//    }
     
     for (int i = 0; i < stacks.size(); i++) {
         
-        if (dooutput && 0) {
-            std::cout << "checking stack " << i << " stamp is " << this->stacks[i].stamp
-                << " status is " << this->stacks[i].status << "\n";
-        }
+        //if (dooutput) {
+        //    std::cout << "checking stack " << i << " stamp is " << this->stacks[i].stamp
+        //        << " status is " << this->stacks[i].status << "\n";
+        //}
 
         if (stacks[i].status != UNCHECKED) {
             continue;
         }
         std::vector<std::shared_ptr<Card>>& stack = this->stacks.at(i).cards;
-        CardSet tmp(stack);
-        //tmp.showCardDetail();
-        //std::cout << "  total " << stack.size() << " stacks\n";
+        std::string vagueMatch;
+        CardSet tmp(stack,vagueMatch);
+        tmp.showCardDetail();
+        std::cout << "-----\n";
+        std::cout << "  total " << stack.size() << " stacks\n";
         auto it = reg.cardSetMap.find(tmp);
         if (it == reg.cardSetMap.end()) {
             stacks[i].status = CHECKED_N;
@@ -80,6 +89,14 @@ void MainApplication::checkCard() {
             stacks[i].status = CHECKED_P;
             stacks[i].cardSet = it->second;
             stacks[i].timeUntil = reg.cardSetTimeNeeded[it->second] + lastFrame;
+            stacks[i].vagueMatch = vagueMatch;
+            if (reg.cardSetLostCard.contains(it->second)) {
+                stacks[i].lostCard = reg.cardSetLostCard[it->second];
+            }
+            else {
+                SPDLOG_LOGGER_WARN(spdlog::get("main"),
+                    "lostcard {} not registered at time: {}. stack stamp: {}", it->second, lastFrame, stacks[i].stamp);
+            }
 
             //reg.outputAttribute();
         }
@@ -91,7 +108,8 @@ void MainApplication::check_all_cards() {
     int stackSum = this->stacks.size();
     std::cout << "------------\n";
     for (int i = 0; i < stackSum; i++) {
-        CardSet tmp(this->stacks.at(i).cards);
+        std::string strNONEED;
+        CardSet tmp(this->stacks.at(i).cards,strNONEED);
         std::cout << "\nstack " << i << " ";
         tmp.showCardDetail();  
     }
@@ -146,7 +164,7 @@ void MainApplication::giveReward() {
         else {
             SPDLOG_LOGGER_WARN(spdlog::get("main"), "reward type: {} does not exist", r->getType());
         }
-        reg.outputAttribute();
+        //reg.outputAttribute();
         updateAdvancement();
     } 
 }
@@ -161,7 +179,24 @@ void MainApplication::processWaitingCard() {
             //std::cout << "need " << stack.timeUntil << " now " << lastFrame << "\n";
             for (int i = 0; i < reg.cardSetToFormula[stack.cardSet].size(); i++) {
                 std::string formulaName = reg.cardSetToFormula[stack.cardSet].at(i);
+
+                std::cout << "card set " << stack.cardSet << " vaguematch "<<stack.vagueMatch<<"\n";
+                if (reg.formulaPtr[formulaName]->getVagueMatch() != stack.vagueMatch) {
+                    continue;
+                }
                 reg.formulaAttained[formulaName] = true;
+
+                if (reg.cardSetLostCard.contains(stack.cardSet)) {
+                    std::vector<std::string>& tmpset = reg.cardSetLostCard[stack.cardSet];
+                    for (auto const& name : tmpset) {
+                        stack.del(name);
+                    }
+                }
+                else {
+                    SPDLOG_LOGGER_WARN(spdlog::get("main"),
+                        "lostcard set for cardset {} not registered", stack.cardSet);
+                }
+
                 for (int j = 0; j < reg.formulaPtr[formulaName]->getRewardName().size(); j++) {
                     rewards.emplace(reg.formulaPtr[formulaName]->getRewardName().at(j));
                 }
@@ -187,7 +222,19 @@ void MainApplication::updateAdvancement() {
             reg.advancementStatus[ad.first] = Advancement::SHOWN_P;
         }
         else {
-            std::cout << "do not match " << ad.first << "\n";
+            //std::cout << "do not match " << ad.first << "\n";
         }
     }
+}
+
+//void MainApplication::deleteCard() {
+//
+//}
+
+void Stack::del(std::string a) {
+    /*for (int i = 0; i < this->cards.size(); i++) {
+        if (cards.at(i)->getName() == a) {
+            std::cout << "   find\n";
+        }
+    }*/
 }

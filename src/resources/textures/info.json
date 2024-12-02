@@ -1,8 +1,8 @@
 {
-  "_man": "/role/_man.png",
-  "_brick": "/item/_brick.png",
-  "_coin": "/item/_coin.png",
-  "_apple": "/item/_apple.png",
-  "_banana": "/item/_banana.png",
-  "_home": "/spot/_home.png"
+  "_man": "/card/_man.png",
+  "_brick": "/card/_brick.png",
+  "@COIN_fruit": "/card/@COIN_fruit.png",
+  "_apple": "/card/_apple.png",
+  "@BANANA_fruit": "/card/@BANANA_fruit.png",
+  "_home": "/card/_home.png"
 }
