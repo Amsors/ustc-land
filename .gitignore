@@ -1,5 +1,5 @@
 # CMake构建目录
-out/
+/out/
 cmake-build-*/
 
 # 运行目录
