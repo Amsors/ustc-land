@@ -52,6 +52,10 @@ bool Advancement::checkAdvancement() {
 			double needLower = detail.res.at(i).second.lower;
 			std::string needName = detail.res.at(i).first;
 
+			bool containIndex = reg.regAttribute[name]->getAttributeArray().contains(needName);
+			if (containIndex == false) {
+				return false;
+			}
 			double realValue = reg.regAttribute[name]->getAttributeArray()[needName];
 			if (realValue > needUpper || realValue < needLower) {
 				return false;

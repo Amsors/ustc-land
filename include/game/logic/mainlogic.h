@@ -101,6 +101,13 @@ public:
 		LOCKED_P, LOCKED_N, SHOWN_P, SHOWN_N
 	};
 
+	const std::string& getName() const {
+		return this->name;
+	}
+	bool getEstablished() const {
+		return this->established;
+	}
+	
 	Advancement();
 	bool checkAdvancement();
 
@@ -112,7 +119,7 @@ private:
 	std::vector<std::string> formulaNeeded;
 	std::vector<std::string> itemNeeded;
 	std::vector<std::string> cardNeeded;
-	int established;
+	bool established;
 
 	friend void readAdvancementJson();
 };

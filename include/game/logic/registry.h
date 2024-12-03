@@ -37,6 +37,8 @@ public:
 	std::map<std::string, Reward*> rewardPtr;
 	
 	void outputAttribute();
+	void AttributeOutput();
+	void AdvancementOutput();
 };
 
 extern Registry reg;

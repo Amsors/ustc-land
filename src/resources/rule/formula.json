@@ -6,11 +6,14 @@
       "formulaName": "_test_formula1",
       "cardSetName": "_cardset_test1",
       "vagueMatch": "COIN",
-      "rewardSum": 1,
+      "rewardSum": 2,
       "reward": [
         {
           "name": "r_GPA_0.3"
 
+        },
+        {
+          "name": "_test"
         }
       ]
     },
@@ -18,11 +21,8 @@
       "formulaName": "_test_formula2",
       "cardSetName": "_cardset_test2",
       "vagueMatch": "#",
-      "rewardSum": 2,
+      "rewardSum": 1,
       "reward": [
-        {
-          "name": "_test"
-        },
         {
           "name": "_test2"
         }

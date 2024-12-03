@@ -153,6 +153,9 @@ void MainApplication::giveReward() {
                 SPDLOG_LOGGER_WARN(spdlog::get("main"), "reward {} : {} does not exist", r->getType(), r->getAttributeName());
             }
             if (reg.regAttribute[r->getAttributeName()]->getAttributeArray().contains(r->getKey()) == false) {
+                reg.regAttribute[r->getAttributeName()]->getAttributeArray().emplace(std::pair<std::string, double>(r->getKey(), 0.0));
+            }
+            if (reg.regAttribute[r->getAttributeName()]->getAttributeArray().contains(r->getKey()) == false) {
                 SPDLOG_LOGGER_WARN(spdlog::get("main"), "{} not in registered array {}", r->getKey(),
                     reg.regAttribute[r->getAttributeName()]->getAttributeMatchKey());
             }
@@ -216,7 +219,8 @@ void MainApplication::processWaitingCard() {
 
 
 void MainApplication::updateAdvancement() {
-    //assert(false);
+    reg.AttributeOutput();
+    reg.AdvancementOutput();
     for (const auto& ad : reg.regAdvancement) {
         if (reg.advancementStatus[ad.first] == Advancement::LOCKED_P) {
             continue;

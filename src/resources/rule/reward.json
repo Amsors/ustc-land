@@ -1,6 +1,6 @@
 {
   "type": "reward",
-  "rewardSum": 5,
+  "rewardSum": 3,
   "reward": [
     {
       "name": "r_GPA_0.3",
@@ -8,19 +8,6 @@
       "attributeName": "GPA",
       "change": "ratio_of_rest",
       "changeValue": 0.3
-    },
-    {
-      "name": "r_FB_Physics",
-      "type": "attributeArray",
-      "attributeName": "finalTestBonus",
-      "key": "Physics",
-      "change": "add",
-      "changeValue": 1
-    },
-    {
-      "name": "r_C_item_pen",
-      "type": "card",
-      "cardName": "pen"
     },
     {
       "name": "_test",

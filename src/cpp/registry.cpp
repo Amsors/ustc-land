@@ -24,3 +24,29 @@ void Registry::outputAttribute() {
 	}
 	std::cout << "---AttributeEnd---\n";
 }
+
+
+void Registry::AttributeOutput() {
+	for (const auto& attr : reg.regAttribute) {
+		auto attrPtr = attr.second;
+		if (attrPtr->getIsArray() == true) {
+			//输出数组型的属性
+			std::cout << "[Array]" << attrPtr->getName() << ":\n";
+			for (const auto& element : attrPtr->getAttributeArray()) {
+				std::cout << "element: " << element.first << " value: " << element.second << "\n";
+			}
+		}
+		else {
+			//输出元素型的属性
+			std::cout << "[Value]" << attrPtr->getName() << ": " << attrPtr->getAttributeValue() << "\n";
+		}
+	}
+}
+
+void Registry::AdvancementOutput() {
+	for (const auto& adv : reg.regAdvancement) {
+		auto advPtr = adv.second;
+		std::cout << advPtr->getName();
+		std::cout << (advPtr->getEstablished() == true ? " Established" : " Unestablished") << "\n";
+	}
+}

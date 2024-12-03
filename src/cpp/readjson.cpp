@@ -104,11 +104,11 @@ void readAttributeJson() {
 		
 		std::string match = tryReadString(jSingleAttributeArray, "match");
 		newAttribute->attributeMatchKey = match;
-		for (int j = 0; j < reg.regArrayElements[match].size(); j++) {
+		/*for (int j = 0; j < reg.regArrayElements[match].size(); j++) {
 			newAttribute->attributeArray.emplace(
 				std::pair<std::string, double>(reg.regArrayElements[match].at(j), 0.0)
 				);
-		}
+		}*/
 
 		/*SPDLOG_LOGGER_TRACE(spdlog::get("readjson"), "read attribute successfully. kind: {}, index: {}, name: {}",
 			"Array", i, jSingleAttributeArray["name"].asString());*/
