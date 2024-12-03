@@ -88,7 +88,6 @@ void MainApplication::checkCard() {
             else {
                 SPDLOG_LOGGER_TRACE(spdlog::get("main"),
                     "match cardset: {} at time: {}. stack stamp: {}", it->second, lastFrame, stacks[i].stamp);
-                reg.cardSetAttained[it->second] = true;
                 stacks[i].status = CHECKED_P;
                 stacks[i].cardSet = it->second;
                 stacks[i].timeUntil = reg.cardSetTimeNeeded[it->second] + lastFrame;
@@ -193,6 +192,11 @@ void MainApplication::processWaitingCard() {
             //std::cout << "need " << stack.timeUntil << " now " << lastFrame << "\n";
             SPDLOG_LOGGER_TRACE(spdlog::get("main"), 
                 "cardset {} attained in on stack with stamp {}, time is {}", stack.cardSet, stack.stamp, lastFrame);
+            if (reg.cardSetAttained[stack.cardSet] == true && reg.cardSetIsOnce[stack.cardSet] == true) {
+                stack.status = UNCHECKED;
+                continue;
+            }
+            reg.cardSetAttained[stack.cardSet] = true;
             for (int i = 0; i < reg.cardSetToFormula[stack.cardSet].size(); i++) {
                 std::string formulaName = reg.cardSetToFormula[stack.cardSet].at(i);
 
