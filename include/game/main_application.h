@@ -22,6 +22,8 @@ protected:
     std::string cardSet;
     int stamp;
     double timeUntil;
+    double timeStart;
+    double progress;
     std::string vagueMatch;
     std::vector<std::string> lostCard;
 

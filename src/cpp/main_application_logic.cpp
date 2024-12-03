@@ -92,6 +92,8 @@ void MainApplication::checkCard() {
                 stacks[i].status = CHECKED_P;
                 stacks[i].cardSet = it->second;
                 stacks[i].timeUntil = reg.cardSetTimeNeeded[it->second] + lastFrame;
+                stacks[i].timeStart = lastFrame;
+                stacks[i].progress = 0;
                 stacks[i].vagueMatch = vagueMatch;
                 if (reg.cardSetLostCard.contains(it->second)) {
                     stacks[i].lostCard = reg.cardSetLostCard[it->second];
@@ -182,6 +184,10 @@ void MainApplication::processWaitingCard() {
     for (auto& stack : this->stacks) {
         if (stack.status < CHECKED_P) {
             continue;
+        }
+        stack.progress = (lastFrame - stack.timeStart) / (stack.timeUntil - stack.timeStart);
+        if (stack.progress > 1.0) {
+            stack.progress = 1.0;
         }
         if (stack.timeUntil <= lastFrame) {
             //std::cout << "need " << stack.timeUntil << " now " << lastFrame << "\n";
