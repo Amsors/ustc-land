@@ -10,7 +10,7 @@
 #include "spdlog/sinks/daily_file_sink.h"
 #include "spdlog/sinks/wincolor_sink.h"
 #include "game/logic/mainlogic.h"
-#include "game/logic/register.h"
+#include "game/logic/registry.h"
 #include "game/logic/readjson.h"
 
 #ifdef __USTC_LAND_RELEASE__

@@ -5,7 +5,7 @@
 #include "json/json.h"
 #include "game/logic/mainlogic.h"
 #include "game/logic/readjson.h"
-#include "game/logic/register.h"
+#include "game/logic/registry.h"
 #include "spdlog/spdlog.h"
 
 Advancement::Advancement() {

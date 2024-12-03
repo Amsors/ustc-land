@@ -4,7 +4,7 @@
 #include "game/logic/mainlogic.h"
 #include "nanogui/screen.h"
 
-class Register {
+class Registry {
 public:
 	std::vector<std::pair<std::string,int>> regJsonFile;
 
@@ -23,6 +23,8 @@ public:
 	std::map<CardSet, std::string> cardSetMap;
 	std::map<std::string, double> cardSetTimeNeeded;
 	std::map<std::string, std::vector<std::string>> cardSetLostCard;
+	std::map<std::string, bool> cardSetIsOnce;
+	std::map<std::string, bool> cardSetAttained;
 
 	std::vector<std::string> allCardType;
 	std::map<std::string, nanogui::Color> cardTypeColor;
@@ -37,4 +39,4 @@ public:
 	void outputAttribute();
 };
 
-extern Register reg;
+extern Registry reg;

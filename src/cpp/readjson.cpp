@@ -4,7 +4,7 @@
 
 #include <game/logic/mainlogic.h>
 #include <game/logic/cards.h>
-#include <game/logic/register.h>
+#include <game/logic/registry.h>
 #include <game/logic/readjson.h>
 #include "nanogui/screen.h"
 
@@ -84,8 +84,8 @@ void readAttributeJson() {
 		newAttribute->max = tryReadDouble(jSingleAttributeValue, "max");
 		newAttribute->attributeValue = tryReadDouble(jSingleAttributeValue, "initial");
 
-		SPDLOG_LOGGER_TRACE(spdlog::get("readjson"), "read attribute successfully. kind: {}, index: {}, name: {}",
-			"Value", i, jSingleAttributeValue["name"].asString());
+		/*SPDLOG_LOGGER_TRACE(spdlog::get("readjson"), "read attribute successfully. kind: {}, index: {}, name: {}",
+			"Value", i, jSingleAttributeValue["name"].asString());*/
 
 		reg.regAttribute.emplace(std::pair(newAttribute->name, newAttribute));
 		reg.allAttribute.push_back(newAttribute->name);
@@ -110,8 +110,8 @@ void readAttributeJson() {
 				);
 		}
 
-		SPDLOG_LOGGER_TRACE(spdlog::get("readjson"), "read attribute successfully. kind: {}, index: {}, name: {}",
-			"Array", i, jSingleAttributeArray["name"].asString());
+		/*SPDLOG_LOGGER_TRACE(spdlog::get("readjson"), "read attribute successfully. kind: {}, index: {}, name: {}",
+			"Array", i, jSingleAttributeArray["name"].asString());*/
 
 		reg.regAttribute.emplace(std::pair<std::string, Attribute*>(newAttribute->name, newAttribute));
 		reg.allAttribute.push_back(newAttribute->name);
@@ -235,6 +235,8 @@ void readCardSetJson() {
 
 		double timeNeeded = tryReadDouble(jSingleCardSet, "timeNeeded");
 		reg.cardSetTimeNeeded[cardSetName] = timeNeeded;
+		bool isOnce = tryReadBool(jSingleCardSet, "once");
+		reg.cardSetIsOnce[cardSetName] = isOnce;
 
 		for(int j = 0; j < cardNum; j++) {
 			Json::Value oneCard = tryReadArray(jCard, j);
@@ -254,6 +256,7 @@ void readCardSetJson() {
 
 		/*reg.cardSetPtr.emplace(std::pair(
 			cardSetName, newCardSet));*/
+		reg.cardSetAttained[cardSetName] = false;
 		reg.regArrayElements["cardSet"].push_back(cardSetName);
 		reg.cardSetMap.emplace(std::pair<CardSet, std::string>(newCardSet, cardSetName));
 	}
@@ -510,7 +513,7 @@ void readJson() {
 		else{
 			SPDLOG_LOGGER_WARN(spdlog::get("readjson"), "no match for {}", file);
 		}
-		SPDLOG_LOGGER_TRACE(spdlog::get("readjson"), "read json file {} (importance {} ) successfully", file, importance);
+		SPDLOG_LOGGER_TRACE(spdlog::get("readjson"), "read json file {} (importance {} )", file, importance);
 	}
 }
 

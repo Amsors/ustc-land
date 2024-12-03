@@ -1,8 +1,8 @@
-#include "game/logic/register.h"
+#include "game/logic/registry.h"
 
-Register reg;
+Registry reg;
 
-void Register::outputAttribute() {
+void Registry::outputAttribute() {
 	std::cout << "---AttributeBegin---\n";
 	for (int i = 0; i < this->allAttribute.size(); i++) {
 		Attribute* a = this->regAttribute[this->allAttribute.at(i)];

@@ -30,6 +30,7 @@ protected:
     }
 
     void del(std::string a);
+    void show();
 
     friend class MainApplication;
 };

@@ -3,7 +3,7 @@
 #include <queue>
 
 #include "game/logic/cards.h"
-#include "game/logic/register.h"
+#include "game/logic/registry.h"
 #include "spdlog/spdlog.h"
 
 CardSet::CardSet(const std::vector<std::shared_ptr<Card>>& stack, std::string& vagueMatch) {
@@ -15,7 +15,7 @@ CardSet::CardSet(const std::vector<std::shared_ptr<Card>>& stack, std::string& v
 		std::string addtmp;
 		if (nametmp[0] == '@') {
 			if (mark) {
-				SPDLOG_LOGGER_WARN(spdlog::get("main"),"can not have more than one vague match card");
+				//SPDLOG_LOGGER_WARN(spdlog::get("main"),"can not have more than one vague match card");
 			}
 			vagueMatch.clear();
 			for (int j = 0; j < nametmp.length(); j++) {

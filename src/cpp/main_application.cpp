@@ -9,7 +9,7 @@
 #include "nanovg/nanovg.h"
 #include "nanovg/stb_image.h"
 #include "spdlog/spdlog.h"
-#include "game/logic/register.h"
+#include "game/logic/registry.h"
 
 MainApplication::MainApplication():
     nanogui::Screen({400, 270}, "USTC Land", false, false), camera(0, -4, -40) {
@@ -325,6 +325,14 @@ void MainApplication::draw_contents() {
             }
             break;
         case PLAYING:
+
+            checkCard();
+            processWaitingCard();
+            giveReward();
+            //updateAdvancement();
+            //检查成就在givereward里完成
+            addCard();
+
             for(const auto &stack: stacks) {
                 for(const auto &card: stack.cards) {
                     card->calc(deltaTime);
@@ -344,13 +352,10 @@ void MainApplication::draw_contents() {
                     cardShader->end();
                 }
             }
-            checkCard();
+            /*checkCard();
             processWaitingCard();
             giveReward();
-            //updateAdvancement();
-            //检查成就在givereward里完成
-
-            addCard();
+            addCard();*/
             break;
         default:
             break;

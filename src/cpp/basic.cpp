@@ -2,7 +2,7 @@
 
 #include "nanogui/texture.h"
 #include "nanovg/stb_image.h"
-#include "game/logic/register.h"
+#include "game/logic/registry.h"
 
 //Card::Card(const Type type, const std::string &name, const nanogui::Vector3f &pos):
 //    pos(pos), name(name), type(type), color(colorSetter(type)) {
