@@ -308,6 +308,7 @@ void MainApplication::draw_contents() {
                 infoBar->move(deltaTime, false);
                 if(listBar->where() == Bar::HERE/* && infoBar->where() == Bar::HERE*/) {
                     state = PLAYING;
+                    this->logicInit();
                 }
             } else {
                 welcomeBar->move(deltaTime, true);

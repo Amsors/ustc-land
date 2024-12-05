@@ -1,17 +1,17 @@
 {
   "type": "cardSet",
-  "cardSetSum": 2,
+  "cardSetSum": 25,
   "cardSet": [
     {
-      "cardSetName": "_cardset_test2",
+      "cardSetName": "cs_middle",
       "timeNeeded": 4,
       "cardNum": 2,
       "card": [
         {
-          "name": "_man"
+          "name": "role_student"
         },
         {
-          "name": "_home"
+          "name": "spot_campus_middle"
         }
       ],
       "lostCardNum": 0,
@@ -20,22 +20,443 @@
       ]
     },
     {
-      "cardSetName": "_cardset_test1",
+      "cardSetName": "cs_west",
       "timeNeeded": 4,
       "cardNum": 2,
       "card": [
         {
-          "name": "@_fruit"
+          "name": "role_student"
         },
         {
-          "name": "_man"
+          "name": "spot_campus_west"
+        }
+      ],
+      "lostCardNum": 0,
+      "lostCard": [
+
+      ]
+    },
+    {
+      "cardSetName": "cs_east",
+      "timeNeeded": 4,
+      "cardNum": 2,
+      "card": [
+        {
+          "name": "role_student"
+        },
+        {
+          "name": "spot_campus_east"
+        }
+      ],
+      "lostCardNum": 0,
+      "lostCard": [
+
+      ]
+    },
+    {
+      "cardSetName": "cs_playground",
+      "timeNeeded": 4,
+      "cardNum": 2,
+      "card": [
+        {
+          "name": "role_student"
+        },
+        {
+          "name": "spot_playground"
+        }
+      ],
+      "lostCardNum": 0,
+      "lostCard": [
+
+      ]
+    },
+    {
+      "cardSetName": "cs_canteen",
+      "timeNeeded": 4,
+      "cardNum": 2,
+      "card": [
+        {
+          "name": "role_student"
+        },
+        {
+          "name": "spot_canteen"
+        }
+      ],
+      "lostCardNum": 0,
+      "lostCard": [
+
+      ]
+    },
+    {
+      "cardSetName": "cs_canteen_textbook",
+      "timeNeeded": 4,
+      "cardNum": 3,
+      "card": [
+        {
+          "name": "role_student"
+        },
+        {
+          "name": "spot_canteen"
+        },
+        {
+          "name": "@item_textbook"
+        }
+      ],
+      "lostCardNum": 0,
+      "lostCard": [
+
+      ]
+    },
+    {
+      "cardSetName": "cs_dorm_computer",
+      "timeNeeded": 4,
+      "cardNum": 3,
+      "card": [
+        {
+          "name": "role_student"
+        },
+        {
+          "name": "spot_dorm"
+        },
+        {
+          "name": "item_computer"
+        }
+      ],
+      "lostCardNum": 0,
+      "lostCard": [
+
+      ]
+    },
+    {
+      "cardSetName": "cs_dorm_textbook",
+      "timeNeeded": 4,
+      "cardNum": 3,
+      "card": [
+        {
+          "name": "role_student"
+        },
+        {
+          "name": "spot_dorm"
+        },
+        {
+          "name": "@item_textbook"
+        }
+      ],
+      "lostCardNum": 0,
+      "lostCard": [
+
+      ]
+    },
+    {
+      "cardSetName": "cs_dorm_pastpaper",
+      "timeNeeded": 4,
+      "cardNum": 3,
+      "card": [
+        {
+          "name": "role_student"
+        },
+        {
+          "name": "spot_dorm"
+        },
+        {
+          "name": "item_pastpaper"
         }
       ],
       "lostCardNum": 1,
       "lostCard": [
         {
-          "name": "_man"
+          "name": "item_pastpaper"
         }
+      ]
+    },
+    {
+      "cardSetName": "cs_library_textbook",
+      "timeNeeded": 4,
+      "cardNum": 3,
+      "card": [
+        {
+          "name": "role_student"
+        },
+        {
+          "name": "spot_library"
+        },
+        {
+          "name": "@item_textbook"
+        }
+      ],
+      "lostCardNum": 0,
+      "lostCard": [
+
+      ]
+    },
+    {
+      "cardSetName": "cs_library_pastpaper",
+      "timeNeeded": 4,
+      "cardNum": 3,
+      "card": [
+        {
+          "name": "role_student"
+        },
+        {
+          "name": "spot_library"
+        },
+        {
+          "name": "item_pastpastpaper"
+        }
+      ],
+      "lostCardNum": 1,
+      "lostCard": [
+        {
+          "name": "pastpaper"
+        }
+      ]
+    },
+    {
+      "cardSetName": "cs_deanoffice_computer",
+      "timeNeeded": 4,
+      "cardNum": 3,
+      "card": [
+        {
+          "name": "role_student"
+        },
+        {
+          "name": "spot_deanoffice"
+        },
+        {
+          "name": "item_computer"
+        }
+      ],
+      "lostCardNum": 0,
+      "lostCard": [
+
+      ]
+    },
+    {
+      "cardSetName": "cs_lab",
+      "timeNeeded": 4,
+      "cardNum": 2,
+      "card": [
+        {
+          "name": "role_student"
+        },
+        {
+          "name": "spot_lab"
+        }
+      ],
+      "lostCardNum": 0,
+      "lostCard": [
+
+      ]
+    },
+    {
+      "cardSetName": "cs_club",
+      "timeNeeded": 4,
+      "cardNum": 2,
+      "card": [
+        {
+          "name": "role_student"
+        },
+        {
+          "name": "spot_club"
+        }
+      ],
+      "lostCardNum": 0,
+      "lostCard": [
+
+      ]
+    },
+    {
+      "cardSetName": "cs_teachingbuilding_textbook",
+      "timeNeeded": 4,
+      "cardNum": 3,
+      "card": [
+        {
+          "name": "role_student"
+        },
+        {
+          "name": "spot_teachingbuilding"
+        },
+        {
+          "name": "@item_textbook"
+        }
+      ],
+      "lostCardNum": 0,
+      "lostCard": [
+
+      ]
+    },
+    {
+      "cardSetName": "cs_food",
+      "timeNeeded": 4,
+      "cardNum": 2,
+      "card": [
+        {
+          "name": "role_student"
+        },
+        {
+          "name": "@item_food"
+        }
+      ],
+      "lostCardNum": 1,
+      "lostCard": [
+        {
+          "name": "@item_food"
+        }
+      ]
+    },
+    {
+      "cardSetName": "cs_library",
+      "timeNeeded": 4,
+      "cardNum": 2,
+      "card": [
+        {
+          "name": "role_student"
+        },
+        {
+          "name": "spot_library"
+        }
+      ],
+      "lostCardNum": 0,
+      "lostCard": [
+
+      ]
+    },
+    {
+      "cardSetName": "cs_pastpaper",
+      "timeNeeded": 4,
+      "cardNum": 2,
+      "card": [
+        {
+          "name": "role_student"
+        },
+        {
+          "name": "item_pastpaper"
+        }
+      ],
+      "lostCardNum": 1,
+      "lostCard": [
+        {
+          "name": "item_pastpaper"
+        }
+      ]
+    },
+    {
+      "cardSetName": "",
+      "timeNeeded": 4,
+      "cardNum": 2,
+      "card": [
+        {
+          "name": ""
+        },
+        {
+          "name": ""
+        }
+      ],
+      "lostCardNum": 0,
+      "lostCard": [
+
+      ]
+    },
+    {
+      "cardSetName": "",
+      "timeNeeded": 4,
+      "cardNum": 2,
+      "card": [
+        {
+          "name": ""
+        },
+        {
+          "name": ""
+        }
+      ],
+      "lostCardNum": 0,
+      "lostCard": [
+
+      ]
+    },
+    {
+      "cardSetName": "",
+      "timeNeeded": 4,
+      "cardNum": 2,
+      "card": [
+        {
+          "name": ""
+        },
+        {
+          "name": ""
+        }
+      ],
+      "lostCardNum": 0,
+      "lostCard": [
+
+      ]
+    },
+    {
+      "cardSetName": "",
+      "timeNeeded": 4,
+      "cardNum": 2,
+      "card": [
+        {
+          "name": ""
+        },
+        {
+          "name": ""
+        }
+      ],
+      "lostCardNum": 0,
+      "lostCard": [
+
+      ]
+    },
+    {
+      "cardSetName": "",
+      "timeNeeded": 4,
+      "cardNum": 2,
+      "card": [
+        {
+          "name": ""
+        },
+        {
+          "name": ""
+        }
+      ],
+      "lostCardNum": 0,
+      "lostCard": [
+
+      ]
+    },
+    {
+      "cardSetName": "",
+      "timeNeeded": 4,
+      "cardNum": 2,
+      "card": [
+        {
+          "name": ""
+        },
+        {
+          "name": ""
+        }
+      ],
+      "lostCardNum": 0,
+      "lostCard": [
+
+      ]
+    },
+    {
+      "cardSetName": "",
+      "timeNeeded": 4,
+      "cardNum": 2,
+      "card": [
+        {
+          "name": ""
+        },
+        {
+          "name": ""
+        }
+      ],
+      "lostCardNum": 0,
+      "lostCard": [
+
       ]
     }
   ]

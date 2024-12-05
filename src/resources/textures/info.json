@@ -1,8 +1,33 @@
 {
-  "_man": "/card/_man.png",
-  "_brick": "/card/_brick.png",
-  "@COIN_fruit": "/card/@COIN_fruit.png",
-  "_apple": "/card/_apple.png",
-  "@BANANA_fruit": "/card/@BANANA_fruit.png",
-  "_home": "/card/_home.png"
+  "spot_campus_middle": "/card/spot_campus_middle.png",
+  "spot_campus_west": "/card/spot_campus_west.png",
+  "spot_campus_east": "/card/spot_campus_east.png",
+  "spot_playground": "/card/spot_playground.png",
+  "spot_canteen": "/card/spot_canteen.png",
+  "spot_dorm": "/card/spot_dorm.png",
+  "spot_library": "/card/spot_library.png",
+  "spot_deanoffice": "/card/spot_deanoffice.png",
+  "spot_lab": "/card/spot_lab.png",
+  "spot_club": "/card/spot_club.png",
+  "spot_teachingbuilding": "/card/spot_teachingbuilding.png",
+
+  "role_student": "/card/role_student.png",
+
+  "item_labreport": "/card/item_labreport.png",
+  "item_pastpaper": "/card/item_pastpaper.png",
+  "item_computer": "/card/item_computer.png",
+
+  "@KFCitem_food": "/card/@KFCitem_food.png",
+  "@GREENCIRCLEitem_food": "/card/@GREENCIRCLEitem_food.png",
+  "@FREESOUPitem_food": "/card/@FREESOUPitem_food.png",
+  "@FOODitem_food": "/card/@FOODitem_food.png",
+
+  "@LINEARALGEBRAitem_textbook": "/card/@LINEARALGEBRAitem_textbook.png",
+  "@MATHEMATICALANALYSISitem_textbook": "/card/@MATHEMATICALANALYSISitem_textbook.png",
+  "@PHYSICSitem_textbook": "/card/@PHYSICSitem_textbook.png",
+  "@IDEOLOGICALANDPOLITICALitem_textbook": "/card/@IDEOLOGICALANDPOLITICALitem_textbook.png",
+  "@CLANGUAGEitem_textbook": "/card/@CLANGUAGEitem_textbook.png",
+
+  "@ONETHOUSANDPROBLEMSitem_referencebook": "/card/@ONETHOUSANDPROBLEMSitem_referencebook.png",
+  "@DEMIDOVICHitem_referencebook": "/card/@DEMIDOVICHitem_referencebook.png"
 }

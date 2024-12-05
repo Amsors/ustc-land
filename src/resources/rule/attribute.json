@@ -35,22 +35,17 @@
     {
       "name": "redAndPro",
       "visibility": true,
-      "max": 9999,
+      "max": 100,
       "initial": 0
     }
   ],
-  "attributeArraySum": 3,
+  "attributeArraySum": 2,
   "attributeArrayMaxLength": 100,
   "attributeArray": [
     {
       "name": "classChosen",
       "match": "class",
       "visibility": true
-    },
-    {
-      "name": "finalTestBonus",
-      "match": "class",
-      "visibility": false
     },
     {
       "name": "classAttendance",

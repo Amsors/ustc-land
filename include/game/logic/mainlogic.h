@@ -148,6 +148,9 @@ public:
 	std::string getCardName() {
 		return this->cardName;
 	}
+	bool getIsVague() {
+		return this->isVague;
+	}
 private:
 	//for all
 	std::string name;
@@ -161,6 +164,7 @@ private:
 
 	//for attributeArray
 	std::string key;
+	bool isVague = false;
 
 	//for card
 	std::string cardName;
@@ -180,8 +184,11 @@ public:
 	std::map<std::string, double>& getRewardPossibility() {
 		return this->rewardPossibility;
 	}
-	std::string& getVagueMatch(){
-		return vagueMatch;
+	std::string& getRewardVagueMatch(){
+		return this->rewardVagueMatch;
+	}
+	std::string& getCardSetVagueMatch() {
+		return this->cardSetVagueMatch;
 	}
 private:
 	std::string formulaName;
@@ -189,7 +196,8 @@ private:
 	std::vector<std::string> rewardName;
 	std::map<std::string, int> rewardSet;
 	std::map<std::string, double> rewardPossibility;
-	std::string vagueMatch;
+	std::string rewardVagueMatch;
+	std::string cardSetVagueMatch;
 
 
 	friend void readFormulaJson();

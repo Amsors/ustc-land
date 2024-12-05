@@ -38,7 +38,6 @@ bool MainApplication::addCard() {
             SPDLOG_LOGGER_WARN(spdlog::get("main"), "no registered card: {} when trying to add card", card);
         }
     }
-
     return true;
 }
 
@@ -53,22 +52,8 @@ void MainApplication::showCard() {
     }
 }
 
-//int framecnt = 0;
 void MainApplication::checkCard() {
-//    framecnt++;
-//    int dooutput = 0;
-//    if (framecnt == 100) {
-//        std::cout << "=====output at "<<lastFrame<<"\n";
-//        dooutput = 1;
-//        framecnt = 0;
-//    }
-    
-    for (int i = 0; i < stacks.size(); i++) {
-        
-        //if (dooutput) {
-        //    std::cout << "checking stack " << i << " stamp is " << this->stacks[i].stamp
-        //        << " status is " << this->stacks[i].status << "\n";
-        //}
+    for (int i = 0; i < stacks.size(); i++) {       
 
         if (stacks[i].status != UNCHECKED) {
             continue;
@@ -83,6 +68,10 @@ void MainApplication::checkCard() {
         else {
             SPDLOG_LOGGER_TRACE(spdlog::get("main"),
                 "match cardset: {} at time: {}. stack stamp: {}", it->second, lastFrame, stacks[i].stamp);
+            if (reg.cardSetToFormula[stacks[i].cardSet].size() == 0) { //cardset已注册，但没有对应formula
+                stacks[i].status = CHECKED_N;
+                continue;
+            }
             stacks[i].status = CHECKED_P;
             stacks[i].cardSet = it->second;
             stacks[i].timeUntil = reg.cardSetTimeNeeded[it->second] + lastFrame;
@@ -97,30 +86,16 @@ void MainApplication::checkCard() {
                     "lostcard {} not registered at time: {}. stack stamp: {}", it->second, lastFrame, stacks[i].stamp);
             }
             //reg.outputAttribute();
-            
         }
     }
-    
-}
-
-void MainApplication::check_all_cards() {
-    int stackSum = this->stacks.size();
-    std::cout << "totally " << this->stacks.size() << "cards\n";
-    //std::cout << "------------\n";
-    for (int i = 0; i < stackSum; i++) {
-        std::string NONEED;
-        CardSet tmp(this->stacks.at(i).cards,NONEED);
-        //std::cout << "\nstack " << i << " ";
-        //tmp.showCardDetail();  
-    }
-    //reg.outputAttribute();
 }
 
 void MainApplication::giveReward() {
     while (this->rewards.empty() == false) {
-        Reward* r = reg.rewardPtr[this->rewards.front()];
-        this->rewards.pop();
+        Reward* r = reg.rewardPtr[this->rewards.front().first];
+        std::string vagueMatch = this->rewards.front().second;
         SPDLOG_LOGGER_TRACE(spdlog::get("main"), "give reward {}", r->getName());
+        reg.rewardAttained[this->rewards.front().first] = true;
         if (r->getType() == "card") {
             newCards.push(r->getCardName());
         }
@@ -132,6 +107,9 @@ void MainApplication::giveReward() {
                 reg.regAttribute[r->getAttributeName()]->getAttributeValue() +=
                     (reg.regAttribute[r->getAttributeName()]->getMax() -
                         reg.regAttribute[r->getAttributeName()]->getAttributeValue()) * (r->getChangeValue());
+                if (reg.regAttribute[r->getAttributeName()]->getAttributeValue() < 0) {
+                    reg.regAttribute[r->getAttributeName()]->getAttributeValue() = 0;
+                }
             }
             else if (r->getChange() == "add") {
                 reg.regAttribute[r->getAttributeName()]->getAttributeValue() += r->getChangeValue();
@@ -147,18 +125,28 @@ void MainApplication::giveReward() {
             if (reg.regAttribute.contains(r->getAttributeName()) == false) {
                 SPDLOG_LOGGER_WARN(spdlog::get("main"), "reward {} : {} does not exist", r->getType(), r->getAttributeName());
             }
-            if (reg.regAttribute[r->getAttributeName()]->getAttributeArray().contains(r->getKey()) == false) {
-                reg.regAttribute[r->getAttributeName()]->getAttributeArray().emplace(std::pair<std::string, double>(r->getKey(), 0.0));
+            std::string index;
+            if (vagueMatch == "#") {
+                index = r->getKey();
             }
-            if (reg.regAttribute[r->getAttributeName()]->getAttributeArray().contains(r->getKey()) == false) {
+            else {
+                index = vagueMatch;
+            }
+            if (reg.regAttribute[r->getAttributeName()]->getAttributeArray().contains(index) == false) {
+                reg.regAttribute[r->getAttributeName()]->getAttributeArray().emplace(std::pair<std::string, double>(index, 0.0));
+            }
+            /*if (reg.regAttribute[r->getAttributeName()]->getAttributeArray().contains(r->getKey()) == false) {
                 SPDLOG_LOGGER_WARN(spdlog::get("main"), "{} not in registered array {}", r->getKey(),
                     reg.regAttribute[r->getAttributeName()]->getAttributeMatchKey());
-            }
+            }*/
             if (r->getChange() == "add") {
-                reg.regAttribute[r->getAttributeName()]->getAttributeArray()[r->getKey()] += r->getChangeValue();
+                reg.regAttribute[r->getAttributeName()]->getAttributeArray()[index] += r->getChangeValue();
+                if (reg.regAttribute[r->getAttributeName()]->getAttributeArray()[index] < 0) {
+                    reg.regAttribute[r->getAttributeName()]->getAttributeArray()[index] = 0;
+                }
             }
             else if (r->getChange() == "mult") {
-                reg.regAttribute[r->getAttributeName()]->getAttributeArray()[r->getKey()] *= r->getChangeValue();
+                reg.regAttribute[r->getAttributeName()]->getAttributeArray()[index] *= r->getChangeValue();
             }
             else {
                 SPDLOG_LOGGER_WARN(spdlog::get("main"), "change: {} does not exist", r->getChange());
@@ -168,6 +156,7 @@ void MainApplication::giveReward() {
             SPDLOG_LOGGER_WARN(spdlog::get("main"), "reward type: {} does not exist", r->getType());
         }
         //reg.outputAttribute();
+        this->rewards.pop();
         updateAdvancement();
     } 
 }
@@ -191,15 +180,27 @@ void MainApplication::processWaitingCard() {
                 std::string formulaName = reg.cardSetToFormula[stack.cardSet].at(i);
 
                 //std::cout << "card set " << stack.cardSet << " vaguematch "<<stack.vagueMatch<<"\n";
-                if (reg.formulaPtr[formulaName]->getVagueMatch() != stack.vagueMatch) {
-                    continue;
+                //if (reg.formulaPtr[formulaName]->getVagueMatch() != stack.vagueMatch) {
+                //    continue;
+                //}
+                if (reg.formulaPtr[formulaName]->getCardSetVagueMatch() != "#") {
+                    if (stack.vagueMatch != reg.formulaPtr[formulaName]->getCardSetVagueMatch()) {
+                        continue;
+                    }
                 }
                 reg.formulaAttained[formulaName] = true;
 
                 if (reg.cardSetLostCard.contains(stack.cardSet)) {
                     std::vector<std::string>& tmpset = reg.cardSetLostCard[stack.cardSet];
                     for (auto const& name : tmpset) {
-                        stack.del(name);
+                        if (name[0] == '@') {
+                            std::string tmpVague = name.substr(1);
+                            tmpVague = '@' + stack.vagueMatch + tmpVague;
+                            stack.del(tmpVague);
+                        }
+                        else {
+                            stack.del(name);
+                        }
                     }
                 }
                 else {
@@ -212,18 +213,23 @@ void MainApplication::processWaitingCard() {
 
                 for (int j = 0; j < reg.formulaPtr[formulaName]->getRewardName().size(); j++) {
                     std::string rewardName = reg.formulaPtr[formulaName]->getRewardName().at(j);
-                    int rewardSet = reg.formulaPtr[formulaName]->getRewardSet()[rewardName];
-                    double rewardPossibility= reg.formulaPtr[formulaName]->getRewardPossibility()[rewardName];
-                    int pos = rewardPossibility * 100;
-                    if (tmp.contains(rewardSet)) {
+
+                    if (reg.rewardAttained[rewardName] == true && reg.rewardIsOnce[rewardName] == true) {
                         continue;
                     }
-                    tmp.insert(rewardSet);
+
+                    double rewardPossibility= reg.formulaPtr[formulaName]->getRewardPossibility()[rewardName];
+                    int pos = rewardPossibility * 100;
+                    int rewardSet = reg.formulaPtr[formulaName]->getRewardSet()[rewardName];
+                    if (tmp.contains(rewardSet)) {
+                        continue;
+                    }                 
 
                     int randomNumber = distribution(globalGenerator);
-                    SPDLOG_LOGGER_WARN(spdlog::get("main"), "random is {}", randomNumber);
                     if(pos>=randomNumber){
-                        rewards.emplace(rewardName);
+                        rewards.emplace(std::pair<std::string,std::string>(rewardName,stack.vagueMatch));
+                        tmp.insert(reg.formulaPtr[formulaName]->getRewardSet()[rewardName]);
+                        SPDLOG_LOGGER_TRACE(spdlog::get("main"), "vaguematch is {}", stack.vagueMatch);
                     }
                 }
             }
@@ -254,9 +260,6 @@ void MainApplication::updateAdvancement() {
     }
 }
 
-//void MainApplication::deleteCard() {
-//
-//}
 
 void Stack::del(std::string a) {
     //cards.at(0) 是最下面的卡
@@ -294,4 +297,12 @@ void Stack::show() {
     std::cout << "cardset is " << this->cardSet << "\n";
     std::cout << "vaguematch is " << this->vagueMatch << "\n";
     std::cout << "-----\n";
+}
+
+void MainApplication::logicInit() {
+
+    this->newCards.emplace("spot_campus_middle");
+    this->newCards.emplace("spot_campus_east");
+    this->newCards.emplace("spot_campus_west");
+    this->newCards.emplace("role_student");
 }

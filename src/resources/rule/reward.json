@@ -1,29 +1,386 @@
 {
   "type": "reward",
-  "rewardSum": 3,
+  "rewardSum": 50,
   "reward": [
     {
-      "name": "r_GPA_0.3",
+      "name": "r_GPA_+0.05",
+      "type": "attributeValue",
+      "attributeName": "GPA",
+      "change": "ratio_of_rest",
+      "changeValue": 0.05,
+      "once": false,
+      "isVague": false
+    },
+    {
+      "name": "r_GPA_-0.05",
+      "type": "attributeValue",
+      "attributeName": "GPA",
+      "change": "ratio_of_rest",
+      "changeValue": -0.05,
+      "once": false,
+      "isVague": false
+    },
+    {
+      "name": "r_GPA_+0.3",
       "type": "attributeValue",
       "attributeName": "GPA",
       "change": "ratio_of_rest",
       "changeValue": 0.3,
-      "once": false
+      "once": false,
+      "isVague": false
     },
     {
-      "name": "_test",
-      "type": "attributeArray",
-      "attributeName": "classChosen",
-      "key": "Physics",
+      "name": "r_PH_+0.05",
+      "type": "attributeValue",
+      "attributeName": "physicalHealth",
+      "change": "ratio_of_rest",
+      "changeValue": 0.05,
+      "once": false,
+      "isVague": false
+    },
+    {
+      "name": "r_PH_-0.05",
+      "type": "attributeValue",
+      "attributeName": "physicalHealth",
+      "change": "ratio_of_rest",
+      "changeValue": -0.05,
+      "once": false,
+      "isVague": false
+    },
+    {
+      "name": "r_MH_+0.05",
+      "type": "attributeValue",
+      "attributeName": "mentalHealth",
+      "change": "ratio_of_rest",
+      "changeValue": 0.05,
+      "once": false,
+      "isVague": false
+    },
+    {
+      "name": "r_MH_-0.05",
+      "type": "attributeValue",
+      "attributeName": "mentalHealth",
+      "change": "ratio_of_rest",
+      "changeValue": -0.05,
+      "once": false,
+      "isVague": false
+    },
+    {
+      "name": "r_LV_+0.05",
+      "type": "attributeValue",
+      "attributeName": "luckyValue",
+      "change": "ratio_of_rest",
+      "changeValue": 0.05,
+      "once": false,
+      "isVague": false
+    },
+    {
+      "name": "r_LV_-0.05",
+      "type": "attributeValue",
+      "attributeName": "luckyValue",
+      "change": "ratio_of_rest",
+      "changeValue": -0.05,
+      "once": false,
+      "isVague": false
+    },
+    {
+      "name": "r_SC_+1",
+      "type": "attributeValue",
+      "attributeName": "secondClass",
       "change": "add",
       "changeValue": 1,
-      "once": false
+      "once": false,
+      "isVague": false
     },
     {
-      "name": "_test2",
+      "name": "r_CC",
+      "type": "attributeArray",
+      "attributeName": "classChosen",
+      "change": "add",
+      "changeValue": 1,
+      "once": true,
+      "isVague": true
+    },
+    {
+      "name": "r_CA",
+      "type": "attributeArray",
+      "attributeName": "classAttendance",
+      "change": "add",
+      "changeValue": 1,
+      "once": false,
+      "isVague": true
+    },
+    {
+      "name": "r_card_item_labreport",
       "type": "card",
-      "cardName": "@COIN_fruit",
-      "once": false
+      "cardName": "item_labreport",
+      "once": false,
+      "isVague": false
+    },
+    {
+      "name": "r_card_item_pastpaper",
+      "type": "card",
+      "cardName": "item_pastpaper",
+      "once": false,
+      "isVague": false
+    },
+    {
+      "name": "r_card_item_computer",
+      "type": "card",
+      "cardName": "item_computer",
+      "once": true,
+      "isVague": false
+    },
+    {
+      "name": "r_card_@KFCitem_food",
+      "type": "card",
+      "cardName": "@KFCitem_food",
+      "once": false,
+      "isVague": false
+    },
+    {
+      "name": "r_card_@GREENCIRCLEitem_food",
+      "type": "card",
+      "cardName": "@GREENCIRCLEitem_food",
+      "once": false,
+      "isVague": false
+    },
+    {
+      "name": "r_card_@FREESOUPitem_food",
+      "type": "card",
+      "cardName": "@FREESOUPitem_food",
+      "once": false,
+      "isVague": false
+    },
+    {
+      "name": "r_card_@FOODitem_food",
+      "type": "card",
+      "cardName": "@FOODitem_food",
+      "once": false,
+      "isVague": false
+    },
+    {
+      "name": "r_card_@LINEARALGEBRAitem_textbook",
+      "type": "card",
+      "cardName": "@LINEARALGEBRAitem_textbook",
+      "once": true,
+      "isVague": false
+    },
+    {
+      "name": "r_card_@MATHEMATICALANALYSISitem_textbook",
+      "type": "card",
+      "cardName": "@MATHEMATICALANALYSISitem_textbook",
+      "once": true,
+      "isVague": false
+    },
+    {
+      "name": "r_card_@PHYSICSitem_textbook",
+      "type": "card",
+      "cardName": "@PHYSICSitem_textbook",
+      "once": true,
+      "isVague": false
+    },
+    {
+      "name": "r_card_@IDEOLOGICALANDPOLITICALitem_textbook",
+      "type": "card",
+      "cardName": "@IDEOLOGICALANDPOLITICALitem_textbook",
+      "once": true,
+      "isVague": false
+    },
+    {
+      "name": "r_card_@CLANGUAGEitem_textbook",
+      "type": "card",
+      "cardName": "@CLANGUAGEitem_textbook",
+      "once": true,
+      "isVague": false
+    },
+    {
+      "name": "r_card_@ONETHOUSANDPROBLEMSitem_referencebook",
+      "type": "card",
+      "cardName": "@ONETHOUSANDPROBLEMSitem_referencebook",
+      "once": true,
+      "isVague": false
+    },
+    {
+      "name": "r_card_@DEMIDOVICHitem_referencebook",
+      "type": "card",
+      "cardName": "@DEMIDOVICHitem_referencebook",
+      "once": true,
+      "isVague": false
+    },
+    {
+      "name": "r_card_role_student",
+      "type": "card",
+      "cardName": "role_student",
+      "once": false,
+      "isVague": false
+    },
+    {
+      "name": "r_card_spot_campus_middle",
+      "type": "card",
+      "cardName": "spot_campus_middle",
+      "once": true,
+      "isVague": false
+    },
+    {
+      "name": "r_card_spot_campus_west",
+      "type": "card",
+      "cardName": "spot_campus_west",
+      "once": true,
+      "isVague": false
+    },
+    {
+      "name": "r_card_spot_campus_east",
+      "type": "card",
+      "cardName": "spot_campus_east",
+      "once": true,
+      "isVague": false
+    },
+    {
+      "name": "r_card_spot_playground",
+      "type": "card",
+      "cardName": "spot_playground",
+      "once": true,
+      "isVague": false
+    },
+    {
+      "name": "r_card_spot_canteen",
+      "type": "card",
+      "cardName": "spot_canteen",
+      "once": true,
+      "isVague": false
+    },
+    {
+      "name": "r_card_spot_dorm",
+      "type": "card",
+      "cardName": "spot_dorm",
+      "once": true,
+      "isVague": false
+    },
+    {
+      "name": "r_card_spot_library",
+      "type": "card",
+      "cardName": "spot_library",
+      "once": true,
+      "isVague": false
+    },
+    {
+      "name": "r_card_spot_deanoffice",
+      "type": "card",
+      "cardName": "spot_deanoffice",
+      "once": true,
+      "isVague": false
+    },
+    {
+      "name": "r_card_spot_lab",
+      "type": "card",
+      "cardName": "spot_lab",
+      "once": true,
+      "isVague": false
+    },
+    {
+      "name": "r_card_spot_club",
+      "type": "card",
+      "cardName": "spot_club",
+      "once": true,
+      "isVague": false
+    },
+    {
+      "name": "r_card_spot_teaching_building",
+      "type": "card",
+      "cardName": "spot_teachingbuilding",
+      "once": true,
+      "isVague": false
+    },
+    {
+      "name": "r_RP_+0.05",
+      "type": "attributeValue",
+      "attributeName": "redAndPro",
+      "change": "ratio_of_rest",
+      "changeValue": 0.05,
+      "once": false,
+      "isVague": false
+    },
+    {
+      "name": "r_RP_-0.05",
+      "type": "attributeValue",
+      "attributeName": "redAndPro",
+      "change": "ratio_of_rest",
+      "changeValue": -0.05,
+      "once": false,
+      "isVague": false
+    },
+    {
+      "name": "r_GPA_+1.0",
+      "type": "attributeValue",
+      "attributeName": "GPA",
+      "change": "ratio_of_rest",
+      "changeValue": 1.0,
+      "once": false,
+      "isVague": false
+    },
+    {
+      "name": "r_GPA_+0.5",
+      "type": "attributeValue",
+      "attributeName": "GPA",
+      "change": "ratio_of_rest",
+      "changeValue": 0.5,
+      "once": false,
+      "isVague": false
+    },
+    {
+      "name": "r_GPA_+0.2",
+      "type": "attributeValue",
+      "attributeName": "GPA",
+      "change": "ratio_of_rest",
+      "changeValue": 0.2,
+      "once": false,
+      "isVague": false
+    },
+    {
+      "name": "r_RP_-1.0",
+      "type": "attributeValue",
+      "attributeName": "redAndPro",
+      "change": "ratio_of_rest",
+      "changeValue": -1.0,
+      "once": false,
+      "isVague": false
+    },
+    {
+      "name": "r_MH_-0.2",
+      "type": "attributeValue",
+      "attributeName": "mentalHealth",
+      "change": "ratio_of_rest",
+      "changeValue": -0.2,
+      "once": false,
+      "isVague": false
+    },
+    {
+      "name": "r_MH_+0.2",
+      "type": "attributeValue",
+      "attributeName": "mentalHealth",
+      "change": "ratio_of_rest",
+      "changeValue": 0.2,
+      "once": false,
+      "isVague": false
+    },
+    {
+      "name": "r_LV_+0.1",
+      "type": "attributeValue",
+      "attributeName": "luckyValue",
+      "change": "ratio_of_rest",
+      "changeValue": 0.1,
+      "once": false,
+      "isVague": false
+    },
+    {
+
+    },
+    {
+
+    },
+    {
+
     }
   ]
 }

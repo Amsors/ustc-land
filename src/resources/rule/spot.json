@@ -1,9 +1,39 @@
 {
   "type": "spot",
-  "spotSum": 1,
+  "spotSum": 11,
   "spot": [
     {
-      "name": "_home"
+      "name": "spot_campus_middle"
+    },
+    {
+      "name": "spot_campus_west"
+    },
+    {
+      "name": "spot_campus_east"
+    },
+    {
+      "name": "spot_playground"
+    },
+    {
+      "name": "spot_canteen"
+    },
+    {
+      "name": "spot_dorm"
+    },
+    {
+      "name": "spot_library"
+    },
+    {
+      "name": "spot_deanoffice"
+    },
+    {
+      "name": "spot_lab"
+    },
+    {
+      "name": "spot_club"
+    },
+    {
+      "name": "spot_teachingbuilding"
     }
   ]
 }

@@ -1,35 +1,619 @@
 {
   "type": "formula",
-  "formulaSum": 2,
+  "formulaSum": 30,
   "formula": [
     {
-      "formulaName": "_test_formula1",
-      "cardSetName": "_cardset_test1",
-      "vagueMatch": "COIN",
+      "formulaName": "f_middle",
+      "cardSetName": "cs_middle",
+      "rewardVagueMatch": "#",
+      "cardSetVagueMatch": "#",
       "rewardSum": 2,
       "reward": [
         {
-          "name": "r_GPA_0.3",
+          "name": "r_card_spot_dorm",
+          "set": 1,
+          "possibility": 0.3
+        },
+        {
+          "name": "r_card_spot_canteen",
+          "set": 1,
+          "possibility": 0.3
+        }
+      ]
+    },
+    {
+      "formulaName": "f_west",
+      "cardSetName": "cs_west",
+      "rewardVagueMatch": "#",
+      "cardSetVagueMatch": "#",
+      "rewardSum": 5,
+      "reward": [
+        {
+          "name": "r_card_spot_library",
+          "set": 1,
+          "possibility": 0.2
+        },
+        {
+          "name": "r_card_spot_playground",
+          "set": 1,
+          "possibility": 0.2
+        },
+        {
+          "name": "r_card_spot_canteen",
+          "set": 1,
+          "possibility": 0.2
+        },
+        {
+          "name": "r_card_spot_club",
+          "set": 1,
+          "possibility": 0.2
+        },
+        {
+          "name": "r_card_spot_teaching_building",
+          "set": 1,
+          "possibility": 0.2
+        }
+      ]
+    },
+    {
+      "formulaName": "f_east",
+      "cardSetName": "cs_east",
+      "rewardVagueMatch": "#",
+      "cardSetVagueMatch": "#",
+      "rewardSum": 7,
+      "reward": [
+        {
+          "name": "r_card_spot_library",
+          "set": 1,
+          "possibility": 0.2
+        },
+        {
+          "name": "r_card_spot_playground",
+          "set": 1,
+          "possibility": 0.2
+        },
+        {
+          "name": "r_card_spot_canteen",
+          "set": 1,
+          "possibility": 0.2
+        },
+        {
+          "name": "r_card_spot_club",
+          "set": 1,
+          "possibility": 0.2
+        },
+        {
+          "name": "r_card_spot_teaching_building",
+          "set": 1,
+          "possibility": 0.2
+        },
+        {
+          "name": "r_card_spot_deanoffice",
+          "set": 1,
+          "possibility": 0.05
+        },
+        {
+          "name": "r_card_spot_lab",
+          "set": 1,
+          "possibility": 0.2
+        }
+      ]
+    },
+    {
+      "formulaName": "f_playground",
+      "cardSetName": "cs_playground",
+      "rewardVagueMatch": "#",
+      "cardSetVagueMatch": "#",
+      "rewardSum": 2,
+      "reward": [
+        {
+          "name": "r_PH_+0.05",
+          "set": 1,
+          "possibility": 0.8
+        },
+        {
+          "name": "r_MH_+0.05",
+          "set": 2,
+          "possibility": 0.8
+        }
+      ]
+    },
+    {
+      "formulaName": "f_canteen",
+      "cardSetName": "cs_canteen",
+      "rewardVagueMatch": "#",
+      "cardSetVagueMatch": "#",
+      "rewardSum": 4,
+      "reward": [
+        {
+          "name": "r_card_@KFCitem_food",
+          "set": 1,
+          "possibility": 0.05
+        },
+        {
+          "name": "r_card_@GREENCIRCLEitem_food",
+          "set": 1,
+          "possibility": 0.10
+        },
+        {
+          "name": "r_card_@FREESOUPitem_food",
+          "set": 1,
+          "possibility": 0.5
+        },
+        {
+          "name": "r_card_@FOODitem_food",
+          "set": 1,
+          "possibility": 0.5
+        }
+      ]
+    },
+    {
+      "formulaName": "f_canteen_textbook",
+      "cardSetName": "cs_canteen_textbook",
+      "rewardVagueMatch": "#",
+      "cardSetVagueMatch": "#",
+      "rewardSum": 2,
+      "reward": [
+        {
+          "name": "r_GPA_+0.05",
+          "set": 1,
+          "possibility": 0.5
+        },
+        {
+          "name": "r_MH_-0.05",
+          "set": 2,
+          "possibility": 0.7
+        }
+      ]
+    },
+    {
+      "formulaName": "f_dorm_computer",
+      "cardSetName": "cs_dorm_computer",
+      "rewardVagueMatch": "#",
+      "cardSetVagueMatch": "#",
+      "rewardSum": 3,
+      "reward": [
+        {
+          "name": "r_MH_+0.05",
+          "set": 1,
+          "possibility": 0.9
+        },
+        {
+          "name": "r_PH_-0.05",
+          "set": 2,
+          "possibility": 0.9
+        },
+        {
+          "name": "r_GPA_-0.05",
+          "set": 3,
+          "possibility": 0.5
+        }
+      ]
+    },
+    {
+      "formulaName": "f_dorm_textbook",
+      "cardSetName": "cs_dorm_textbook",
+      "rewardVagueMatch": "#",
+      "cardSetVagueMatch": "#",
+      "rewardSum": 3,
+      "reward": [
+        {
+          "name": "r_GPA_+0.05",
+          "set": 1,
+          "possibility": 0.9
+        },
+        {
+          "name": "r_MH_-0.05",
+          "set": 2,
+          "possibility": 0.6
+        },
+        {
+          "name": "r_PH_-0.05",
+          "set": 3,
+          "possibility": 0.5
+        }
+      ]
+    },
+    {
+      "formulaName": "f_dorm_pastpaper",
+      "cardSetName": "cs_dorm_pastpaper",
+      "rewardVagueMatch": "#",
+      "cardSetVagueMatch": "#",
+      "rewardSum": 3,
+      "reward": [
+        {
+          "name": "r_GPA_+0.5",
+          "set": 1,
+          "possibility": 0.9
+        },
+        {
+          "name": "r_MH_-0.05",
+          "set": 2,
+          "possibility": 0.6
+        },
+        {
+          "name": "r_PH_-0.05",
+          "set": 3,
+          "possibility": 0.5
+        }
+      ]
+    },
+    {
+      "formulaName": "f_library_textbook",
+      "cardSetName": "cs_library_textbook",
+      "rewardVagueMatch": "#",
+      "cardSetVagueMatch": "#",
+      "rewardSum": 2,
+      "reward": [
+        {
+          "name": "r_GPA_+0.05",
           "set": 1,
           "possibility": 1
         },
         {
-          "name": "_test",
+          "name": "r_PH_-0.05",
+          "set": 2,
+          "possibility": 0.4
+        }
+      ]
+    },
+    {
+      "formulaName": "f_library_pastreal",
+      "cardSetName": "cs_library_pastreal",
+      "rewardVagueMatch": "#",
+      "cardSetVagueMatch": "#",
+      "rewardSum": 2,
+      "reward": [
+        {
+          "name": "r_GPA_+0.5",
+          "set": 1,
+          "possibility": 1
+        },
+        {
+          "name": "r_PH_-0.05",
+          "set": 2,
+          "possibility": 0.4
+        }
+      ]
+    },
+    {
+      "formulaName": "f_deanoffice_computer",
+      "cardSetName": "cs_deanoffice_computer",
+      "rewardVagueMatch": "#",
+      "cardSetVagueMatch": "#",
+      "rewardSum": 2,
+      "reward": [
+        {
+          "name": "r_RP_-1.0",
+          "set": 1,
+          "possibility": 1
+        },
+        {
+          "name": "r_GPA_+1.0",
           "set": 2,
           "possibility": 1
         }
       ]
     },
     {
-      "formulaName": "_test_formula2",
-      "cardSetName": "_cardset_test2",
-      "vagueMatch": "#",
+      "formulaName": "f_lab",
+      "cardSetName": "cs_lab",
+      "rewardVagueMatch": "#",
+      "cardSetVagueMatch": "#",
+      "rewardSum": 3,
+      "reward": [
+        {
+          "name": "r_card_item_labreport",
+          "set": 1,
+          "possibility": 0.3
+        },
+        {
+          "name": "r_MH_-0.2",
+          "set": 2,
+          "possibility": 0.9
+        },
+        {
+          "name": "r_PH_-0.05",
+          "set": 3,
+          "possibility": 0.5
+        }
+      ]
+    },
+    {
+      "formulaName": "f_club",
+      "cardSetName": "cs_club",
+      "rewardVagueMatch": "#",
+      "cardSetVagueMatch": "#",
+      "rewardSum": 4,
+      "reward": [
+        {
+          "name": "r_SC_+1",
+          "set": 1,
+          "possibility": 1
+        },
+        {
+          "name": "r_MH_+0.05",
+          "set": 2,
+          "possibility": 0.9
+        },
+        {
+          "name": "r_card_item_pastpaper",
+          "set": 3,
+          "possibility": 0.1
+        },
+        {
+          "name": "r_card_item_computer",
+          "set": 4,
+          "possibility": 0.1
+        }
+      ]
+    },
+    {
+      "formulaName": "f_teachingbuilding_textbook",
+      "cardSetName": "cs_teachingbuilding_textbook",
+      "rewardVagueMatch": "classAttandance",
+      "cardSetVagueMatch": "#",
+      "rewardSum": 4,
+      "reward": [
+        {
+          "name": "r_MH_-0.05",
+          "set": 1,
+          "possibility": 0.7
+        },
+        {
+          "name": "r_GPA_+0.05",
+          "set": 2,
+          "possibility": 1
+        },
+        {
+          "name": "r_card_item_pastpaper",
+          "set": 3,
+          "possibility": 0.05
+        },
+        {
+          "name": "r_CA",
+          "set": 4,
+          "possibility": 1
+        }
+      ]
+    },
+    {
+      "formulaName": "f_library",
+      "cardSetName": "cs_library",
+      "rewardVagueMatch": "#",
+      "cardSetVagueMatch": "#",
+      "rewardSum": 5,
+      "reward": [
+        {
+          "name": "r_card_@LINEARALGEBRAitem_textbook",
+          "set": 1,
+          "possibility": 0.3
+        },
+        {
+          "name": "r_card_@MATHEMATICALANALYSISitem_textbook",
+          "set": 1,
+          "possibility": 0.3
+        },
+        {
+          "name": "r_card_@PHYSICSitem_textbook",
+          "set": 1,
+          "possibility": 0.3
+        },
+        {
+          "name": "r_card_@IDEOLOGICALANDPOLITICALitem_textbook",
+          "set": 1,
+          "possibility": 0.3
+        },
+        {
+          "name": "r_card_@CLANGUAGEitem_textbook",
+          "set": 1,
+          "possibility": 0.3
+        }
+      ]
+    },
+    {
+      "formulaName": "f_kfc",
+      "cardSetName": "cs_food",
+      "rewardVagueMatch": "#",
+      "cardSetVagueMatch": "KFC",
+      "rewardSum": 2,
+      "reward": [
+        {
+          "name": "r_MH_+0.2",
+          "set": 1,
+          "possibility": 0.8
+        },
+        {
+          "name": "r_PH_-0.05",
+          "set": 2,
+          "possibility": 0.8
+        }
+      ]
+    },
+    {
+      "formulaName": "f_greencircle",
+      "cardSetName": "cs_food",
+      "rewardVagueMatch": "#",
+      "cardSetVagueMatch": "GREENCIRCLE",
+      "rewardSum": 2,
+      "reward": [
+        {
+          "name": "r_MH_-0.05",
+          "set": 1,
+          "possibility": 0.8
+        },
+        {
+          "name": "r_LV_+0.1",
+          "set": 2,
+          "possibility": 0.8
+        }
+      ]
+    },
+    {
+      "formulaName": "f_freesoup",
+      "cardSetName": "cs_food",
+      "rewardVagueMatch": "#",
+      "cardSetVagueMatch": "FREESOUP",
+      "rewardSum": 2,
+      "reward": [
+        {
+          "name": "r_MH_-0.05",
+          "set": 1,
+          "possibility": 0.8
+        },
+        {
+          "name": "r_LV_-0.05",
+          "set": 2,
+          "possibility": 0.8
+        }
+      ]
+    },
+    {
+      "formulaName": "f_food",
+      "cardSetName": "cs_food",
+      "rewardVagueMatch": "#",
+      "cardSetVagueMatch": "FOOD",
+      "rewardSum": 2,
+      "reward": [
+        {
+          "name": "r_MH_+0.05",
+          "set": 1,
+          "possibility": 0.8
+        },
+        {
+          "name": "r_PH_+0.05",
+          "set": 2,
+          "possibility": 0.8
+        }
+      ]
+    },
+    {
+      "formulaName": "PRESERVED",
+      "cardSetName": "",
+      "vagueMatch": "",
       "rewardSum": 1,
       "reward": [
         {
-          "name": "_test2",
+          "name": "",
           "set": 1,
-          "possibility": 0.5
+          "possibility": 1
+        }
+      ]
+    },
+    {
+      "formulaName": "PRESERVED",
+      "cardSetName": "",
+      "vagueMatch": "",
+      "rewardSum": 1,
+      "reward": [
+        {
+          "name": "",
+          "set": 1,
+          "possibility": 1
+        }
+      ]
+    },
+    {
+      "formulaName": "PRESERVED",
+      "cardSetName": "",
+      "vagueMatch": "",
+      "rewardSum": 1,
+      "reward": [
+        {
+          "name": "",
+          "set": 1,
+          "possibility": 1
+        }
+      ]
+    },
+    {
+      "formulaName": "PRESERVED",
+      "cardSetName": "",
+      "vagueMatch": "",
+      "rewardSum": 1,
+      "reward": [
+        {
+          "name": "",
+          "set": 1,
+          "possibility": 1
+        }
+      ]
+    },
+    {
+      "formulaName": "PRESERVED",
+      "cardSetName": "",
+      "vagueMatch": "",
+      "rewardSum": 1,
+      "reward": [
+        {
+          "name": "",
+          "set": 1,
+          "possibility": 1
+        }
+      ]
+    },
+    {
+      "formulaName": "PRESERVED",
+      "cardSetName": "",
+      "vagueMatch": "",
+      "rewardSum": 1,
+      "reward": [
+        {
+          "name": "",
+          "set": 1,
+          "possibility": 1
+        }
+      ]
+    },
+    {
+      "formulaName": "PRESERVED",
+      "cardSetName": "",
+      "vagueMatch": "",
+      "rewardSum": 1,
+      "reward": [
+        {
+          "name": "",
+          "set": 1,
+          "possibility": 1
+        }
+      ]
+    },
+    {
+      "formulaName": "PRESERVED",
+      "cardSetName": "",
+      "vagueMatch": "",
+      "rewardSum": 1,
+      "reward": [
+        {
+          "name": "",
+          "set": 1,
+          "possibility": 1
+        }
+      ]
+    },
+    {
+      "formulaName": "PRESERVED",
+      "cardSetName": "",
+      "vagueMatch": "",
+      "rewardSum": 1,
+      "reward": [
+        {
+          "name": "",
+          "set": 1,
+          "possibility": 1
+        }
+      ]
+    },
+    {
+      "formulaName": "PRESERVED",
+      "cardSetName": "",
+      "vagueMatch": "",
+      "rewardSum": 1,
+      "reward": [
+        {
+          "name": "",
+          "set": 1,
+          "possibility": 1
         }
       ]
     }

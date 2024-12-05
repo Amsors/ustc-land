@@ -51,11 +51,11 @@ public:
         return texture;
     }
 
-    static constexpr float W = 5.f; // 卡牌宽度
-    static constexpr float H = 7.f; // 卡牌高度
-    static constexpr float D = 1.f; // 卡堆中相邻卡牌的间距
+    static constexpr float W = 4.f; // 卡牌宽度
+    static constexpr float H = 5.6; // 卡牌高度
+    static constexpr float D = 1.2; // 卡堆中相邻卡牌的间距
     static constexpr float R = .6f; // 卡牌圆角半径
-    static constexpr float TS = 4.f; // 卡牌材质大小
+    static constexpr float TS = 3.f; // 卡牌材质大小
 
 private:
     Position pos;
