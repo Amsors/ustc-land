@@ -235,8 +235,6 @@ void readCardSetJson() {
 
 		double timeNeeded = tryReadDouble(jSingleCardSet, "timeNeeded");
 		reg.cardSetTimeNeeded[cardSetName] = timeNeeded;
-		bool isOnce = tryReadBool(jSingleCardSet, "once");
-		reg.cardSetIsOnce[cardSetName] = isOnce;
 
 		for(int j = 0; j < cardNum; j++) {
 			Json::Value oneCard = tryReadArray(jCard, j);
@@ -280,6 +278,10 @@ void readRewardJson() {
 
 		std::string type = tryReadString(jSingleReward, "type");
 		std::string name = tryReadString(jSingleReward, "name");
+
+		bool isOnce = tryReadBool(jSingleReward, "once");
+		reg.rewardIsOnce[name] = isOnce;
+		reg.rewardAttained[name] = false;
 
 		newReward->type = type;
 		newReward->name = name;
@@ -345,6 +347,11 @@ void readFormulaJson() {
 			Json::Value jSingleReward = tryReadArray(jReward, j);
 			std::string tryRewardName = tryReadString(jSingleReward, "name");
 			newFormula->rewardName.push_back(tryRewardName);
+			
+			int trySet = tryReadInt(jSingleReward, "set");
+			newFormula->rewardSet[tryRewardName] = trySet;
+			double tryPossibility = tryReadDouble(jSingleReward, "possibility");
+			newFormula->rewardPossibility[tryRewardName] = tryPossibility;
 		}
 		
 		reg.cardSetToFormula[tryCardSet].push_back(tryFormulaName);

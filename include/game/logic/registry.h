@@ -19,11 +19,11 @@ public:
 	std::map<std::string, bool> cardAttained;
 	std::map<std::string, bool> formulaAttained;
 	std::map<std::string, bool> itemAttained;
+	std::map<std::string, bool> rewardAttained;
 
 	std::map<CardSet, std::string> cardSetMap;
 	std::map<std::string, double> cardSetTimeNeeded;
 	std::map<std::string, std::vector<std::string>> cardSetLostCard;
-	std::map<std::string, bool> cardSetIsOnce;
 	std::map<std::string, bool> cardSetAttained;
 
 	std::vector<std::string> allCardType;
@@ -35,6 +35,8 @@ public:
 
 	std::map<std::string, Formula*> formulaPtr;
 	std::map<std::string, Reward*> rewardPtr;
+
+	std::map<std::string, bool> rewardIsOnce;
 	
 	void outputAttribute();
 	void AttributeOutput();

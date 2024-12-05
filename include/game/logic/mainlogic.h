@@ -174,6 +174,12 @@ public:
 	std::vector<std::string>& getRewardName() {
 		return this->rewardName;
 	}
+	std::map<std::string, int>& getRewardSet() {
+		return this->rewardSet;
+	}
+	std::map<std::string, double>& getRewardPossibility() {
+		return this->rewardPossibility;
+	}
 	std::string& getVagueMatch(){
 		return vagueMatch;
 	}
@@ -181,6 +187,8 @@ private:
 	std::string formulaName;
 	std::string cardSetName;
 	std::vector<std::string> rewardName;
+	std::map<std::string, int> rewardSet;
+	std::map<std::string, double> rewardPossibility;
 	std::string vagueMatch;
 
 

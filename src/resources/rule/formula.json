@@ -9,11 +9,14 @@
       "rewardSum": 2,
       "reward": [
         {
-          "name": "r_GPA_0.3"
-
+          "name": "r_GPA_0.3",
+          "set": 1,
+          "possibility": 1
         },
         {
-          "name": "_test"
+          "name": "_test",
+          "set": 2,
+          "possibility": 1
         }
       ]
     },
@@ -24,7 +27,9 @@
       "rewardSum": 1,
       "reward": [
         {
-          "name": "_test2"
+          "name": "_test2",
+          "set": 1,
+          "possibility": 0.5
         }
       ]
     }

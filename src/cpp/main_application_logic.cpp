@@ -1,9 +1,10 @@
 ﻿#include <map>
 #include <tuple>
+#include <random>
 
 #include "spdlog/spdlog.h"
 #include "game/logic/registry.h"
-
+#include "game/random.h"
 
 
 bool MainApplication::addCard() {
@@ -80,29 +81,22 @@ void MainApplication::checkCard() {
             stacks[i].status = CHECKED_N;
         }
         else {
-            if (reg.cardSetAttained[it->second] == true && reg.cardSetIsOnce[it->second] == true) {
-                stacks[i].status = CHECKED_N;
-                SPDLOG_LOGGER_TRACE(spdlog::get("main"),
-                    "match cardset(attained): {} at time: {}. stack stamp: {}", it->second, lastFrame, stacks[i].stamp);
+            SPDLOG_LOGGER_TRACE(spdlog::get("main"),
+                "match cardset: {} at time: {}. stack stamp: {}", it->second, lastFrame, stacks[i].stamp);
+            stacks[i].status = CHECKED_P;
+            stacks[i].cardSet = it->second;
+            stacks[i].timeUntil = reg.cardSetTimeNeeded[it->second] + lastFrame;
+            stacks[i].timeStart = lastFrame;
+            stacks[i].progress = 0;
+            stacks[i].vagueMatch = vagueMatch;
+            if (reg.cardSetLostCard.contains(it->second)) {
+                stacks[i].lostCard = reg.cardSetLostCard[it->second];
             }
             else {
-                SPDLOG_LOGGER_TRACE(spdlog::get("main"),
-                    "match cardset: {} at time: {}. stack stamp: {}", it->second, lastFrame, stacks[i].stamp);
-                stacks[i].status = CHECKED_P;
-                stacks[i].cardSet = it->second;
-                stacks[i].timeUntil = reg.cardSetTimeNeeded[it->second] + lastFrame;
-                stacks[i].timeStart = lastFrame;
-                stacks[i].progress = 0;
-                stacks[i].vagueMatch = vagueMatch;
-                if (reg.cardSetLostCard.contains(it->second)) {
-                    stacks[i].lostCard = reg.cardSetLostCard[it->second];
-                }
-                else {
-                    SPDLOG_LOGGER_WARN(spdlog::get("main"),
-                        "lostcard {} not registered at time: {}. stack stamp: {}", it->second, lastFrame, stacks[i].stamp);
-                }
-                //reg.outputAttribute();
+                SPDLOG_LOGGER_WARN(spdlog::get("main"),
+                    "lostcard {} not registered at time: {}. stack stamp: {}", it->second, lastFrame, stacks[i].stamp);
             }
+            //reg.outputAttribute();
             
         }
     }
@@ -192,10 +186,6 @@ void MainApplication::processWaitingCard() {
             //std::cout << "need " << stack.timeUntil << " now " << lastFrame << "\n";
             SPDLOG_LOGGER_TRACE(spdlog::get("main"), 
                 "cardset {} attained in on stack with stamp {}, time is {}", stack.cardSet, stack.stamp, lastFrame);
-            if (reg.cardSetAttained[stack.cardSet] == true && reg.cardSetIsOnce[stack.cardSet] == true) {
-                stack.status = UNCHECKED;
-                continue;
-            }
             reg.cardSetAttained[stack.cardSet] = true;
             for (int i = 0; i < reg.cardSetToFormula[stack.cardSet].size(); i++) {
                 std::string formulaName = reg.cardSetToFormula[stack.cardSet].at(i);
@@ -217,8 +207,24 @@ void MainApplication::processWaitingCard() {
                         "lostcard set for cardset {} not registered", stack.cardSet);
                 }
 
+                std::set<int> tmp;
+                std::uniform_int_distribution<int> distribution(0, 99);
+
                 for (int j = 0; j < reg.formulaPtr[formulaName]->getRewardName().size(); j++) {
-                    rewards.emplace(reg.formulaPtr[formulaName]->getRewardName().at(j));
+                    std::string rewardName = reg.formulaPtr[formulaName]->getRewardName().at(j);
+                    int rewardSet = reg.formulaPtr[formulaName]->getRewardSet()[rewardName];
+                    double rewardPossibility= reg.formulaPtr[formulaName]->getRewardPossibility()[rewardName];
+                    int pos = rewardPossibility * 100;
+                    if (tmp.contains(rewardSet)) {
+                        continue;
+                    }
+                    tmp.insert(rewardSet);
+
+                    int randomNumber = distribution(globalGenerator);
+                    SPDLOG_LOGGER_WARN(spdlog::get("main"), "random is {}", randomNumber);
+                    if(pos>=randomNumber){
+                        rewards.emplace(rewardName);
+                    }
                 }
             }
             stack.status = UNCHECKED;

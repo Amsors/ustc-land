@@ -7,7 +7,8 @@
       "type": "attributeValue",
       "attributeName": "GPA",
       "change": "ratio_of_rest",
-      "changeValue": 0.3
+      "changeValue": 0.3,
+      "once": false
     },
     {
       "name": "_test",
@@ -15,12 +16,14 @@
       "attributeName": "classChosen",
       "key": "Physics",
       "change": "add",
-      "changeValue": 1
+      "changeValue": 1,
+      "once": false
     },
     {
       "name": "_test2",
       "type": "card",
-      "cardName": "@COIN_fruit"
+      "cardName": "@COIN_fruit",
+      "once": false
     }
   ]
 }

@@ -17,8 +17,7 @@
       "lostCardNum": 0,
       "lostCard": [
 
-      ],
-      "once": false
+      ]
     },
     {
       "cardSetName": "_cardset_test1",
@@ -37,8 +36,7 @@
         {
           "name": "_man"
         }
-      ],
-      "once": true
+      ]
     }
   ]
 }
