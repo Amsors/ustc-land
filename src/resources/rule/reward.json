@@ -374,7 +374,11 @@
       "isVague": false
     },
     {
-
+      "name": "r_card_item_goldmine",
+      "type": "card",
+      "cardName": "item_goldmine",
+      "once": true,
+      "isVague": false
     },
     {
 

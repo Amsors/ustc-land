@@ -143,7 +143,9 @@ void readAdvancementJson() {
 		Json::Value singleAdvancement = tryReadArray(jAdcancement, i);
 		Advancement *newAdvancement = new Advancement();
 
-		newAdvancement->name = tryReadString(singleAdvancement, "name");
+		std::string advancementName = tryReadString(singleAdvancement, "name");
+		newAdvancement->name = advancementName;
+		SPDLOG_LOGGER_TRACE(spdlog::get("readjson"), "reading advancement {}", advancementName);
 
 		int formulaNeededSum = tryReadInt(singleAdvancement, "formulaNeededSum");
 		Json::Value jFormulaNeeded = tryReadValue(singleAdvancement, "formulaNeeded");
@@ -218,10 +220,10 @@ void readAdvancementJson() {
 				double lower = tryReadDouble(singleRestriction, "lower");
 				std::string name = tryReadString(singleRestriction, "name");
 
-				if (reg.regAttribute[attributeName]->getAttributeArray().contains(name) == false) {
+				/*if (reg.regAttribute[attributeName]->getAttributeArray().contains(name) == false) {
 					SPDLOG_LOGGER_WARN(spdlog::get("readjson"), "no element: {} in ArrayAttribute: {}", name, attributeName);
 					continue;
-				}
+				}*/
 				std::pair<std::string, Range> tmp2;
 				tmp2.first = name;
 				tmp2.second.lower = lower;

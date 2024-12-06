@@ -300,7 +300,7 @@
       "cardSetName": "cs_lab",
       "rewardVagueMatch": "#",
       "cardSetVagueMatch": "#",
-      "rewardSum": 3,
+      "rewardSum": 4,
       "reward": [
         {
           "name": "r_card_item_labreport",
@@ -316,6 +316,11 @@
           "name": "r_PH_-0.05",
           "set": 3,
           "possibility": 0.5
+        },
+        {
+          "name": "r_card_item_goldmine",
+          "set": 4,
+          "possibility": 0.05
         }
       ]
     },
@@ -488,28 +493,35 @@
       ]
     },
     {
-      "formulaName": "PRESERVED",
-      "cardSetName": "",
-      "vagueMatch": "",
+      "formulaName": "f_teachingbuilding_computer",
+      "cardSetName": "cs_teachingbuilding_computer",
+      "rewardVagueMatch": "#",
+      "cardSetVagueMatch": "#",
       "rewardSum": 1,
       "reward": [
         {
-          "name": "",
+          "name": "r_GPA_+0.05",
           "set": 1,
-          "possibility": 1
+          "possibility": 0.9
         }
       ]
     },
     {
-      "formulaName": "PRESERVED",
-      "cardSetName": "",
-      "vagueMatch": "",
-      "rewardSum": 1,
+      "formulaName": "f_club_computer",
+      "cardSetName": "cs_club_computer",
+      "rewardVagueMatch": "#",
+      "cardSetVagueMatch": "#",
+      "rewardSum": 2,
       "reward": [
         {
-          "name": "",
+          "name": "r_GPA_-0.05",
           "set": 1,
-          "possibility": 1
+          "possibility": 0.8
+        },
+        {
+          "name": "r_MH_+0.05",
+          "set": 2,
+          "possibility": 0.8
         }
       ]
     },

@@ -341,15 +341,18 @@
       ]
     },
     {
-      "cardSetName": "",
+      "cardSetName": "cs_teachingbuilding_computer",
       "timeNeeded": 4,
-      "cardNum": 2,
+      "cardNum": 3,
       "card": [
         {
-          "name": ""
+          "name": "role_student"
         },
         {
-          "name": ""
+          "name": "spot_teachingbuilding"
+        },
+        {
+          "name": "item_computer"
         }
       ],
       "lostCardNum": 0,
@@ -358,15 +361,18 @@
       ]
     },
     {
-      "cardSetName": "",
+      "cardSetName": "cs_club_computer",
       "timeNeeded": 4,
-      "cardNum": 2,
+      "cardNum": 3,
       "card": [
         {
-          "name": ""
+          "name": "role_student"
         },
         {
-          "name": ""
+          "name": "spot_club"
+        },
+        {
+          "name": "item_computer"
         }
       ],
       "lostCardNum": 0,
