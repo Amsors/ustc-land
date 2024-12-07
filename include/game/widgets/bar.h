@@ -38,14 +38,8 @@ class ListBar final: public Bar {
 public:
     ListBar(nanogui::Widget *parent, double moveSpeed);
     void move(double deltaTime, bool isLeft) override;
-};
-
-class InfoBar final: public Bar {
-public:
-    InfoBar(nanogui::Widget *parent, double moveSpeed);
-    void move(double deltaTime, bool isLeft) override;
-    void draw(NVGcontext *ctx) override;
+    void updateInfo();
 
 private:
-    float textBound[4]{};
+    Widget *attribute, *advancement;
 };

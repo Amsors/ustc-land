@@ -1,17 +1,25 @@
 #include "game/widgets/bar.h"
 
+#include <ranges>
+
 #include "i18n.h"
 #include "game/main_application.h"
+#include "game/logic/registry.h"
+#include "game/widgets/button.h"
 #include "game/widgets/label.h"
 #include "game/widgets/tabwidget.h"
 #include "GLFW/glfw3.h"
 #include "nanogui/button.h"
+#include "nanogui/icons.h"
+#include "nanogui/imageview.h"
 #include "nanogui/label.h"
 #include "nanogui/layout.h"
 #include "nanogui/screen.h"
 #include "nanogui/tabwidget.h"
 #include "nanovg/nanovg.h"
+#include "nanovg/stb_image.h"
 #include "spdlog/spdlog.h"
+#include "spdlog/fmt/bundled/xchar.h"
 
 Bar::Bar(nanogui::Widget *parent, const double moveSpeed, const SizeProvider &width, const SizeProvider &height, const SizeProvider &margin, const DistanceProvider &distance0, const DistanceProvider &maxDistance):
     nanogui::Window(parent, ""), MOVE_SPEED(moveSpeed),
@@ -92,7 +100,7 @@ ListBar::ListBar(nanogui::Widget *parent, const double moveSpeed):
         [](const nanogui::Screen *const screen)-> int {
             return static_cast<int>(screen->size().x() * .2f);
         }, [](const nanogui::Screen *const screen)-> int {
-            return static_cast<int>(screen->size().y() * .75f) - 15;
+            return screen->size().y() - 20;
         }, [](const nanogui::Screen *const) -> int {
             return 10;
         }, [](const int width, const int, const int margin) -> double {
@@ -107,11 +115,21 @@ ListBar::ListBar(nanogui::Widget *parent, const double moveSpeed):
     set_layout(new nanogui::GroupLayout(0));
 
     auto *tab = new StyledTabWidget(this, "msyh", "msyhbd");
-    tab->set_font_size(HEIGHT / 15);
-    auto *list1 = new nanogui::Widget(tab);
-    auto *list2 = new nanogui::Widget(tab);
-    tab->append_tab("list1", list1);
-    tab->append_tab("list2", list2);
+    tab->set_font_size(HEIGHT / 20);
+    attribute = new nanogui::Widget(tab);
+    advancement = new nanogui::Widget(tab);
+    auto *layout = new nanogui::GroupLayout(5, 2);
+    attribute->set_layout(layout);
+    advancement->set_layout(layout);
+    tab->append_tab(i18n::translated("tab.title.attribute"), attribute);
+    tab->append_tab(i18n::translated("tab.title.advancement"), advancement);
+    tab->set_callback([](int) {});
+
+    theme()->m_button_gradient_bot_pushed = theme()->m_button_gradient_top_pushed = BAR_BACKGROUND;
+    theme()->m_border_dark = theme()->m_border_light = theme()->m_border_medium = BAR_BACKGROUND;
+    theme()->m_text_color_shadow = BAR_BACKGROUND;
+
+    updateInfo();
 }
 
 void ListBar::move(const double deltaTime, const bool isLeft) {
@@ -126,59 +144,35 @@ void ListBar::move(const double deltaTime, const bool isLeft) {
     }
 }
 
-InfoBar::InfoBar(nanogui::Widget *parent, const double moveSpeed):
-    Bar(parent, moveSpeed,
-        [](const nanogui::Screen *const screen)-> int {
-            return static_cast<int>(screen->size().x() * .2f);
-        }, [](const nanogui::Screen *const screen)-> int {
-            return static_cast<int>(screen->size().y() * .25f) - 15;
-        }, [](const nanogui::Screen *const) -> int {
-            return 10;
-        }, [](const int width, const int, const int margin) -> double {
-            return margin * 2 + width;
-        }, [](const int width, const int, const int margin) -> double {
-            return margin * 2 + width;
-        }) {
-    set_fixed_size({WIDTH, HEIGHT});
-    x = -MARGIN - WIDTH;
-    y = static_cast<int>(screen()->size().y()) - MARGIN - HEIGHT;
-    set_position({static_cast<int>(x), static_cast<int>(y)});
-}
-
-void InfoBar::move(const double deltaTime, const bool isLeft) {
-    if(isLeft && distance < MAX_DISTANCE) {
-        x -= std::min(deltaTime * MOVE_SPEED, MAX_DISTANCE - distance);
-        set_position({static_cast<int>(x), static_cast<int>(y)});
-        distance = std::min(MAX_DISTANCE, distance + deltaTime * MOVE_SPEED);
-    } else if(!isLeft && distance > 0) {
-        x += std::min(deltaTime * MOVE_SPEED, distance);
-        set_position({static_cast<int>(x), static_cast<int>(y)});
-        distance = std::max(0., distance - deltaTime * MOVE_SPEED);
+void ListBar::updateInfo() {
+    while(!attribute->children().empty()) {
+        attribute->remove_child_at(0);
     }
-}
-
-void InfoBar::draw(NVGcontext *ctx) {
-    Bar::draw(ctx);
-
-    nvgSave(ctx);
-
-    static constexpr int FONT_SIZE = 20;
-    static constexpr int SCROLL_SPEED = 20;
-    static const std::string &text = i18n::translated("text.render.very_long");
-    static NVGtextRow rows[100];
-    nvgFontSize(ctx, FONT_SIZE);
-    nvgFontFace(ctx, "msyh");
-    nvgFillColor(ctx, nvgRGBA(0, 0, 0, 255));
-    nvgTextAlign(ctx, NVG_ALIGN_LEFT | NVG_ALIGN_TOP);
-    static const int LINES = nvgTextBreakLines(ctx, text.c_str(), nullptr, WIDTH - MARGIN * 2, rows, 100);
-    static const int TEXT_HEIGHT = FONT_SIZE * LINES;
-    const int x0 = m_pos.x() + MARGIN;
-    const int y0 = m_pos.y() + MARGIN -
-        (dynamic_cast<MainApplication*>(screen())->gameState() == MainApplication::PLAYING ? static_cast<int>(glfwGetTime() * SCROLL_SPEED) % TEXT_HEIGHT : 0);
-    nvgIntersectScissor(ctx, m_pos.x() + MARGIN, m_pos.y() + MARGIN, WIDTH - MARGIN * 2, HEIGHT - MARGIN * 2);
-    for(int i = 0, y = y0; i < LINES; i++, y += FONT_SIZE) {
-        nvgText(ctx, x0, y, rows[i].start, rows[i].end);
+    while(!advancement->children().empty()) {
+        advancement->remove_child_at(0);
     }
 
-    nvgRestore(ctx);
+    nanogui::Button *btn;
+    for(const auto &anAttr: reg.regAttribute | std::views::values) {
+        if(anAttr->getIsArray()) {
+            btn = new CustomButton(attribute, anAttr->getName() + ": ", FA_CIRCLE);
+            btn->set_background_color(BAR_BACKGROUND);
+            btn->set_icon_position(nanogui::Button::IconPosition::Left);
+            for(const auto &value: anAttr->getAttributeArray() | std::views::values) {
+                btn = new CustomButton(attribute, fmt::format("{}: {}", anAttr->getName(), value), FA_MINUS);
+                btn->set_background_color(BAR_BACKGROUND);
+                btn->set_icon_position(nanogui::Button::IconPosition::Left);
+            }
+        } else {
+            btn = new CustomButton(attribute, fmt::format("{}: {}", anAttr->getName(), anAttr->getAttributeValue()), FA_CIRCLE);
+            btn->set_background_color(BAR_BACKGROUND);
+            btn->set_icon_position(nanogui::Button::IconPosition::Left);
+        }
+    }
+    for(const auto &anAdv: reg.regAdvancement | std::views::values) {
+        btn = new CustomButton(advancement, anAdv->getName(), anAdv->getEstablished() ? FA_CHECK_SQUARE : FA_SQUARE);
+        btn->set_background_color(BAR_BACKGROUND);
+    }
+
+    perform_layout(screen()->nvg_context());
 }

@@ -1,12 +1,16 @@
+#include <utility>
+
 #include "game/widgets/tabwidget.h"
 
 #include "game/common.h"
+#include "nanogui/button.h"
 #include "nanovg/nanovg.h"
+#include "spdlog/spdlog.h"
 
-StyledTabWidget::StyledTabWidget(nanogui::Widget *parent, const std::string &quitTab, const std::string &enteredTab):
-    nanogui::TabWidget(parent, quitTab), enteredTabFont(enteredTab), hovering(-1), tabWidth(0) {
-    theme()->m_button_gradient_bot_pushed = nanogui::Color(233, 223, 187, 255);
-}
+const nanogui::Color StyledTabWidget::UNFOCUSED = nanogui::Color(233, 223, 187, 255);
+
+StyledTabWidget::StyledTabWidget(nanogui::Widget *parent, const std::string &quitTab, std::string enteredTab):
+    nanogui::TabWidget(parent, quitTab), enteredTabFont(std::move(enteredTab)), hovering(-1), tabWidth(0) {}
 
 void StyledTabWidget::draw(NVGcontext *ctx) {
     const int tab_height = m_font_size + 2 * m_theme->m_tab_button_vertical_padding;
@@ -21,7 +25,7 @@ void StyledTabWidget::draw(NVGcontext *ctx) {
         if(i != m_active_tab) {
             nvgBeginPath(ctx);
             nvgRect(ctx, x + 0.5f, y + 1.5f, width, tab_height);
-            nvgFillColor(ctx, m_theme->m_button_gradient_bot_pushed);
+            nvgFillColor(ctx, UNFOCUSED);
             nvgFill(ctx);
         }
         // 绘制文字
@@ -32,10 +36,30 @@ void StyledTabWidget::draw(NVGcontext *ctx) {
         nvgText(ctx, tx, ty, m_tab_captions[i].c_str(), nullptr);
     }
     nvgRestore(ctx);
+
+    if(!m_children.empty()) {
+        nvgTranslate(ctx, m_pos.x(), m_pos.y());
+        for(const auto child: m_children) {
+            if(!child->visible()) {
+                continue;
+            }
+            #if !defined(NANOGUI_SHOW_WIDGET_BOUNDS)
+            nvgSave(ctx);
+            nvgIntersectScissor(ctx, child->position().x(), child->position().y(), child->size().x(), child->size().y());
+            #endif
+
+            child->draw(ctx);
+
+            #if !defined(NANOGUI_SHOW_WIDGET_BOUNDS)
+            nvgRestore(ctx);
+            #endif
+        }
+        nvgTranslate(ctx, -m_pos.x(), -m_pos.y());
+    }
 }
 
 bool StyledTabWidget::mouse_motion_event(const nanogui::Vector2i &p, const nanogui::Vector2i &rel, const int button, const int modifiers) {
-    if(TabWidget::mouse_motion_event(p, rel, button, modifiers)) {
+    if(TabWidgetBase::mouse_motion_event(p, rel, button, modifiers)) {
         return true;
     }
     hovering = p.y() <= m_pos.y() || p.y() >= m_pos.y() + m_font_size + 2 * m_theme->m_tab_button_vertical_padding ? -1 :

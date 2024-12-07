@@ -12,7 +12,7 @@
 #include "game/logic/registry.h"
 
 MainApplication::MainApplication():
-    nanogui::Screen({400, 270}, "USTC Land", false, false), camera(0, -4, -40) {
+    nanogui::Screen({400, 270}, "USTC Land", false, true), camera(0, -4, -40) {
     SPDLOG_LOGGER_TRACE(spdlog::get("render"), "Main window created! size of the window: (x: {}, y: {}); pixel ratio: {:.2}", m_size.x(), m_size.y(), m_pixel_ratio);
 
     // 加载字体
@@ -27,7 +27,6 @@ MainApplication::MainApplication():
     }
     welcomeBar = new WelcomeBar(this, 500.);
     listBar = new ListBar(this, 440.);
-    infoBar = new InfoBar(this, 440.);
     perform_layout();
 
     std::string bvs, bfs, cvs, cfs, svs, sfs, fvs, ffs;
@@ -50,9 +49,9 @@ MainApplication::MainApplication():
     shadowPass->set_clear_color(0, {0xFF, 0xFF, 0xFF, 0xFF});
     shadowShader = new nanogui::Shader(shadowPass, "shadow", svs, sfs, nanogui::Shader::BlendMode::None);
 
+    nanogui::Vector2i size;
+    int channels;
     for(int i = 1; i <= 13; i++) {
-        nanogui::Vector2i size;
-        int channels;
         const std::string &imageFile = fmt::format("textures/background/{}.png", i);
         const ImageData texture_data(stbi_load(imageFile.c_str(), &size.x(), &size.y(), &channels, 0), stbi_image_free);
         #ifndef __USTC_LAND_RELEASE__
@@ -305,8 +304,7 @@ void MainApplication::draw_contents() {
         case PREPARING:
             if(welcomeBar->where() == Bar::THERE) {
                 listBar->move(deltaTime, false);
-                infoBar->move(deltaTime, false);
-                if(listBar->where() == Bar::HERE/* && infoBar->where() == Bar::HERE*/) {
+                if(listBar->where() == Bar::HERE) {
                     state = PLAYING;
                 }
             } else {
@@ -314,14 +312,13 @@ void MainApplication::draw_contents() {
             }
             break;
         case QUITTING:
-            if(listBar->where() == Bar::THERE/* && infoBar->where() == Bar::THERE*/) {
+            if(listBar->where() == Bar::THERE) {
                 welcomeBar->move(deltaTime, false);
                 if(welcomeBar->where() == Bar::HERE) {
                     state = TITLE;
                 }
             } else {
                 listBar->move(deltaTime, true);
-                infoBar->move(deltaTime, true);
             }
             break;
         case PLAYING:

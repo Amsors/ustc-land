@@ -6,4 +6,5 @@ screen.welcome.quit=退出游戏
 shader.load.fail.vertex=无法加载顶点着色器：{}.vert
 shader.load.fail.fragment=无法加载片段着色器：{}.frag
 
-text.render.very_long=This is a test of a very long multi-line text, in order to test the display of multi-line text. FreeType是一个能够用于加载字体并将他们渲染到位图以及提供多种字体相关的操作的软件开发库。它是一个非常受欢迎的跨平台字体库，它被用于Mac OS X、Java、PlayStation主机、Linux、Android等平台。FreeType的真正吸引力在于它能够加载TrueType字体。TrueType字体不是用像素或其他不可缩放的方式来定义的，它是通过数学公式（曲线的组合）来定义的。类似于矢量图像，这些光栅化后的字体图像可以根据需要的字体高度来生成。通过使用TrueType字体，你可以轻易渲染不同大小的字形而不造成任何质量损失。FreeType可以在他们的官方网站中下载到。你可以选择自己用源码编译这个库，如果支持你的平台的话，你也可以使用他们预编译好的库。请确认你将freetype.lib添加到你项目的链接库中，并且确认编译器知道头文件的位置。
+tab.title.attribute=属性
+tab.title.advancement=成就

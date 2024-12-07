@@ -99,7 +99,7 @@ private:
     nanogui::ref<nanogui::Texture> depthMap, bgTex;
     nanogui::Vector3f camera;
 
-    Bar *welcomeBar, *listBar, *infoBar; // HUD
+    Bar *welcomeBar, *listBar; // HUD
     State state = TITLE;
     double lastFrame = 0.;
     MouseState mouseState = NONE;

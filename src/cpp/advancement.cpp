@@ -42,7 +42,7 @@ bool Advancement::checkAdvancement() {
 		}
 	}
 	for (const auto& detail : this->attributeArrayNeeded) {
-		//每个detail对应一种attribute
+		//姣忎釜detail瀵瑰簲涓�绉峚ttribute
 		std::string name = detail.name;
 		if (reg.regAttribute.contains(name) == false) {
 			SPDLOG_LOGGER_WARN(spdlog::get("main"), "no attribute: {} when trying to check advancement", name);

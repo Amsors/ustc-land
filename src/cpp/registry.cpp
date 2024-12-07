@@ -27,18 +27,19 @@ void Registry::outputAttribute() {
 
 
 void Registry::AttributeOutput() {
+	std::cout << "size: " << reg.regAttribute.size() << std::endl;
 	for (const auto& attr : reg.regAttribute) {
 		auto attrPtr = attr.second;
 		if (attrPtr->getIsArray() == true) {
-			//Êä³öÊı×éĞÍµÄÊôĞÔ
-			std::cout << "[Array]" << attrPtr->getName() << ":\n";
+			//è¾“å‡ºæ•°ç»„å‹çš„å±æ€§
+			std::cout << "[Array]" << attrPtr->getName() << ":" << std::endl;
 			for (const auto& element : attrPtr->getAttributeArray()) {
-				std::cout << "element: " << element.first << " value: " << element.second << "\n";
+				std::cout << "element: " << element.first << " value: " << element.second << std::endl;
 			}
 		}
 		else {
-			//Êä³öÔªËØĞÍµÄÊôĞÔ
-			std::cout << "[Value]" << attrPtr->getName() << ": " << attrPtr->getAttributeValue() << "\n";
+			//è¾“å‡ºå…ƒç´ å‹çš„å±æ€§
+			std::cout << "[Value]" << attrPtr->getName() << ": " << attrPtr->getAttributeValue() << std::endl;
 		}
 	}
 }
