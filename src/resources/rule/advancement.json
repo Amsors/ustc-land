@@ -53,13 +53,13 @@
       "formulaNeededSum": 3,
       "formulaNeeded": [
         {
-          "name": "cs_middle"
+          "name": "f_middle"
         },
         {
-          "name": "cs_west"
+          "name": "f_west"
         },
         {
-          "name": "cs_east"
+          "name": "f_east"
         }
       ],
       "cardNeededSum": 0,
@@ -95,7 +95,7 @@
       "formulaNeededSum": 1,
       "formulaNeeded": [
         {
-          "name": "cs_deanoffice_computer"
+          "name": "f_deanoffice_computer"
         }
       ],
       "cardNeededSum": 0,
@@ -113,7 +113,7 @@
       "formulaNeededSum": 1,
       "formulaNeeded": [
         {
-          "name": "cs_lab"
+          "name": "f_lab"
         }
       ],
       "cardNeededSum": 0,
@@ -160,7 +160,7 @@
       "formulaNeededSum": 1,
       "formulaNeeded": [
         {
-          "name": "cs_dorm_computer"
+          "name": "f_dorm_computer"
         }
       ],
       "cardNeededSum": 0,

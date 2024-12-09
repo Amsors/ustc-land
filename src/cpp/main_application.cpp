@@ -10,9 +10,10 @@
 #include "nanovg/stb_image.h"
 #include "spdlog/spdlog.h"
 #include "game/logic/registry.h"
+#include "game/random.h"
 
 MainApplication::MainApplication():
-    nanogui::Screen({400, 270}, "USTC Land", false, false), camera(0, -4, -40) {
+    nanogui::Screen({reg.gameSettings.pixel_x, reg.gameSettings.pixel_y}, "USTC Land", false, reg.gameSettings.full_screen), camera(0, -4, -40) {
     SPDLOG_LOGGER_TRACE(spdlog::get("render"), "Main window created! size of the window: (x: {}, y: {}); pixel ratio: {:.2}", m_size.x(), m_size.y(), m_pixel_ratio);
 
     // 加载字体
@@ -155,14 +156,14 @@ bool MainApplication::mouse_button_event(const nanogui::Vector2i &p, const int b
         if(down) {
             mouseState = RIGHT;
             if(state == PLAYING) {
-
-                int typerandi = rand() % reg.allCardType.size();
-                std::string typerand = reg.allCardType.at(typerandi);
-                int namerandi = rand() % reg.allCard[typerand].size();
-                auto it = reg.allCard[typerand].begin();
-                std::advance(it, namerandi);
-                newCards.emplace(*it);
-
+                if (reg.gameSettings.cheat == true) {          
+                    for (auto it = reg.cardAttained.begin(); it != reg.cardAttained.end(); it++) {
+                        if (it->second == false) {
+                            newCards.emplace(it->first);
+                            break;
+                        }
+                    }
+                }
                 return true;
             }
         } else {

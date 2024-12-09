@@ -201,13 +201,13 @@
           "name": "spot_library"
         },
         {
-          "name": "item_pastpastpaper"
+          "name": "item_pastpaper"
         }
       ],
       "lostCardNum": 1,
       "lostCard": [
         {
-          "name": "pastpaper"
+          "name": "item_pastpaper"
         }
       ]
     },
@@ -381,7 +381,7 @@
       ]
     },
     {
-      "cardSetName": "",
+      "cardSetName": "PRESERVED",
       "timeNeeded": 4,
       "cardNum": 2,
       "card": [
@@ -398,7 +398,7 @@
       ]
     },
     {
-      "cardSetName": "",
+      "cardSetName": "PRESERVED",
       "timeNeeded": 4,
       "cardNum": 2,
       "card": [
@@ -415,7 +415,7 @@
       ]
     },
     {
-      "cardSetName": "",
+      "cardSetName": "PRESERVED",
       "timeNeeded": 4,
       "cardNum": 2,
       "card": [
@@ -432,7 +432,7 @@
       ]
     },
     {
-      "cardSetName": "",
+      "cardSetName": "PRESERVED",
       "timeNeeded": 4,
       "cardNum": 2,
       "card": [
@@ -449,7 +449,7 @@
       ]
     },
     {
-      "cardSetName": "",
+      "cardSetName": "PRESERVED",
       "timeNeeded": 4,
       "cardNum": 2,
       "card": [

@@ -258,8 +258,8 @@
       ]
     },
     {
-      "formulaName": "f_library_pastreal",
-      "cardSetName": "cs_library_pastreal",
+      "formulaName": "f_library_pastpaper",
+      "cardSetName": "cs_library_pastpaper",
       "rewardVagueMatch": "#",
       "cardSetVagueMatch": "#",
       "rewardSum": 2,

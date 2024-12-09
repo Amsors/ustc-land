@@ -11,7 +11,6 @@
 
 class Attribute {
 public:
-	Attribute();
 	//void showAttribute();
 	double& getAttributeValue() {
 		return this->attributeValue;
@@ -37,9 +36,9 @@ public:
 	
 private:
 	//for all
-	std::string name;
-	bool visibility;
-	bool isArray;
+	std::string name = "default";
+	bool visibility = false;
+	bool isArray = false;
 
 	//for attributeValue
 	double max;

@@ -1,6 +1,5 @@
 ﻿#include <map>
 #include <tuple>
-#include <random>
 
 #include "spdlog/spdlog.h"
 #include "game/logic/registry.h"
@@ -15,7 +14,7 @@ bool MainApplication::addCard() {
         bool given = false;
         for (const auto& cardType : reg.allCardType) {
             if (reg.allCard[cardType].contains(card)) {
-
+                SPDLOG_LOGGER_TRACE(spdlog::get("logic"), "trying to add card {}", card);
                 std::vector<std::shared_ptr<Card>> newStack;
                 newStack.emplace_back(std::make_shared<Card>(cardType, card));
                 Stack tmp = Stack(newStack, UNCHECKED, stamp);
@@ -35,7 +34,7 @@ bool MainApplication::addCard() {
             }
         }
         if (given == false) {
-            SPDLOG_LOGGER_WARN(spdlog::get("main"), "no registered card: {} when trying to add card", card);
+            SPDLOG_LOGGER_WARN(spdlog::get("logic"), "no registered card: {} when trying to add card", card);
         }
     }
     return true;
@@ -66,9 +65,9 @@ void MainApplication::checkCard() {
             stacks[i].status = CHECKED_N;
         }
         else {
-            SPDLOG_LOGGER_TRACE(spdlog::get("main"),
+            SPDLOG_LOGGER_TRACE(spdlog::get("logic"),
                 "match cardset: {} at time: {}. stack stamp: {}", it->second, lastFrame, stacks[i].stamp);
-            if (reg.cardSetToFormula[stacks[i].cardSet].size() == 0) { //cardset已注册，但没有对应formula
+            if (reg.cardSetToFormula[it->second].size() == 0) { //cardset已注册，但没有对应formula
                 stacks[i].status = CHECKED_N;
                 continue;
             }
@@ -82,7 +81,7 @@ void MainApplication::checkCard() {
                 stacks[i].lostCard = reg.cardSetLostCard[it->second];
             }
             else {
-                SPDLOG_LOGGER_WARN(spdlog::get("main"),
+                SPDLOG_LOGGER_WARN(spdlog::get("logic"),
                     "lostcard {} not registered at time: {}. stack stamp: {}", it->second, lastFrame, stacks[i].stamp);
             }
             //reg.outputAttribute();
@@ -92,16 +91,29 @@ void MainApplication::checkCard() {
 
 void MainApplication::giveReward() {
     while (this->rewards.empty() == false) {
-        Reward* r = reg.rewardPtr[this->rewards.front().first];
+        std::string rewardName = this->rewards.front().first;
         std::string vagueMatch = this->rewards.front().second;
-        SPDLOG_LOGGER_TRACE(spdlog::get("main"), "give reward {}", r->getName());
-        reg.rewardAttained[this->rewards.front().first] = true;
+        this->rewards.pop();
+
+        if (reg.rewardAttained.contains(rewardName) == false) {
+            SPDLOG_LOGGER_WARN(spdlog::get("logic"), "no reward {}", rewardName);
+            continue;
+        }
+        Reward* r = reg.rewardPtr[rewardName];
+        SPDLOG_LOGGER_TRACE(spdlog::get("logic"), "give reward {}", r->getName());
+        
+        reg.rewardAttained[rewardName] = true;
         if (r->getType() == "card") {
+            if (reg.cardAttained.contains(r->getCardName()) == false) {
+                SPDLOG_LOGGER_WARN(spdlog::get("logic"), "no card {} when trying to give reward", r->getCardName());
+                continue;
+            }
             newCards.push(r->getCardName());
         }
         else if (r->getType() == "attributeValue") {
             if (reg.regAttribute.contains(r->getAttributeName()) == false) {
-                SPDLOG_LOGGER_WARN(spdlog::get("main"), "reward {} : {} does not exist", r->getType(), r->getAttributeName());
+                SPDLOG_LOGGER_WARN(spdlog::get("logic"), "reward {} : {} does not exist", r->getType(), r->getAttributeName());
+                continue;
             }
             if (r->getChange() == "ratio_of_rest") {
                 reg.regAttribute[r->getAttributeName()]->getAttributeValue() +=
@@ -118,12 +130,13 @@ void MainApplication::giveReward() {
                 reg.regAttribute[r->getAttributeName()]->getAttributeValue() *= r->getChangeValue();
             }
             else {
-                SPDLOG_LOGGER_WARN(spdlog::get("main"), "change: {} does not exist", r->getChange());
+                SPDLOG_LOGGER_WARN(spdlog::get("logic"), "change: {} does not exist", r->getChange());
             }
         }
         else if (r->getType() == "attributeArray") {
             if (reg.regAttribute.contains(r->getAttributeName()) == false) {
-                SPDLOG_LOGGER_WARN(spdlog::get("main"), "reward {} : {} does not exist", r->getType(), r->getAttributeName());
+                SPDLOG_LOGGER_WARN(spdlog::get("logic"), "reward {} : {} does not exist", r->getType(), r->getAttributeName());
+                continue;
             }
             std::string index;
             if (vagueMatch == "#") {
@@ -135,10 +148,6 @@ void MainApplication::giveReward() {
             if (reg.regAttribute[r->getAttributeName()]->getAttributeArray().contains(index) == false) {
                 reg.regAttribute[r->getAttributeName()]->getAttributeArray().emplace(std::pair<std::string, double>(index, 0.0));
             }
-            /*if (reg.regAttribute[r->getAttributeName()]->getAttributeArray().contains(r->getKey()) == false) {
-                SPDLOG_LOGGER_WARN(spdlog::get("main"), "{} not in registered array {}", r->getKey(),
-                    reg.regAttribute[r->getAttributeName()]->getAttributeMatchKey());
-            }*/
             if (r->getChange() == "add") {
                 reg.regAttribute[r->getAttributeName()]->getAttributeArray()[index] += r->getChangeValue();
                 if (reg.regAttribute[r->getAttributeName()]->getAttributeArray()[index] < 0) {
@@ -149,14 +158,13 @@ void MainApplication::giveReward() {
                 reg.regAttribute[r->getAttributeName()]->getAttributeArray()[index] *= r->getChangeValue();
             }
             else {
-                SPDLOG_LOGGER_WARN(spdlog::get("main"), "change: {} does not exist", r->getChange());
+                SPDLOG_LOGGER_WARN(spdlog::get("logic"), "change: {} does not exist", r->getChange());
             }
         }
         else {
-            SPDLOG_LOGGER_WARN(spdlog::get("main"), "reward type: {} does not exist", r->getType());
+            SPDLOG_LOGGER_WARN(spdlog::get("logic"), "reward type: {} does not exist", r->getType());
         }
         //reg.outputAttribute();
-        this->rewards.pop();
         updateAdvancement();
     } 
 }
@@ -173,16 +181,12 @@ void MainApplication::processWaitingCard() {
         }
         if (stack.timeUntil <= lastFrame) {
             //std::cout << "need " << stack.timeUntil << " now " << lastFrame << "\n";
-            SPDLOG_LOGGER_TRACE(spdlog::get("main"), 
-                "cardset {} attained in on stack with stamp {}, time is {}", stack.cardSet, stack.stamp, lastFrame);
+            SPDLOG_LOGGER_TRACE(spdlog::get("logic"), 
+                "cardset {} attained on stack with stamp {}, time is {}", stack.cardSet, stack.stamp, lastFrame);
             reg.cardSetAttained[stack.cardSet] = true;
             for (int i = 0; i < reg.cardSetToFormula[stack.cardSet].size(); i++) {
                 std::string formulaName = reg.cardSetToFormula[stack.cardSet].at(i);
 
-                //std::cout << "card set " << stack.cardSet << " vaguematch "<<stack.vagueMatch<<"\n";
-                //if (reg.formulaPtr[formulaName]->getVagueMatch() != stack.vagueMatch) {
-                //    continue;
-                //}
                 if (reg.formulaPtr[formulaName]->getCardSetVagueMatch() != "#") {
                     if (stack.vagueMatch != reg.formulaPtr[formulaName]->getCardSetVagueMatch()) {
                         continue;
@@ -204,7 +208,7 @@ void MainApplication::processWaitingCard() {
                     }
                 }
                 else {
-                    SPDLOG_LOGGER_WARN(spdlog::get("main"),
+                    SPDLOG_LOGGER_WARN(spdlog::get("logic"),
                         "lostcard set for cardset {} not registered", stack.cardSet);
                 }
 
@@ -229,7 +233,7 @@ void MainApplication::processWaitingCard() {
                     if(pos>=randomNumber){
                         rewards.emplace(std::pair<std::string,std::string>(rewardName,stack.vagueMatch));
                         tmp.insert(reg.formulaPtr[formulaName]->getRewardSet()[rewardName]);
-                        SPDLOG_LOGGER_TRACE(spdlog::get("main"), "vaguematch is {}", stack.vagueMatch);
+                        SPDLOG_LOGGER_TRACE(spdlog::get("logic"), "vaguematch is {}", stack.vagueMatch);
                     }
                 }
             }
@@ -241,8 +245,10 @@ void MainApplication::processWaitingCard() {
 
 
 void MainApplication::updateAdvancement() {
-    reg.AttributeOutput();
-    reg.AdvancementOutput();
+    if (reg.gameSettings.show_detail == true) {
+        reg.AttributeOutput();
+        reg.AdvancementOutput();
+    }
     for (const auto& ad : reg.regAdvancement) {
         if (reg.advancementStatus[ad.first] == Advancement::LOCKED_P) {
             continue;
@@ -251,7 +257,7 @@ void MainApplication::updateAdvancement() {
             continue;
         }
         if (ad.second->checkAdvancement() == true) {
-            SPDLOG_LOGGER_TRACE(spdlog::get("main"), "match advancement: {}", ad.first);
+            SPDLOG_LOGGER_TRACE(spdlog::get("logic"), "match advancement: {}", ad.first);
             reg.advancementStatus[ad.first] = Advancement::SHOWN_P;
         }
         else {
@@ -264,7 +270,7 @@ void MainApplication::updateAdvancement() {
 void Stack::del(std::string a) {
     //cards.at(0) 是最下面的卡
     //this->show();
-    SPDLOG_LOGGER_TRACE(spdlog::get("main"), "delete card {}", a);
+    SPDLOG_LOGGER_TRACE(spdlog::get("logic"), "delete card {}", a);
     bool finished = false;
     for (int i = 0; i < this->cards.size(); i++) {
         //std::cout << cards.at(i)->getName() << "\n";
@@ -282,7 +288,7 @@ void Stack::del(std::string a) {
         }
     }
     if (finished == false) {
-        SPDLOG_LOGGER_WARN(spdlog::get("main"), "card {} not found when trying to delete it", a);
+        SPDLOG_LOGGER_WARN(spdlog::get("logic"), "card {} not found when trying to delete it", a);
     }
 }
 

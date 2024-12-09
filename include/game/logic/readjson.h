@@ -10,3 +10,4 @@ void readSpotJson();
 void readAdcancementJson();
 void readFormulaJson();
 void readItemJson();
+void readGameSettingsJson();

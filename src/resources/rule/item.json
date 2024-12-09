@@ -1,6 +1,6 @@
 {
   "type": "item",
-  "itemSum": 14,
+  "itemSum": 15,
   "item": [
     {
       "name": "item_labreport"
@@ -43,6 +43,9 @@
     },
     {
       "name": "@DEMIDOVICHitem_referencebook"
+    },
+    {
+      "name": "item_goldmine"
     }
   ]
 }

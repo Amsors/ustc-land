@@ -16,6 +16,7 @@
   "item_labreport": "/card/item_labreport.png",
   "item_pastpaper": "/card/item_pastpaper.png",
   "item_computer": "/card/item_computer.png",
+  "item_goldmine": "/card/item_goldmine.png",
 
   "@KFCitem_food": "/card/@KFCitem_food.png",
   "@GREENCIRCLEitem_food": "/card/@GREENCIRCLEitem_food.png",

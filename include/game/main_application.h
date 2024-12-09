@@ -37,8 +37,7 @@ protected:
     friend class MainApplication;
 };
 
-
-class MainApplication final: public nanogui::Screen {
+class MainApplication final : public nanogui::Screen {
 public:
     enum State {
         TITLE, PREPARING, PLAYING, PAUSED, QUITTING, OVER
@@ -55,9 +54,9 @@ public:
     MainApplication();
     ~MainApplication() override;
     bool keyboard_event(int key, int scancode, int action, int modifiers) override;
-    bool mouse_button_event(const nanogui::Vector2i &p, int button, bool down, int modifiers) override;
-    bool mouse_motion_event(const nanogui::Vector2i &p, const nanogui::Vector2i &rel, int button, int modifiers) override;
-    void draw(NVGcontext *ctx) override;
+    bool mouse_button_event(const nanogui::Vector2i& p, int button, bool down, int modifiers) override;
+    bool mouse_motion_event(const nanogui::Vector2i& p, const nanogui::Vector2i& rel, int button, int modifiers) override;
+    void draw(NVGcontext* ctx) override;
     void draw_contents() override;
 
     void showCard();
@@ -70,7 +69,7 @@ public:
 
     void check_all_cards();
 
-    [[nodiscard]] nanogui::Vector2f screenToWorldZ0(const nanogui::Vector2f &p) const {
+    [[nodiscard]] nanogui::Vector2f screenToWorldZ0(const nanogui::Vector2f& p) const {
         nanogui::Vector4f worldPos = iVp * nanogui::Vector4f(p.x() * 2.f / m_size.x() - 1, 1 - p.y() * 2.f / m_size.y(), .9f, 1.f);
         worldPos /= worldPos[3];
         return {
@@ -95,12 +94,12 @@ private:
 
     std::vector<nanogui::ref<nanogui::Texture>> bgTextures;
     nanogui::Matrix4f iVp;
-    nanogui::RenderPass *renderPass, *bgPass, *shadowPass;
-    nanogui::Shader *bgShader, *cardShader, *floorShader, *shadowShader;
+    nanogui::RenderPass* renderPass, * bgPass, * shadowPass;
+    nanogui::Shader* bgShader, * cardShader, * floorShader, * shadowShader;
     nanogui::ref<nanogui::Texture> depthMap, bgTex;
     nanogui::Vector3f camera;
 
-    Bar *welcomeBar, *listBar, *infoBar; // HUD
+    Bar* welcomeBar, * listBar, * infoBar; // HUD
     State state = TITLE;
     double lastFrame = 0.;
     MouseState mouseState = NONE;
@@ -109,7 +108,7 @@ private:
 
     bool movingStack = false;
 
-    std::queue<std::pair<std::string,std::string>> rewards;
+    std::queue<std::pair<std::string, std::string>> rewards;
     std::queue<std::string> newCards;
 
     int stamp = 0;
