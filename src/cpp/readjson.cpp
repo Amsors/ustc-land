@@ -74,9 +74,12 @@ void readAttributeJson() {
 
 	int attributeValueSum = tryReadInt(root, "attributeValueSum");
 	Json::Value jAttributeValue = tryReadValue(root, "attributeValue");
+	if (jAttributeValue.size() != attributeValueSum) {
+		SPDLOG_LOGGER_WARN(spdlog::get("readjson"), "array length not match");
+	}
 	for(int i = 0; i < attributeValueSum; i++) {
 		Json::Value jSingleAttributeValue = tryReadArray(jAttributeValue, i);
-		Attribute *newAttribute = new Attribute();
+		Attribute *newAttribute = new Attribute;
 
 		newAttribute->isArray = 0;
 		newAttribute->name = tryReadString(jSingleAttributeValue, "name");
@@ -84,19 +87,19 @@ void readAttributeJson() {
 		newAttribute->max = tryReadDouble(jSingleAttributeValue, "max");
 		newAttribute->attributeValue = tryReadDouble(jSingleAttributeValue, "initial");
 
-		/*SPDLOG_LOGGER_TRACE(spdlog::get("readjson"), "read attribute successfully. kind: {}, index: {}, name: {}",
-			"Value", i, jSingleAttributeValue["name"].asString());*/
-
 		reg.regAttribute.emplace(std::pair(newAttribute->name, newAttribute));
 		reg.allAttribute.push_back(newAttribute->name);
 	}
 
 	int attributeArraySum = tryReadInt(root, "attributeArraySum");
 	Json::Value jAttributeArray = tryReadValue(root, "attributeArray");
+	if (jAttributeArray.size() != attributeArraySum) {
+		SPDLOG_LOGGER_WARN(spdlog::get("readjson"), "array length not match");
+	}
 	for(int i = 0; i < attributeArraySum; i++) {
 		Json::Value jSingleAttributeArray = tryReadArray(jAttributeArray, i);
 
-		Attribute* newAttribute = new Attribute();
+		Attribute* newAttribute = new Attribute;
 
 		newAttribute->isArray = 1;
 		newAttribute->name = tryReadString(jSingleAttributeArray, "name");
@@ -104,14 +107,6 @@ void readAttributeJson() {
 		
 		std::string match = tryReadString(jSingleAttributeArray, "match");
 		newAttribute->attributeMatchKey = match;
-		/*for (int j = 0; j < reg.regArrayElements[match].size(); j++) {
-			newAttribute->attributeArray.emplace(
-				std::pair<std::string, double>(reg.regArrayElements[match].at(j), 0.0)
-				);
-		}*/
-
-		/*SPDLOG_LOGGER_TRACE(spdlog::get("readjson"), "read attribute successfully. kind: {}, index: {}, name: {}",
-			"Array", i, jSingleAttributeArray["name"].asString());*/
 
 		reg.regAttribute.emplace(std::pair<std::string, Attribute*>(newAttribute->name, newAttribute));
 		reg.allAttribute.push_back(newAttribute->name);
@@ -130,44 +125,63 @@ void readAdvancementJson() {
 	int advancementSum = tryReadInt(root, "advancementSum");
 	reg.regValue["advancementSum"] = advancementSum;
 	Json::Value jAdcancement = tryReadValue(root, "advancement");
+	if (jAdcancement.size() != advancementSum) {
+		SPDLOG_LOGGER_WARN(spdlog::get("readjson"), "array length not match");
+	}
 	for(int i = 0; i < advancementSum; i++) {
 		Json::Value singleAdvancement = tryReadArray(jAdcancement, i);
 		Advancement *newAdvancement = new Advancement();
 
-		newAdvancement->name = tryReadString(singleAdvancement, "name");
+		std::string advancementName = tryReadString(singleAdvancement, "name");
+		newAdvancement->name = advancementName;
+		SPDLOG_LOGGER_TRACE(spdlog::get("readjson"), "reading advancement {}", advancementName);
 
 		int formulaNeededSum = tryReadInt(singleAdvancement, "formulaNeededSum");
 		Json::Value jFormulaNeeded = tryReadValue(singleAdvancement, "formulaNeeded");
+		if (jFormulaNeeded.size() != formulaNeededSum) {
+			SPDLOG_LOGGER_WARN(spdlog::get("readjson"), "array length not match");
+		}
 		for(int j = 0; j < formulaNeededSum; j++) {
 			Json::Value jSingleFormulaNeeded = tryReadArray(jFormulaNeeded, j);
 			std::string needName = tryReadString(jSingleFormulaNeeded, "name");
+			if (reg.formulaAttained.contains(needName) == false) {
+				SPDLOG_LOGGER_WARN(spdlog::get("readjson"), "no formula {}",needName);
+				continue;
+			}
 			newAdvancement->formulaNeeded.push_back(needName);
 		}
 
 		int cardNeededSum = tryReadInt(singleAdvancement, "cardNeededSum");
 		Json::Value jCardNeeded = tryReadValue(singleAdvancement, "cardNeeded");
+		if (jCardNeeded.size() != cardNeededSum) {
+			SPDLOG_LOGGER_WARN(spdlog::get("readjson"), "array length not match");
+		}
 		for(int j = 0; j < cardNeededSum; j++) {
 			Json::Value jSingleCardNeeded = tryReadArray(jCardNeeded, j);
 			std::string needName = tryReadString(jSingleCardNeeded, "name");
+			if (reg.cardAttained.contains(needName) == false) {
+				SPDLOG_LOGGER_WARN(spdlog::get("readjson"), "no card {}", needName);
+				continue;
+			}
 			newAdvancement->cardNeeded.push_back(needName);
 		}
 
-		//int itemNeededSum = tryReadInt(singleAdvancement, "itemNeededSum");
-		//Json::Value jItemNeeded = tryReadValue(singleAdvancement, "itemNeeded");
-		//for(int j = 0; j < itemNeededSum; j++) {
-		//	Json::Value jSingleItemNeeded = tryReadArray(jItemNeeded, j);
-		//	std::string needName = tryReadString(jSingleItemNeeded, "name");
-		//	newAdvancement->itemNeeded.push_back(needName);
-		//}
-
 		int attributeValueNeededSum = tryReadInt(singleAdvancement, "attributeValueNeededSum");
 		Json::Value jAttributeValueNeeded = tryReadValue(singleAdvancement, "attributeValueNeeded");
+		if (jAttributeValueNeeded.size() != attributeValueNeededSum) {
+			SPDLOG_LOGGER_WARN(spdlog::get("readjson"), "array length not match");
+		}
 		for(int j = 0; j < attributeValueNeededSum; j++) {
 			Json::Value singleAttribute = tryReadArray(jAttributeValueNeeded, j);
 			double upper = tryReadDouble(singleAttribute, "upper");
 			double lower = tryReadDouble(singleAttribute, "lower");
 
 			std::string attributeName = tryReadString(singleAttribute, "attributeName");
+
+			if (reg.regAttribute.contains(attributeName) == false) {
+				SPDLOG_LOGGER_WARN(spdlog::get("readjson"), "no attribute {}", attributeName);
+				continue;
+			}
 
 			AttributeValueNeeded tmp;
 			tmp.name = attributeName;
@@ -178,26 +192,33 @@ void readAdvancementJson() {
 
 		int attributeArrayNeededSum = tryReadInt(singleAdvancement, "attributeArrayNeededSum");
 		Json::Value jAttributeArrayNeeded = tryReadValue(singleAdvancement, "attributeArrayNeeded");
+		if (jAttributeArrayNeeded.size() != attributeArrayNeededSum) {
+			SPDLOG_LOGGER_WARN(spdlog::get("readjson"), "array length not match");
+		}
 		for(int j = 0; j < attributeArrayNeededSum; j++) {
 			Json::Value jSingleAttribute = tryReadArray(jAttributeArrayNeeded, j);
 			std::string attributeName = tryReadString(jSingleAttribute, "attributeName");
 			std::string key = reg.regAttribute[attributeName]->getAttributeMatchKey();
+
+			if (reg.regAttribute.contains(attributeName) == false) {
+				SPDLOG_LOGGER_WARN(spdlog::get("readjson"), "no attribute {}", attributeName);
+				continue;
+			}
 
 			AttributeArrayNeeded tmp;
 			tmp.name = attributeName;
 
 			int restrictionSum = tryReadInt(jSingleAttribute, "restrictionSum");
 			Json::Value jrestriction = tryReadValue(jSingleAttribute, "restriction");
+			if (jrestriction.size() != restrictionSum) {
+				SPDLOG_LOGGER_WARN(spdlog::get("readjson"), "array length not match");
+			}
 			for (int k = 0; k < restrictionSum; k++) {
 				Json::Value singleRestriction = tryReadArray(jrestriction, k);
 				double upper = tryReadDouble(singleRestriction, "upper");
 				double lower = tryReadDouble(singleRestriction, "lower");
 				std::string name = tryReadString(singleRestriction, "name");
 
-				if (reg.regAttribute[attributeName]->getAttributeArray().contains(name) == false) {
-					SPDLOG_LOGGER_WARN(spdlog::get("readjson"), "no element: {} in ArrayAttribute: {}", name, attributeName);
-					continue;
-				}
 				std::pair<std::string, Range> tmp2;
 				tmp2.first = name;
 				tmp2.second.lower = lower;
@@ -222,6 +243,9 @@ void readCardSetJson() {
 	reg.regValue.emplace(std::pair("cardSetSum", cardSetSum));
 
 	Json::Value jCardSet = tryReadValue(root, "cardSet");
+	if (jCardSet.size() != cardSetSum) {
+		SPDLOG_LOGGER_WARN(spdlog::get("readjson"), "array length not match");
+	}
 	for (int i = 0; i < cardSetSum; i++) {
 		
 		Json::Value jSingleCardSet = tryReadArray(jCardSet, i);
@@ -231,31 +255,50 @@ void readCardSetJson() {
 		int lostCardNum = tryReadInt(jSingleCardSet, "lostCardNum");
 		Json::Value jLostCard = tryReadValue(jSingleCardSet, "lostCard");
 
+		if (cardSetName == "PRESERVED") {
+			SPDLOG_LOGGER_WARN(spdlog::get("readjson"), "Preserved cardSet");
+			continue;
+		}
+
 		CardSet newCardSet;
 
 		double timeNeeded = tryReadDouble(jSingleCardSet, "timeNeeded");
 		reg.cardSetTimeNeeded[cardSetName] = timeNeeded;
-		bool isOnce = tryReadBool(jSingleCardSet, "once");
-		reg.cardSetIsOnce[cardSetName] = isOnce;
 
+		if (jCard.size() != cardNum) {
+			SPDLOG_LOGGER_WARN(spdlog::get("readjson"), "array length not match");
+		}
 		for(int j = 0; j < cardNum; j++) {
 			Json::Value oneCard = tryReadArray(jCard, j);
 			std::string oneCardName = tryReadString(oneCard, "name");
+			if (reg.cardAttained.contains(oneCardName) == false) {
+				if (oneCardName[0] != '@') {
+					SPDLOG_LOGGER_WARN(spdlog::get("readjson"), "no card {}", oneCardName);
+					continue;
+				}
+			}
 			newCardSet.cardSet.emplace(oneCardName);
 		}
 
 		std::vector<std::string> tmp;
+		if (jLostCard.size() != lostCardNum) {
+			SPDLOG_LOGGER_WARN(spdlog::get("readjson"), "array length not match");
+		}
 		for (int j = 0; j < lostCardNum; j++) {
 			Json::Value oneLostCard = tryReadArray(jLostCard, j);
 			std::string oneLostCardName = tryReadString(oneLostCard, "name");
+			if (reg.cardAttained.contains(oneLostCardName) == false) {
+				if (oneLostCardName[0] != '@') {
+					SPDLOG_LOGGER_WARN(spdlog::get("readjson"), "no card {}", oneLostCardName);
+					continue;
+				}
+			}
 			tmp.emplace_back(oneLostCardName);
 		}
 		reg.cardSetLostCard.emplace(std::pair<std::string, std::vector<std::string>>(cardSetName, tmp));
 
 		newCardSet.cardSum = cardNum;
 
-		/*reg.cardSetPtr.emplace(std::pair(
-			cardSetName, newCardSet));*/
 		reg.cardSetAttained[cardSetName] = false;
 		reg.regArrayElements["cardSet"].push_back(cardSetName);
 		reg.cardSetMap.emplace(std::pair<CardSet, std::string>(newCardSet, cardSetName));
@@ -273,21 +316,40 @@ void readRewardJson() {
 	int rewardSum = tryReadInt(root, "rewardSum");
 	Json::Value jReward = tryReadValue(root, "reward");
 
-	for (int i = 0; i < rewardSum; i++) {
-		Reward* newReward = new Reward;
+	if (jReward.size() != rewardSum) {
+		SPDLOG_LOGGER_WARN(spdlog::get("readjson"), "array length not match");
+	}
 
+	for (int i = 0; i < rewardSum; i++) {
 		Json::Value jSingleReward = tryReadArray(jReward, i);
 
-		std::string type = tryReadString(jSingleReward, "type");
 		std::string name = tryReadString(jSingleReward, "name");
+		if (name == "PRESERVED") {
+			SPDLOG_LOGGER_WARN(spdlog::get("readjson"), "Preserved reward");
+			continue;
+		}
+
+		Reward* newReward = new Reward;
+
+		bool isOnce = tryReadBool(jSingleReward, "once");
+		std::string type = tryReadString(jSingleReward, "type");
+		reg.rewardIsOnce[name] = isOnce;
+		reg.rewardAttained[name] = false;
 
 		newReward->type = type;
 		newReward->name = name;
 
-		if (type == "attributeValue") {
+		if (type == "attributeValue") {	
 			std::string attributeName = tryReadString(jSingleReward, "attributeName");
 			std::string change = tryReadString(jSingleReward, "change");
 			double changeValue = tryReadDouble(jSingleReward, "changeValue");
+
+			if (reg.regAttribute.contains(attributeName) == false) {
+				SPDLOG_LOGGER_WARN(spdlog::get("readjson"), "no value attribute {}", attributeName);
+			}
+			if (change != "ratio_of_rest" && change != "add" && change != "mult") {
+				SPDLOG_LOGGER_WARN(spdlog::get("readjson"), "invalid change type {}", change);
+			}
 
 			newReward->attributeName = attributeName;
 			newReward->change = change;
@@ -297,15 +359,30 @@ void readRewardJson() {
 			std::string attributeName = tryReadString(jSingleReward, "attributeName");
 			std::string change = tryReadString(jSingleReward, "change");
 			double changeValue = tryReadDouble(jSingleReward, "changeValue");
-			std::string key = tryReadString(jSingleReward, "key");
+			bool isVague = tryReadBool(jSingleReward, "isVague");
+
+			if (reg.regAttribute.contains(attributeName) == false) {
+				SPDLOG_LOGGER_WARN(spdlog::get("readjson"), "no value attribute {}", attributeName);
+			}
+			if (change != "ratio_of_rest" && change != "add" && change != "mult") {
+				SPDLOG_LOGGER_WARN(spdlog::get("readjson"), "invalid change type {}", change);
+			}
 
 			newReward->attributeName = attributeName;
 			newReward->change = change;
 			newReward->changeValue = changeValue;
-			newReward->key = key;
+			newReward->isVague = isVague;
+
+			if (isVague == false) {
+				std::string key = tryReadString(jSingleReward, "key");
+				newReward->key = key;
+			}
 		}
 		else if (type == "card") {
 			std::string cardName = tryReadString(jSingleReward, "cardName");
+			if (reg.cardAttained.contains(cardName) == false) {
+				SPDLOG_LOGGER_WARN(spdlog::get("readjson"), "no card {}", cardName);
+			}
 			newReward->cardName = cardName;
 		}
 		else {
@@ -326,25 +403,54 @@ void readFormulaJson() {
 
 	int formulaSum = tryReadInt(root, "formulaSum");
 	Json::Value jFormula = tryReadValue(root, "formula");
+
+	if (jFormula.size() != formulaSum) {
+		SPDLOG_LOGGER_WARN(spdlog::get("readjson"), "array length not match");
+	}
 	for(int i = 0; i < formulaSum; i++) {
 		Json::Value jSingleFormula = tryReadArray(jFormula, i);
 
-		Formula* newFormula = new Formula;
+		std::string tryFormulaName = tryReadString(jSingleFormula, "formulaName");
 		std::string tryCardSet = tryReadString(jSingleFormula, "cardSetName");
-		std::string  tryFormulaName = tryReadString(jSingleFormula, "formulaName");
-		int tryRewardtSum = tryReadInt(jSingleFormula, "rewardSum");
 
-		std::string tryVagueMatch = tryReadString(jSingleFormula, "vagueMatch");
-		newFormula->vagueMatch = tryVagueMatch;
+		if (tryFormulaName=="PRESERVED") {
+			SPDLOG_LOGGER_WARN(spdlog::get("readjson"), "Preserved formula");
+			continue;
+		}
+		if (reg.cardSetAttained.contains(tryCardSet) == false) {
+			SPDLOG_LOGGER_WARN(spdlog::get("readjson"), "no cardset {}",tryCardSet);
+			continue;
+		}
 
+		Formula* newFormula = new Formula;
+		
+		newFormula->cardSetName = tryCardSet;
 		newFormula->formulaName = tryFormulaName;
-		newFormula->cardSetName = tryFormulaName;
+		
 
+		std::string tryCardSetVagueMatch = tryReadString(jSingleFormula, "cardSetVagueMatch");
+		std::string tryRewardVagueMatch = tryReadString(jSingleFormula, "rewardVagueMatch");
+		newFormula->cardSetVagueMatch = tryCardSetVagueMatch;
+		newFormula->rewardVagueMatch = tryRewardVagueMatch;
+		
+		int tryRewardSum = tryReadInt(jSingleFormula, "rewardSum");
 		Json::Value jReward = tryReadValue(jSingleFormula, "reward");
-		for (int j = 0; j < tryRewardtSum; j++) {
+		if (jReward.size() != tryRewardSum) {
+			SPDLOG_LOGGER_WARN(spdlog::get("readjson"), "array length not match");
+		}
+		for (int j = 0; j < tryRewardSum; j++) {
 			Json::Value jSingleReward = tryReadArray(jReward, j);
 			std::string tryRewardName = tryReadString(jSingleReward, "name");
+
+			if (reg.rewardPtr.contains(tryRewardName) == false) {
+				SPDLOG_LOGGER_WARN(spdlog::get("readjson"), "no reward {} when trying to add formula {}", tryRewardName, tryFormulaName);
+			}
 			newFormula->rewardName.push_back(tryRewardName);
+			
+			int trySet = tryReadInt(jSingleReward, "set");
+			newFormula->rewardSet[tryRewardName] = trySet;
+			double tryPossibility = tryReadDouble(jSingleReward, "possibility");
+			newFormula->rewardPossibility[tryRewardName] = tryPossibility;
 		}
 		
 		reg.cardSetToFormula[tryCardSet].push_back(tryFormulaName);
@@ -366,6 +472,9 @@ void readSpotJSon() {
 	reg.regValue.emplace(std::pair<std::string, int>("spotSum", spotSum));
 	reg.allCardType.push_back("spot");
 	Json::Value jSpot = tryReadValue(root, "spot");
+	if (jSpot.size() != spotSum) {
+		SPDLOG_LOGGER_WARN(spdlog::get("readjson"), "array length not match");
+	}
 	for (int i = 0; i < spotSum; i++) {
 		Json::Value jSingleSpot = tryReadArray(jSpot, i);
 		std::string onename = tryReadString(jSingleSpot, "name");
@@ -387,6 +496,9 @@ void readClassJson() {
 	int classSum = tryReadInt(root, "classSum");
 	reg.regValue.emplace(std::pair<std::string, int>("classSum", classSum));
 	Json::Value jClass = tryReadValue(root, "class");
+	if (jClass.size() != classSum) {
+		SPDLOG_LOGGER_WARN(spdlog::get("readjson"), "array length not match");
+	}
 	for(int i = 0; i < classSum; i++) {
 		Json::Value jSingleClass = tryReadArray(jClass, i);
 		std::string onename = tryReadString(jSingleClass, "name");
@@ -406,6 +518,9 @@ void readItemJson() {
 	int itemSum = tryReadInt(root, "itemSum");
 	reg.regValue.emplace(std::pair<std::string, int>("itemSum", itemSum));
 	Json::Value jItem = tryReadValue(root, "item");
+	if (jItem.size() != itemSum) {
+		SPDLOG_LOGGER_WARN(spdlog::get("readjson"), "array length not match");
+	}
 	for (int i = 0; i < itemSum; i++) {
 		Json::Value jSingleItem = tryReadArray(jItem, i);
 		std::string onename = tryReadString(jSingleItem, "name");
@@ -430,6 +545,9 @@ void readRoleJson() {
 	reg.regValue.emplace(std::pair<std::string, int>("roleSum", roleSum));
 
 	Json::Value jRole = tryReadValue(root, "role");
+	if (jRole.size() != roleSum) {
+		SPDLOG_LOGGER_WARN(spdlog::get("readjson"), "array length not match");
+	}
 	for (int i = 0; i < roleSum; i++) {
 		Json::Value jSingleRole = tryReadArray(jRole, i);
 		std::string onename = tryReadString(jSingleRole, "name");
@@ -452,6 +570,9 @@ void readCardTypeJson() {
 	int cardTypeSum = tryReadInt(root, "cardTypeSum");
 	reg.regValue.emplace(std::pair<std::string, int>("cardTypeSum", cardTypeSum));
 	Json::Value jCardType = tryReadValue(root, "cardType");
+	if (jCardType.size() != cardTypeSum) {
+		SPDLOG_LOGGER_WARN(spdlog::get("readjson"), "array length not match");
+	}
 	for (int i = 0; i < cardTypeSum; i++) {
 		Json::Value jSingleCardType = tryReadArray(jCardType, i);
 		std::string onename = tryReadString(jSingleCardType, "name");
@@ -475,11 +596,13 @@ void readCardTypeJson() {
 
 void readJson() {
 	readRuleFileJson();
+	readGameSettingsJson();
 	sort(reg.regJsonFile.begin(), reg.regJsonFile.end(),
 		[](const std::pair<std::string, int> &a, const std::pair<std::string, int> &b) {
 			return a.second > b.second;
 		});
 	for(auto &[file, importance]: reg.regJsonFile) {
+		SPDLOG_LOGGER_TRACE(spdlog::get("readjson"), "read json file {} (importance {} )", file, importance);
 		if(file == "attribute.json") {
 			readAttributeJson();
 		}
@@ -513,7 +636,6 @@ void readJson() {
 		else{
 			SPDLOG_LOGGER_WARN(spdlog::get("readjson"), "no match for {}", file);
 		}
-		SPDLOG_LOGGER_TRACE(spdlog::get("readjson"), "read json file {} (importance {} )", file, importance);
 	}
 }
 
@@ -525,12 +647,39 @@ void readRuleFileJson() {
 
 	int jsonFileSum = tryReadInt(root, "jsonFileSum");
 	Json::Value jJsonFile = tryReadValue(root, "jsonFile");
+	if (jJsonFile.size() != jsonFileSum) {
+		SPDLOG_LOGGER_WARN(spdlog::get("readjson"), "array length not match");
+	}
 	for(int i = 0; i < jsonFileSum; i++) {
 		Json::Value jSingleJsonFile = tryReadArray(jJsonFile, i);
 		std::string oneName = tryReadString(jSingleJsonFile, "name");
 		int oneImportance = tryReadInt(jSingleJsonFile, "importance");
 		reg.regJsonFile.emplace_back(oneName, oneImportance);
 	}
+
+	inFile.close();
+}
+
+void readGameSettingsJson() {
+	std::ifstream inFile("gamesettings.json");
+	Json::Reader reader;
+	Json::Value root;
+	reader.parse(inFile, root);
+
+	int x = tryReadInt(root, "pixel_x");
+	int y = tryReadInt(root, "pixel_y");
+	bool f = tryReadBool(root, "full_screen");
+	bool cheat = tryReadBool(root, "cheat");
+	bool detail = tryReadBool(root, "show_detail");
+	if (x > 0) {
+		reg.gameSettings.pixel_x = x;
+	}
+	if (y > 0) {
+		reg.gameSettings.pixel_y = y;
+	}
+	reg.gameSettings.full_screen = f;
+	reg.gameSettings.cheat = cheat;
+	reg.gameSettings.show_detail = detail;
 
 	inFile.close();
 }

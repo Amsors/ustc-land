@@ -37,7 +37,6 @@ protected:
     friend class MainApplication;
 };
 
-
 class MainApplication final: public nanogui::Screen {
 public:
     enum State {
@@ -66,6 +65,7 @@ public:
     void giveReward();
     void processWaitingCard();
     void updateAdvancement();
+    void logicInit();
 
     void check_all_cards();
 
@@ -108,7 +108,7 @@ private:
 
     bool movingStack = false;
 
-    std::queue<std::string> rewards;
+    std::queue<std::pair<std::string, std::string>> rewards;
     std::queue<std::string> newCards;
 
     int stamp = 0;

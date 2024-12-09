@@ -11,7 +11,6 @@
 
 class Attribute {
 public:
-	Attribute();
 	//void showAttribute();
 	double& getAttributeValue() {
 		return this->attributeValue;
@@ -37,9 +36,9 @@ public:
 	
 private:
 	//for all
-	std::string name;
-	bool visibility;
-	bool isArray;
+	std::string name = "default";
+	bool visibility = false;
+	bool isArray = false;
 
 	//for attributeValue
 	double max;
@@ -148,6 +147,9 @@ public:
 	std::string getCardName() {
 		return this->cardName;
 	}
+	bool getIsVague() {
+		return this->isVague;
+	}
 private:
 	//for all
 	std::string name;
@@ -161,6 +163,7 @@ private:
 
 	//for attributeArray
 	std::string key;
+	bool isVague = false;
 
 	//for card
 	std::string cardName;
@@ -174,14 +177,26 @@ public:
 	std::vector<std::string>& getRewardName() {
 		return this->rewardName;
 	}
-	std::string& getVagueMatch(){
-		return vagueMatch;
+	std::map<std::string, int>& getRewardSet() {
+		return this->rewardSet;
+	}
+	std::map<std::string, double>& getRewardPossibility() {
+		return this->rewardPossibility;
+	}
+	std::string& getRewardVagueMatch(){
+		return this->rewardVagueMatch;
+	}
+	std::string& getCardSetVagueMatch() {
+		return this->cardSetVagueMatch;
 	}
 private:
 	std::string formulaName;
 	std::string cardSetName;
 	std::vector<std::string> rewardName;
-	std::string vagueMatch;
+	std::map<std::string, int> rewardSet;
+	std::map<std::string, double> rewardPossibility;
+	std::string rewardVagueMatch;
+	std::string cardSetVagueMatch;
 
 
 	friend void readFormulaJson();

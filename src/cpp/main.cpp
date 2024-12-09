@@ -37,7 +37,8 @@ int main() {
         std::make_shared<spdlog::logger>("main", begin(sinks), end(sinks)),
         std::make_shared<spdlog::logger>("i18n", begin(sinks), end(sinks)),
         std::make_shared<spdlog::logger>("render", begin(sinks), end(sinks)),
-        std::make_shared<spdlog::logger>("readjson", begin(sinks), end(sinks))
+		std::make_shared<spdlog::logger>("readjson", begin(sinks), end(sinks)),
+        std::make_shared<spdlog::logger>("logic", begin(sinks), end(sinks))
     };
     for(const auto &logger: loggers) {
         spdlog::register_logger(logger);

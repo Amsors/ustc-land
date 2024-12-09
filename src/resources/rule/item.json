@@ -1,18 +1,51 @@
 {
   "type": "item",
-  "itemSum": 4,
+  "itemSum": 15,
   "item": [
     {
-      "name": "@BANANA_fruit"
+      "name": "item_labreport"
     },
     {
-      "name": "_apple"
+      "name": "item_pastpaper"
     },
     {
-      "name": "@COIN_fruit"
+      "name": "item_computer"
     },
     {
-      "name": "_brick"
+      "name": "@KFCitem_food"
+    },
+    {
+      "name": "@GREENCIRCLEitem_food"
+    },
+    {
+      "name": "@FREESOUPitem_food"
+    },
+    {
+      "name": "@FOODitem_food"
+    },
+    {
+      "name": "@LINEARALGEBRAitem_textbook"
+    },
+    {
+      "name": "@MATHEMATICALANALYSISitem_textbook"
+    },
+    {
+      "name": "@PHYSICSitem_textbook"
+    },
+    {
+      "name": "@IDEOLOGICALANDPOLITICALitem_textbook"
+    },
+    {
+      "name": "@CLANGUAGEitem_textbook"
+    },
+    {
+      "name": "@ONETHOUSANDPROBLEMSitem_referencebook"
+    },
+    {
+      "name": "@DEMIDOVICHitem_referencebook"
+    },
+    {
+      "name": "item_goldmine"
     }
   ]
 }

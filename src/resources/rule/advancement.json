@@ -1,38 +1,274 @@
 {
   "type": "advancement",
-  "advancementSum": 1,
+  "advancementSum": 12,
   "advancement": [
     {
-      "name": "_test_adv",
+      "name": "adv_full_class",
+      "formulaNeededSum": 0,
+      "formulaNeeded": [
+      ],
+      "cardNeededSum": 0,
+      "cardNeeded": [
+      ],
+      "attributeValueNeededSum": 0,
+      "attributeValueNeeded": [
+      ],
+      "attributeArrayNeededSum": 1,
+      "attributeArrayNeeded": [
+        {
+          "attributeName": "classAttendance",
+          "restrictionSum": 5,
+          "restriction": [
+            {
+              "name": "LINEARALGEBRA",
+              "upper": 10000,
+              "lower": 2
+            },
+            {
+              "name": "MATHEMATICALANALYSIS",
+              "upper": 10000,
+              "lower": 2
+            },
+            {
+              "name": "PHYSICS",
+              "upper": 10000,
+              "lower": 2
+            },
+            {
+              "name": "IDEOLOGICALANDPOLITICAL",
+              "upper": 10000,
+              "lower": 2
+            },
+            {
+              "name": "CLANGUAGE",
+              "upper": 10000,
+              "lower": 2
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "adv_campus_wander",
+      "formulaNeededSum": 3,
+      "formulaNeeded": [
+        {
+          "name": "f_middle"
+        },
+        {
+          "name": "f_west"
+        },
+        {
+          "name": "f_east"
+        }
+      ],
+      "cardNeededSum": 0,
+      "cardNeeded": [
+      ],
+      "attributeValueNeededSum": 0,
+      "attributeValueNeeded": [
+      ],
+      "attributeArrayNeededSum": 0,
+      "attributeArrayNeeded": [
+      ]
+    },
+    {
+      "name": "adv_find_gold_mine",
+      "formulaNeededSum": 0,
+      "formulaNeeded": [
+      ],
+      "cardNeededSum": 1,
+      "cardNeeded": [
+        {
+          "name": "item_goldmine"
+        }
+      ],
+      "attributeValueNeededSum": 0,
+      "attributeValueNeeded": [
+      ],
+      "attributeArrayNeededSum": 0,
+      "attributeArrayNeeded": [
+      ]
+    },
+    {
+      "name": "adv_attact_system",
       "formulaNeededSum": 1,
       "formulaNeeded": [
         {
-          "name": "_test_formula2"
+          "name": "f_deanoffice_computer"
         }
       ],
-      "cardNeededSum": 3,
+      "cardNeededSum": 0,
       "cardNeeded": [
+      ],
+      "attributeValueNeededSum": 0,
+      "attributeValueNeeded": [
+      ],
+      "attributeArrayNeededSum": 0,
+      "attributeArrayNeeded": [
+      ]
+    },
+    {
+      "name": "adv_theory_and_practice",
+      "formulaNeededSum": 1,
+      "formulaNeeded": [
         {
-          "name": "_man"
-        },
-        {
-          "name": "_home"
-        },
-        {
-          "name": "@COIN_fruit"
+          "name": "f_lab"
         }
+      ],
+      "cardNeededSum": 0,
+      "cardNeeded": [
+      ],
+      "attributeValueNeededSum": 0,
+      "attributeValueNeeded": [
+      ],
+      "attributeArrayNeededSum": 1,
+      "attributeArrayNeeded": [
+        {
+          "attributeName": "classAttendance",
+          "restrictionSum": 1,
+          "restriction": [
+            {
+              "name": "PHYSICS",
+              "upper": 10000,
+              "lower": 2
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "adv_dygital_learning",
+      "formulaNeededSum": 1,
+      "formulaNeeded": [
+        {
+          "name": "f_teachingbuilding_computer"
+        }
+      ],
+      "cardNeededSum": 0,
+      "cardNeeded": [
+      ],
+      "attributeValueNeededSum": 0,
+      "attributeValueNeeded": [
+      ],
+      "attributeArrayNeededSum": 0,
+      "attributeArrayNeeded": [
+      ]
+    },
+    {
+      "name": "adv_dygital_playing",
+      "formulaNeededSum": 1,
+      "formulaNeeded": [
+        {
+          "name": "f_dorm_computer"
+        }
+      ],
+      "cardNeededSum": 0,
+      "cardNeeded": [
+      ],
+      "attributeValueNeededSum": 0,
+      "attributeValueNeeded": [
+      ],
+      "attributeArrayNeededSum": 0,
+      "attributeArrayNeeded": [
+      ]
+    },
+    {
+      "name": "adv_gaming_club",
+      "formulaNeededSum": 1,
+      "formulaNeeded": [
+        {
+          "name": "f_club_computer"
+        }
+      ],
+      "cardNeededSum": 0,
+      "cardNeeded": [
+      ],
+      "attributeValueNeededSum": 0,
+      "attributeValueNeeded": [
+      ],
+      "attributeArrayNeededSum": 0,
+      "attributeArrayNeeded": [
+      ]
+    },
+    {
+      "name": "adv_second_class_20+",
+      "formulaNeededSum": 0,
+      "formulaNeeded": [
+      ],
+      "cardNeededSum": 0,
+      "cardNeeded": [
       ],
       "attributeValueNeededSum": 1,
       "attributeValueNeeded": [
         {
-          "attributeName": "GPA",
-          "upper": 5,
-          "lower": 4
+          "attributeName": "secondClass",
+          "upper": 10000,
+          "lower": 20
         }
       ],
       "attributeArrayNeededSum": 0,
       "attributeArrayNeeded": [
-
+      ]
+    },
+    {
+      "name": "adv_red_and_pro_20+",
+      "formulaNeededSum": 0,
+      "formulaNeeded": [
+      ],
+      "cardNeededSum": 0,
+      "cardNeeded": [
+      ],
+      "attributeValueNeededSum": 1,
+      "attributeValueNeeded": [
+        {
+          "attributeName": "redAndPro",
+          "upper": 10000,
+          "lower": 20
+        }
+      ],
+      "attributeArrayNeededSum": 0,
+      "attributeArrayNeeded": [
+      ]
+    },
+    {
+      "name": "adv_phy_80+",
+      "formulaNeededSum": 0,
+      "formulaNeeded": [
+      ],
+      "cardNeededSum": 0,
+      "cardNeeded": [
+      ],
+      "attributeValueNeededSum": 1,
+      "attributeValueNeeded": [
+        {
+          "attributeName": "physicalHealth",
+          "upper": 10000,
+          "lower": 80
+        }
+      ],
+      "attributeArrayNeededSum": 0,
+      "attributeArrayNeeded": [
+      ]
+    },
+    {
+      "name": "adv_phy_40-",
+      "formulaNeededSum": 0,
+      "formulaNeeded": [
+      ],
+      "cardNeededSum": 0,
+      "cardNeeded": [
+      ],
+      "attributeValueNeededSum": 1,
+      "attributeValueNeeded": [
+        {
+          "attributeName": "physicalHealth",
+          "upper": 40,
+          "lower": 0
+        }
+      ],
+      "attributeArrayNeededSum": 0,
+      "attributeArrayNeeded": [
       ]
     }
   ]
