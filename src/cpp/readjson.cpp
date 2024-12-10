@@ -225,10 +225,11 @@ void readAdvancementJson() {
 				tmp2.second.upper = upper;
 				tmp.res.push_back(tmp2);
 			}
+			newAdvancement->attributeArrayNeeded.push_back(tmp);
 		}
 
 		reg.regAdvancement.emplace(std::pair(newAdvancement->name, newAdvancement));
-		reg.advancementStatus.emplace(std::pair(newAdvancement->name, Advancement::AdvancementStatus::SHOWN_N));
+		//reg.advancementStatus.emplace(std::pair(newAdvancement->name, Advancement::AdvancementStatus::SHOWN_N));
 	}
 	inFile.close();
 }
@@ -671,6 +672,7 @@ void readGameSettingsJson() {
 	bool f = tryReadBool(root, "full_screen");
 	bool cheat = tryReadBool(root, "cheat");
 	bool detail = tryReadBool(root, "show_detail");
+	Json::Value start = tryReadValue(root, "start_with");
 	if (x > 0) {
 		reg.gameSettings.pixel_x = x;
 	}
@@ -680,6 +682,10 @@ void readGameSettingsJson() {
 	reg.gameSettings.full_screen = f;
 	reg.gameSettings.cheat = cheat;
 	reg.gameSettings.show_detail = detail;
+	for (int i = 0; i < start.size(); i++) {
+		reg.gameSettings.startWith.emplace_back(start[i].asString());
+		SPDLOG_LOGGER_WARN(spdlog::get("readjson"), "start with {}",start[i].asString());
+	}
 
 	inFile.close();
 }

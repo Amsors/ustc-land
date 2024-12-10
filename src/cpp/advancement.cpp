@@ -8,11 +8,10 @@
 #include "game/logic/registry.h"
 #include "spdlog/spdlog.h"
 
-Advancement::Advancement() {
-	this->established = 0;
-}
-
 bool Advancement::checkAdvancement() {
+	if (this->established == true) {
+		return true;
+	}
 	for (std::string name : this->formulaNeeded) {
 		if (reg.formulaAttained.contains(name) == false) {
 			SPDLOG_LOGGER_WARN(spdlog::get("main"), "no formula: {} when trying to check advancement", name);
@@ -51,7 +50,6 @@ bool Advancement::checkAdvancement() {
 			double needUpper = detail.res.at(i).second.upper;
 			double needLower = detail.res.at(i).second.lower;
 			std::string needName = detail.res.at(i).first;
-
 			bool containIndex = reg.regAttribute[name]->getAttributeArray().contains(needName);
 			if (containIndex == false) {
 				return false;
@@ -62,6 +60,7 @@ bool Advancement::checkAdvancement() {
 			}
 		}
 	}
+	this->established = true;
 	return true;
 }
 

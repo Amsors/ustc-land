@@ -30,12 +30,14 @@ bool MainApplication::addCard() {
                 reg.cardAttained[card] = true;
 
                 given = true;
+				reg.cardAttained[card] = true;
                 break;
             }
         }
         if (given == false) {
             SPDLOG_LOGGER_WARN(spdlog::get("logic"), "no registered card: {} when trying to add card", card);
         }
+        updateAdvancement();
     }
     return true;
 }
@@ -166,9 +168,8 @@ void MainApplication::giveReward() {
         }
         //reg.outputAttribute();
         updateAdvancement();
+        ((ListBar*)listBar)->updateInfo();
     }
-
-    ((ListBar*)listBar)->updateInfo();
 }
 
 void MainApplication::processWaitingCard() {
@@ -240,6 +241,7 @@ void MainApplication::processWaitingCard() {
                 }
             }
             stack.status = UNCHECKED;
+            updateAdvancement();   
         }
     }
     return;
@@ -252,20 +254,11 @@ void MainApplication::updateAdvancement() {
         reg.AdvancementOutput();
     }
     for (const auto& ad : reg.regAdvancement) {
-        if (reg.advancementStatus[ad.first] == Advancement::LOCKED_P) {
-            continue;
-        }
-        if (reg.advancementStatus[ad.first] == Advancement::SHOWN_P) {
-            continue;
-        }
         if (ad.second->checkAdvancement() == true) {
             SPDLOG_LOGGER_TRACE(spdlog::get("logic"), "match advancement: {}", ad.first);
-            reg.advancementStatus[ad.first] = Advancement::SHOWN_P;
-        }
-        else {
-            //std::cout << "do not match " << ad.first << "\n";
         }
     }
+    ((ListBar*)listBar)->updateInfo();
 }
 
 
@@ -313,4 +306,10 @@ void MainApplication::logicInit() {
     this->newCards.emplace("spot_campus_east");
     this->newCards.emplace("spot_campus_west");
     this->newCards.emplace("role_student");
+    if (reg.gameSettings.cheat == true) {
+        for (const auto &name : reg.gameSettings.startWith) {
+		    this->newCards.emplace(name);
+        }
+    }
+    
 }

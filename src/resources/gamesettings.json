@@ -2,6 +2,9 @@
   "pixel_x": 400,
   "pixel_y": 270,
   "full_screen": false,
-  "cheat": true,
-  "show_detail": true
+  "cheat": false,
+  "show_detail": true,
+  "start_with": [
+    "spot_lab"
+  ]
 }

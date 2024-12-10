@@ -15,6 +15,10 @@ public:
 	double& getAttributeValue() {
 		return this->attributeValue;
 	}
+	double getAttributeValueRound() {
+		int tmp = this->attributeValue*100;
+		return (double)tmp / 100.0;
+	}
 	double getMax() const {
 		return this->max;
 	}
@@ -107,7 +111,7 @@ public:
 		return this->established;
 	}
 	
-	Advancement();
+	Advancement() {};
 	bool checkAdvancement();
 
 private:
@@ -118,7 +122,7 @@ private:
 	std::vector<std::string> formulaNeeded;
 	std::vector<std::string> itemNeeded;
 	std::vector<std::string> cardNeeded;
-	bool established;
+	bool established = false;
 
 	friend void readAdvancementJson();
 };

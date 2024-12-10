@@ -45,12 +45,12 @@
     {
       "name": "classChosen",
       "match": "class",
-      "visibility": true
+      "visibility": false
     },
     {
       "name": "classAttendance",
       "match": "class",
-      "visibility": false
+      "visibility": true
     }
   ]
 }

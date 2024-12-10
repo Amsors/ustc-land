@@ -526,15 +526,21 @@
       ]
     },
     {
-      "formulaName": "PRESERVED",
-      "cardSetName": "",
-      "vagueMatch": "",
-      "rewardSum": 1,
+      "formulaName": "f_teachingbuilding_textbook_ideologicalandpolitical",
+      "cardSetName": "cs_teachingbuilding_textbook",
+      "rewardVagueMatch": "#",
+      "cardSetVagueMatch": "IDEOLOGICALANDPOLITICAL",
+      "rewardSum": 2,
       "reward": [
         {
-          "name": "",
+          "name": "r_RP_+0.05",
           "set": 1,
-          "possibility": 1
+          "possibility": 0.9
+        },
+        {
+          "name": "r_MH_-0.05",
+          "set": 2,
+          "possibility": 0.8
         }
       ]
     },

@@ -45,14 +45,5 @@ void Registry::AttributeOutput() {
 }
 
 void Registry::AdvancementOutput() {
-	for (const auto& adv : reg.regAdvancement) {
-		auto advPtr = adv.second;
-		std::cout << advPtr->getName();
-		if (reg.advancementStatus[advPtr->getName()] == 0 || reg.advancementStatus[advPtr->getName()] == 2) {
-			std::cout << " Established" << "\n";
-		}
-		else {
-			std::cout << " Unestablished" << "\n";
-		}
-	}
+	
 }

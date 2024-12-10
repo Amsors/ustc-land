@@ -154,23 +154,35 @@ void ListBar::updateInfo() {
 
     nanogui::Button *btn;
     for(const auto &anAttr: reg.regAttribute | std::views::values) {
+        if (anAttr->getVisibility() == false) {
+            continue;
+        }
         if(anAttr->getIsArray()) {
-            btn = new CustomButton(attribute, anAttr->getName() + ": ", FA_CIRCLE);
+            std::string attrKey = "attribute." + anAttr->getName();
+            std::string attrName = i18n::translated(attrKey);
+            btn = new CustomButton(attribute, attrName + ": ", FA_CIRCLE);
             btn->set_background_color(BAR_BACKGROUND);
             btn->set_icon_position(nanogui::Button::IconPosition::Left);
-            for(const auto &value: anAttr->getAttributeArray() | std::views::values) {
-                btn = new CustomButton(attribute, fmt::format("{}: {}", anAttr->getName(), value), FA_MINUS);
+            for(const auto &element: anAttr->getAttributeArray()) {
+                std::string elementKey = "vaguematch."+ element.first;
+                std::string elementName = i18n::translated(elementKey);
+				double value = element.second;
+                btn = new CustomButton(attribute, fmt::format("{}: {}", elementName, value), FA_MINUS);
                 btn->set_background_color(BAR_BACKGROUND);
                 btn->set_icon_position(nanogui::Button::IconPosition::Left);
             }
         } else {
-            btn = new CustomButton(attribute, fmt::format("{}: {}", anAttr->getName(), anAttr->getAttributeValue()), FA_CIRCLE);
+            std::string attrKey = "attribute." + anAttr->getName();
+            std::string attrName = i18n::translated(attrKey);
+            btn = new CustomButton(attribute, fmt::format("{}: {}", attrName, anAttr->getAttributeValueRound()), FA_CIRCLE);
             btn->set_background_color(BAR_BACKGROUND);
             btn->set_icon_position(nanogui::Button::IconPosition::Left);
         }
     }
     for(const auto &anAdv: reg.regAdvancement | std::views::values) {
-        btn = new CustomButton(advancement, anAdv->getName(), anAdv->getEstablished() ? FA_CHECK_SQUARE : FA_SQUARE);
+		std::string key = "advancement." + anAdv->getName();
+        std::string name = i18n::translated(key);
+        btn = new CustomButton(advancement, name, anAdv->getEstablished() ? FA_CHECK_SQUARE : FA_SQUARE);
         btn->set_background_color(BAR_BACKGROUND);
     }
 
